@@ -58,9 +58,24 @@ poetry add pydantic
 poetry add --group dev mypy ruff black pytest
 ```
 
-# Result:
-# finlib/
-# |-- pyproject.toml
-# |-- src/finlib/__init__.py
-# `-- tests/
+```text 
+finlib/
+|-- pyproject.toml
+|-- src/finlib/__init__.py
+|-- tests/
+```
 
+## Usage
+
+Add to `pyproject.toml` the following
+
+``` text
+[tool.mypy]
+python_version = '3.12'
+strict = true
+warn_return_any = true
+```
+
+```bash
+poetry run mypy src/ --strict
+```
