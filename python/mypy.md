@@ -25,7 +25,7 @@
 
 ## Using mypy with Poetry
 
-- In a Poetry project, mypy is usually added as a development dependency:
+- In a [Poetry](poetry.md) project, mypy is usually added as a development dependency:
 
 ```bash
 poetry add --group dev mypy

@@ -112,7 +112,7 @@ class Instrument(ABC):
 - It does **not** need to inherit from the protocol explicitly.
 - This is called **structural typing**.
 - It matches Python’s duck typing idea: “if it behaves correctly, it is acceptable”.
-- Protocols are mainly useful for static type checkers like `mypy`.
+- Protocols are mainly useful for static type checkers like [`mypy`](mypy.md).
 - They help document expected behaviour without forcing class hierarchies.
 - Example: a `Runnable` protocol may require a `run()` method.
 - Any class with a compatible `run()` method can be used as `Runnable`.
