@@ -67,15 +67,15 @@ finlib/
 
 ## Usage
 
-Add to `pyproject.toml` the following
-
-``` text
-[tool.mypy]
-python_version = '3.12'
-strict = true
-warn_return_any = true
-```
+If you `python ...` you use the default environment on your machine. Instead, 
+you want to run it using the poetry environment.
 
 ```bash
-poetry run mypy src/ --strict
+poetry run ptyhon -m finlib.module
+```
+
+### Update dependences
+
+```bash
+poetry install
 ```
