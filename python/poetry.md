@@ -71,7 +71,7 @@ If you `python ...` you use the default environment on your machine. Instead,
 you want to run it using the poetry environment.
 
 ```bash
-poetry run ptyhon -m finlib.module
+poetry run python -m finlib.module
 ```
 
 ### Update dependences
