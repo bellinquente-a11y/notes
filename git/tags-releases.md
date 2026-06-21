@@ -1,0 +1,69 @@
+# Git Tags and Releases
+
+## Tags
+
+A tag is a named, **immutable** pointer to a specific commit. Unlike branches, tags don't move. They mark a commit as meaningful — typically a version release.
+
+### Lightweight vs annotated
+
+```bash
+git tag v1.0.0                          # lightweight: just a pointer
+git tag -a v1.0.0 -m "First release"   # annotated: full Git object with metadata
+```
+
+Prefer annotated tags — they store author, date, and message, and appear in `git describe`.
+
+### Common operations
+
+```bash
+git tag                        # list all tags
+git tag -l "v1.*"              # filter by pattern
+git show v1.0.0                # show tag metadata + commit
+
+git tag -a v0.9.0 e636bb2 -m "Beta"   # tag a past commit
+
+git push origin v1.0.0         # push one tag (not automatic!)
+git push origin --tags         # push all tags
+
+git tag -d v1.0.0                       # delete locally
+git push origin --delete v1.0.0         # delete on remote
+```
+
+> Tags are **not** pushed with `git push` — you must push them explicitly.
+
+### Semantic versioning
+
+Tags follow `vMAJOR.MINOR.PATCH` by convention:
+
+| Increment | When |
+|-----------|------|
+| `MAJOR` | Breaking change |
+| `MINOR` | New backward-compatible feature |
+| `PATCH` | Bug fix |
+
+## Releases
+
+A release is a platform layer on top of a tag (e.g. GitHub Releases). It adds:
+- Human-readable release notes / changelog
+- Downloadable build artifacts (binaries, wheels, etc.)
+- A `release` event that CI/CD pipelines can react to
+
+The tag is the Git-native concept; the release is the presentation layer for users and automation.
+
+```bash
+gh release create v1.0.0 --generate-notes          # auto-generate notes from commits
+gh release create v1.0.0 ./dist/app --title "v1.0.0"  # attach a build artifact
+```
+
+## Typical release workflow
+
+```bash
+# 1. Tag the release commit
+git tag -a v1.2.0 -m "Release v1.2.0"
+
+# 2. Push the tag
+git push origin v1.2.0
+
+# 3. Create the GitHub release
+gh release create v1.2.0 --generate-notes
+```

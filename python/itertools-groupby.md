@@ -1,0 +1,70 @@
+# `itertools.groupby`
+
+Groups consecutive elements of an iterable that share the same key. Like SQL `GROUP BY`, but **only groups adjacent elements** — input must be sorted by the key first.
+
+## Basic usage
+
+```python
+from itertools import groupby
+
+data = [1, 1, 2, 2, 2, 3, 1, 1]
+for key, group in groupby(data):
+    print(key, list(group))
+# 1 [1, 1]
+# 2 [2, 2, 2]
+# 3 [3]
+# 1 [1, 1]   ← new group; 1 appeared again non-consecutively
+```
+
+Each iteration yields `(key, group)` where `group` is a lazy iterator.
+
+## Key function
+
+```python
+words = ["apple", "ant", "banana", "bee"]
+words.sort(key=lambda w: w[0])  # sort first!
+
+for letter, group in groupby(words, key=lambda w: w[0]):
+    print(letter, list(group))
+# a ['apple', 'ant']
+# b ['banana', 'bee']
+```
+
+## Critical gotcha: consume each group before advancing
+
+The `group` iterator shares state with the outer iterator. Advancing to the next key exhausts the current group.
+
+```python
+# WRONG — all groups are empty when accessed later
+groups = {k: g for k, g in groupby([1, 1, 2, 2, 3])}
+
+# RIGHT — materialise each group immediately
+groups = {k: list(g) for k, g in groupby([1, 1, 2, 2, 3])}
+# {1: [1, 1], 2: [2, 2], 3: [3]}
+```
+
+## Canonical sort → groupby pattern
+
+```python
+records = [
+    {"name": "alice", "dept": "eng"},
+    {"name": "bob",   "dept": "hr"},
+    {"name": "carol", "dept": "eng"},
+]
+
+key = lambda r: r["dept"]
+for dept, group in groupby(sorted(records, key=key), key=key):
+    print(dept, [r["name"] for r in group])
+# eng ['alice', 'carol']
+# hr  ['bob']
+```
+
+## When to use `groupby` vs alternatives
+
+| Situation | Use |
+|-----------|-----|
+| Already-sorted / streaming data | `groupby` |
+| Unsorted data, need counts or aggregations | `collections.Counter` / `defaultdict` |
+| DataFrames | `pandas.DataFrame.groupby` |
+
+See also: [python.md](python.md) for the broader `itertools` landscape.
