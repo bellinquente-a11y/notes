@@ -19,9 +19,11 @@ I will ask you to explain a topic by starting the query with the uppercase strin
 
 ```
 notes/
-├── python/     — Python language, tooling, type system
-├── git/        — Git workflows and commands
-└── misc/       — Diagrams, tools, and everything else
+├── python/
+│   ├── language/   — Core Python: data model, iterators, generators, exceptions, stdlib
+│   └── tooling/    — pyenv, poetry, ruff, mypy, pydantic, pytest, testing strategy
+├── git/            — Git workflows, commands, tags, releases, GitHub Actions
+└── tools/          — Language-agnostic tools and notation (Mermaid, etc.)
 ```
 
 Each subdirectory has a `README.md` table with three columns: **file**, **type** (`note` or `ref`), **one-line description**.

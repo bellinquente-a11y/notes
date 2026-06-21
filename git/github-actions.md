@@ -141,8 +141,8 @@ Share files between jobs or download after a run (kept 90 days):
 
 ## Related notes
 
-- [git.md](../git/git.md) — branching model that CI enforces
-- [testing.md](../python/testing.md) — what CI runs: pytest, coverage
-- [ruff.md](../python/ruff.md) — linter CI runs on every push
-- [mypy.md](../python/mypy.md) — type checker CI runs on every push
-- [poetry.md](../python/poetry.md) — dependency management; `poetry install` in CI
+- [git.md](git.md) — branching model that CI enforces
+- [testing.md](../python/tooling/testing.md) — what CI runs: pytest, coverage
+- [ruff.md](../python/tooling/ruff.md) — linter CI runs on every push
+- [mypy.md](../python/tooling/mypy.md) — type checker CI runs on every push
+- [poetry.md](../python/tooling/poetry.md) — dependency management; `poetry install` in CI
