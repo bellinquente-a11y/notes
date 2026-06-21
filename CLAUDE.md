@@ -8,7 +8,7 @@ This repo is a personal knowledge base. The user asks Claude to explain topics; 
 
 ## Workflow
 
-When asked to explain a topic:
+I will ask you to explain a topic by starting the query with the uppercase string `EXPLAIN`. When asked to explain a topic:
 1. **Respond in the terminal** with a thorough explanation — more depth than the file, including intuition and context.
 2. **Review folder structure** to understand whether a change in an existing file is needed vs. the creation of a new file or folder.
 3. **Write an `.md` file** in the appropriate directory. The file should be more succinct than the terminal explanation but still informative: prefer bullet points and short code examples over prose.
