@@ -84,4 +84,4 @@ Since Python 3.3, hash values are salted per session to prevent hash-flooding Do
 
 Returns a value derived from `id(obj)` (roughly memory address). Two distinct objects never collide, and equality is identity.
 
-See also: [data-model.md](data-model.md) for the broader data model and `@dataclass` overview.
+See also: [data-model.md](data-model.md) for the broader data model and `@dataclass` overview; [functools.md](functools.md) for `@lru_cache`, which requires hashable arguments as cache keys.
