@@ -52,7 +52,7 @@ records = [
     {"name": "carol", "dept": "eng"},
 ]
 
-key = lambda r: r["dept"]
+key = itemgetter("dept")  # or lambda r: r["dept"] — see operator.md
 for dept, group in groupby(sorted(records, key=key), key=key):
     print(dept, [r["name"] for r in group])
 # eng ['alice', 'carol']
