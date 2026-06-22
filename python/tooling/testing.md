@@ -201,6 +201,68 @@ def test_load_prices_mocked():
 | SQL, need exact dialect | Testcontainers or rollback fixture |
 | Can't inject the dep | `patch()` |
 
+## Testing functions that print to stdout
+
+Printing is a side effect — there's no return value to assert against. pytest's `capsys` fixture captures `sys.stdout` / `sys.stderr` during the test.
+
+```python
+def greet(name: str) -> None:
+    print(f"Hello, {name}!")
+
+def test_greet(capsys):
+    greet("Alice")
+    captured = capsys.readouterr()   # named tuple: .out, .err
+    assert captured.out == "Hello, Alice!\n"
+```
+
+`readouterr()` **consumes** the buffer — each call returns only what was printed since the last call.
+
+### Checking stderr separately
+
+```python
+import sys
+
+def log_warning(msg: str) -> None:
+    print(f"WARNING: {msg}", file=sys.stderr)
+
+def test_warning_goes_to_stderr(capsys):
+    log_warning("low balance")
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "low balance" in captured.err
+```
+
+### `capfd` — file-descriptor level
+
+Use `capfd` (same API) when output comes from C extensions or subprocesses that bypass `sys.stdout`.
+
+### Partial matching
+
+For long or variable output, use `in` rather than strict equality:
+
+```python
+assert "Total:" in capsys.readouterr().out
+```
+
+### Design note: prefer a pure function
+
+If you're testing `print` output heavily, the function is probably conflating computation with display. Split them:
+
+```python
+# Hard to test — side effect baked in
+def report_pnl(trades):
+    print(f"P&L: {sum(t.pnl for t in trades):.2f}")
+
+# Easy to test — pure function + thin display layer
+def compute_pnl(trades) -> float:
+    return sum(t.pnl for t in trades)
+
+def report_pnl(trades):
+    print(f"P&L: {compute_pnl(trades):.2f}")
+```
+
+Test `compute_pnl` directly; leave `report_pnl` to a single smoke test or skip it entirely.
+
 ## Related notes
 
 - [`pytest.md`](pytest.md) — command quick-reference
