@@ -10,10 +10,16 @@ This repo is a personal knowledge base. The user asks Claude to explain topics; 
 
 I will ask you to explain a topic by starting the query with the uppercase string `EXPLAIN`. When asked to explain a topic:
 1. **Respond in the terminal** with a thorough explanation — more depth than the file, including intuition and context.
-2. **Review folder structure** to understand whether a change in an existing file is needed vs. the creation of a new file or folder.
+2. **Review folder structure** (read the `README.md` files only) to understand whether a change in an existing file is needed vs. the creation of a new file or folder. Try to keep the number of files limited. That means either:
+    a. Add the information to an exisitng file if makes sense; otherwise,
+    b. Merge the new information with existing information into a new file.
+   It is imperative to keep good logic in structuring the information.
 3. **Write an `.md` file** in the appropriate directory. The file should be more succinct than the terminal explanation but still informative: prefer bullet points and short code examples over prose.
 4. **Update `README.md`** in the relevant subdirectory and the root `README.md` if a new directory is created.
 5. **Update other .md files** with appropriate links, only if needed. The aim is to maintain conceptual links between different topics.
+6. **Commit changes** with an appropriate message — do not prompt for confirmation before committing.
+
+During the EXPLAIN workflow, write new files, edit existing files, and save all changes without prompting for confirmation.
 
 ## File organisation
 

@@ -108,7 +108,7 @@ A hierarchy lets callers catch at the right level (`AppError` vs `TradeError` vs
 - **Be specific** — catch the narrowest type you can actually handle.
 - **Don't swallow silently** — at minimum log, then re-raise.
 - **Raise at the right level** — low-level code raises specific exceptions; high-level code translates them with `raise X from Y`.
-- **Use `finally` for cleanup**, or better: use a [context manager](python.md#context-managers).
+- **Use `finally` for cleanup**, or better: use a [context manager](context-managers.md).
 
 ```python
 # BAD — bug disappears forever
@@ -142,7 +142,7 @@ with suppress(FileNotFoundError):
     os.remove("maybe_exists.txt")
 ```
 
-See [python.md](python.md) for the full context manager protocol.
+See [context-managers.md](context-managers.md) for the full context manager protocol.
 
 ## ExceptionGroup (Python 3.11+)
 
@@ -160,6 +160,6 @@ except* ValueError as eg:    # except* filters by type
 
 ## Related notes
 
-- [python.md](python.md) — context managers (`__exit__` protocol, `@contextmanager`)
+- [context-managers.md](context-managers.md) — context managers (`__exit__` protocol, `@contextmanager`)
 - [testing.md](../tooling/testing.md) — `pytest.raises` to assert exceptions in tests
 - [pydantic.md](../tooling/pydantic.md) — `ValidationError` is the canonical custom exception pattern at application boundaries
