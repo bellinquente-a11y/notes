@@ -67,4 +67,4 @@ for dept, group in groupby(sorted(records, key=key), key=key):
 | Unsorted data, need counts or aggregations | `collections.Counter` / `defaultdict` |
 | DataFrames | `pandas.DataFrame.groupby` |
 
-See also: [python.md](python.md) for the broader `itertools` landscape.
+See also: [itertools.md](itertools.md) for `chain`, `islice`, `product`, and `combinations`; [iterators-generators.md](iterators-generators.md) for the iterator protocol.
