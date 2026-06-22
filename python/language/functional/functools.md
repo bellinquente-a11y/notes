@@ -106,13 +106,15 @@ class Pricer:
 
 ### Decision guide
 
-| Situation | Choice |
-|---|---|
-| Pure function, unbounded inputs | `@lru_cache(maxsize=N)` |
-| Pure function, small/fixed inputs | `@cache` |
-| Computed instance attribute (no args) | `@cached_property` |
-| DB / file / network read | Do not cache at this layer |
-| Per-key expiry or invalidation needed | `cachetools` library |
+
+| Situation                             | Choice                     |
+| ------------------------------------- | -------------------------- |
+| Pure function, unbounded inputs       | `@lru_cache(maxsize=N)`    |
+| Pure function, small/fixed inputs     | `@cache`                   |
+| Computed instance attribute (no args) | `@cached_property`         |
+| DB / file / network read              | Do not cache at this layer |
+| Per-key expiry or invalidation needed | `cachetools` library       |
+
 
 ## Partial Application
 
@@ -121,6 +123,7 @@ class Pricer:
 ```python
 from functools import partial
 
-double = partial(pow, exp=2)
-double(3)  # 9
+square = partial(pow, exp=2)
+square(3)  # 9
 ```
+

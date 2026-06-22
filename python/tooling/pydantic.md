@@ -61,7 +61,7 @@ trade = Trade(symbol="ES", price="5230.5", qty="10", side="BUY")
 - Current major version is Pydantic v2
 
 
-## When to use Pydantic vs dataclass (see [data-model.md](../language/data-model.md#dataclass))?
+## When to use Pydantic vs dataclass (see [data-model.md](../language/objects/data-model.md#dataclass))?
 
 Rule: Pydantic at edges (input/output), dataclass for internal models
 

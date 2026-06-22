@@ -34,7 +34,7 @@ class Instrument(ABC):
 - `Protocol` defines an interface based on object structure, from `typing`: `from typing import Protocol`.
 - A class satisfies a protocol if it has the required methods/attributes — no explicit inheritance needed.
 - This is called **structural typing**, matching Python's duck typing idea.
-- Protocols are mainly useful for static type checkers like `[mypy](../tooling/mypy.md)`.
+- Protocols are mainly useful for static type checkers like `[mypy](../../tooling/mypy.md)`.
 - By default, protocols do not enforce behaviour at runtime.
 - `@runtime_checkable` allows limited `isinstance()` checks.
 

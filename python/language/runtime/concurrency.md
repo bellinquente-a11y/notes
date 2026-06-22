@@ -11,6 +11,7 @@
 **Blocking I/O**: when a thread asks the OS for data (network, disk), the OS parks the thread and schedules other work. The thread does nothing until the data arrives. This "wasted" time is what concurrency exploits.
 
 **Concurrency vs parallelism**:
+
 - Concurrency — multiple tasks *in progress* at once, possibly interleaved on one core.
 - Parallelism — multiple tasks *literally running simultaneously* on separate cores.
 
@@ -23,6 +24,7 @@ I/O-bound work only needs concurrency (one core is fine while threads wait). CPU
 CPython uses reference counting for garbage collection. Because reference counts are not thread-safe, CPython uses a single lock — the **Global Interpreter Lock** — so that only one thread executes Python bytecode at a time.
 
 The GIL is **released** during:
+
 - Any blocking I/O call (network, disk, `sleep`) — OS takes over, Python doesn't need it.
 - C extensions that explicitly release it (numpy, scipy).
 
@@ -43,6 +45,7 @@ with ThreadPoolExecutor(max_workers=10) as pool:
 ```
 
 Manual control:
+
 ```python
 import threading
 
@@ -79,6 +82,7 @@ with ProcessPoolExecutor(max_workers=4) as pool:
 ```
 
 Costs:
+
 - Data is **pickled** (serialised) to pass between processes — overhead for large inputs.
 - Workers must be defined at module level (lambdas can't be pickled).
 - Process startup is slow (~100ms); amortise over many tasks.
@@ -108,8 +112,9 @@ asyncio.run(main())
 ```
 
 Key primitives:
+
 ```python
-await asyncio.gather(*coros)                         # run concurrently, collect results
+await asyncio.gather(*coros)                         # run coroutines concurrently, collect results
 asyncio.create_task(coro())                          # schedule without waiting
 await asyncio.sleep(n)                               # non-blocking sleep
 await loop.run_in_executor(None, blocking_fn, arg)   # offload sync call to thread pool
@@ -121,35 +126,42 @@ await loop.run_in_executor(None, blocking_fn, arg)   # offload sync call to thre
 
 ## Decision guide
 
-| Workload | Tool |
-|---|---|
-| I/O-bound, few tasks | `ThreadPoolExecutor` |
-| I/O-bound, high concurrency | `asyncio` + async libraries |
-| CPU-bound, pure Python | `ProcessPoolExecutor` |
-| CPU-bound, numpy/scipy | Threads often fine (GIL released in C layer) |
+
+| Workload                    | Tool                                         |
+| --------------------------- | -------------------------------------------- |
+| I/O-bound, few tasks        | `ThreadPoolExecutor`                         |
+| I/O-bound, high concurrency | `asyncio` + async libraries                  |
+| CPU-bound, pure Python      | `ProcessPoolExecutor`                        |
+| CPU-bound, numpy/scipy      | Threads often fine (GIL released in C layer) |
+
 
 ### Threads vs asyncio for I/O
 
-| | Threads | asyncio |
-|---|---|---|
-| Context switching | OS (preemptive) | Cooperative (`await`) |
-| Scale | Hundreds | Tens of thousands |
-| Existing sync code | Works as-is | Must use `run_in_executor` or rewrite |
-| Risk | Race conditions | Blocking calls freeze the loop |
+
+|                    | Threads         | asyncio                               |
+| ------------------ | --------------- | ------------------------------------- |
+| Context switching  | OS (preemptive) | Cooperative (`await`)                 |
+| Scale              | Hundreds        | Tens of thousands                     |
+| Existing sync code | Works as-is     | Must use `run_in_executor` or rewrite |
+| Risk               | Race conditions | Blocking calls freeze the loop        |
+
 
 ---
 
 ## Key vocabulary
 
-| Term | Meaning |
-|---|---|
-| **Coroutine** | `async def` function that suspends at `await` and resumes later |
+
+| Term           | Meaning                                                                 |
+| -------------- | ----------------------------------------------------------------------- |
+| **Coroutine**  | `async def` function that suspends at `await` and resumes later         |
 | **Event loop** | asyncio's scheduler — runs one coroutine at a time, switches at `await` |
-| **Future** | Placeholder for a result that will exist later (`concurrent.futures`) |
-| **Task** | asyncio's version of a Future — a scheduled coroutine |
-| **Pickle** | Python's serialisation format; used to pass data between processes |
+| **Future**     | Placeholder for a result that will exist later (`concurrent.futures`)   |
+| **Task**       | asyncio's version of a Future — a scheduled coroutine                   |
+| **Pickle**     | Python's serialisation format; used to pass data between processes      |
+
 
 ## Related notes
 
-- [`functools.md`](functools.md) — `@lru_cache` thread-safety note
-- [`context-managers.md`](context-managers.md) — `async with` uses `__aenter__`/`__aexit__`
+- `[functools.md](../functional/functools.md)` — `@lru_cache` thread-safety note
+- `[context-managers.md](context-managers.md)` — `async with` uses `__aenter__`/`__aexit__`
+

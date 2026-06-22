@@ -49,3 +49,24 @@ Link related files using relative markdown links. Prefer linking on the first me
 - Short code examples are preferred over long ones.
 - Use bullet points for lists of facts; use prose only for conceptual explanations.
 - No multi-paragraph docstrings or wall-of-text sections.
+
+## RESTRUCTURE workflow
+
+I will ask you to restructure the project by starting the query with the uppercase string `RESTRUCTURE`. When asked to restructure:
+
+1. **Survey the current structure cheaply**: read only the `README.md` files in each directory and run `wc -l` on every `.md` file to get line counts. Do **not** open individual note files unless their line count exceeds ~200 and you need to understand their content to split them sensibly.
+2. **Identify problems**: flag any file with >200 lines and any folder with >10 files (excluding `README.md`).
+3. **Propose a new structure** that resolves the problems by introducing subfolders. Requirements:
+   - Group topics by logical criteria (e.g. language feature area, tool category) — never by arbitrary criteria like alphabetical order or file size alone.
+   - Aim for uniform depth across all branches: avoid one branch being 3 levels deep while siblings stay flat.
+   - Keep the total number of new folders minimal — only introduce a subfolder when it contains at least 3 files.
+   - Files >200 lines may be split into two focused files; propose the split with a one-line rationale.
+4. **Output both the old and the proposed structure as directory-tree diagrams in the terminal** (use `tree`-style ASCII art). Annotate each file with its line count and each folder with its file count.
+5. **Do not move, rename, or create any file or folder yet.** Wait for explicit approval before acting.
+6. **Ask for clarification** if a grouping decision is genuinely ambiguous (e.g. a file that belongs equally well in two places).
+
+Once approved and the restructuring is executed:
+
+7. **Update all README files** to reflect the new folder structure: add rows for new files/folders, remove rows for moved ones, and fix any table entries whose paths have changed.
+8. **Update all cross-file hyperlinks** in every `.md` file to point to the new paths.
+9. **Sort all README table rows alphabetically** by filename within each directory.
