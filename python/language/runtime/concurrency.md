@@ -56,6 +56,50 @@ t.join()   # wait for completion
 
 `daemon=True` — thread is killed when the main program exits.
 
+### Future mechanics
+
+`submit()` returns a `Future` immediately — the task is scheduled and the main thread moves on. `.result()` is where you actually block:
+
+```python
+f1 = pool.submit(fetch, url_a)   # returns at once
+f2 = pool.submit(fetch, url_b)   # returns at once
+r1 = f1.result()                 # blocks here until f1 is done
+r2 = f2.result()                 # then blocks here
+```
+
+Trap: calling `.result()` in submission order means you wait on `f1` even if `f2` finished first.
+
+**`as_completed()`** yields futures in completion order, not submission order:
+
+```python
+from concurrent.futures import as_completed
+
+futures = {pool.submit(fetch, url): url for url in urls}
+for f in as_completed(futures):
+    url = futures[f]   # recover original arg from the dict
+    try:
+        data = f.result()
+    except Exception as e:
+        print(f"{url} failed: {e}")
+```
+
+The `{submit(fn, x): x}` dict is the idiomatic way to map a future back to its input.
+
+**Exceptions** raised inside a thread are captured inside the Future. They don't propagate until you call `.result()`, which re-raises them:
+
+```python
+f = pool.submit(bad_fn, 42)
+# no error yet in the main thread
+f.result()   # raises here
+```
+
+`as_completed()` yields failed futures too — handle per-task without aborting the batch.
+
+```python
+exc = f.exception()   # returns the exception object, or None, without raising
+f.done()              # True if finished (success or error)
+```
+
 ### Shared state
 
 Threads share memory. `counter += 1` is not atomic (read → add → write), so concurrent threads can corrupt it. Use a lock:
