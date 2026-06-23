@@ -8,6 +8,7 @@
 | [context-managers.md](context-managers.md) | note | `with` statement, class-based and `@contextmanager` |
 | [datetime.md](datetime.md) | note | Parsing datetime strings: strptime, fromisoformat, dateutil, timezone awareness |
 | [import-system.md](import-system.md) | note | Modules, packages, `__init__.py`, `sys.path`, public API |
+| [logging.md](logging.md) | note | stdlib logging: pipeline, levels, dictConfig, best practices, structured logging |
 
 ## Structure
 
@@ -17,4 +18,5 @@ runtime/\
 ├── [concurrency.md](concurrency.md)\
 ├── [context-managers.md](context-managers.md)\
 ├── [datetime.md](datetime.md)\
-└── [import-system.md](import-system.md)
+├── [import-system.md](import-system.md)\
+└── [logging.md](logging.md)
