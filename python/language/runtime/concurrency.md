@@ -141,6 +141,8 @@ For large arrays: use `multiprocessing.shared_memory` to avoid copying.
 
 A single-threaded **event loop** runs coroutines cooperatively. Instead of the OS interrupting threads, coroutines voluntarily yield at `await` points. The event loop runs another coroutine while one waits for I/O. Scales to tens of thousands of concurrent tasks with low overhead (no per-thread stack, no OS context switches).
 
+See [asyncio.md](asyncio.md) for a deep dive into `async def`, `await`, `asyncio.run()`, and `asyncio.gather()`.
+
 ```python
 import asyncio, aiohttp
 

@@ -2,6 +2,7 @@
 
 | File | Type | Description |
 |------|------|-------------|
+| [asyncio.md](asyncio.md) | note | async def, await, asyncio.run(), gather(), create_task() — core mechanics |
 | [cli.md](cli.md) | ref | Running Python from the terminal: `-c`, `-m`, scripts |
 | [concurrency.md](concurrency.md) | note | GIL, threading, multiprocessing, asyncio — when to use each |
 | [context-managers.md](context-managers.md) | note | `with` statement, class-based and `@contextmanager` |
