@@ -1,12 +1,128 @@
-# Number Formatting in Python
+# String Formatting in Python
 
-`f"{value:spec}"` and `format(value, "spec")` both invoke `value.__format__(spec)`. `str(x)` is equivalent to `format(x, "")`.
+Four ways to embed values into strings. f-strings are the modern default.
 
-## Format spec mini-language
+| Situation | Use |
+|-----------|-----|
+| Normal case | f-string |
+| Template stored in a variable / config | `str.format()` |
+| Logging calls | `%`-style (deferred evaluation) |
+| Template from untrusted user input | `string.Template` |
+
+---
+
+## f-strings (Python 3.6+)
+
+Prefix a string literal with `f`. Any `{expression}` is evaluated at runtime:
+
+```python
+name, age = "Alice", 30
+f"Hello, {name}! You are {age}."     # arbitrary expressions: attr, index, calls, ternary
+f"{price * 1.2:.2f}"                 # format spec after colon
+f"{'yes' if flag else 'no'}"
+```
+
+### Debug shorthand
+
+`f"{expr=}"` prints the source text and the value — useful for quick inspection:
+
+```python
+x = 42
+f"{x=}"           # 'x=42'
+f"{x * 2 + 1=}"   # 'x * 2 + 1=85'
+f"{x=:.2f}"       # 'x=42.00'
+```
+
+### Dynamic spec
+
+The spec field can itself be an expression:
+
+```python
+f"{value:{width}.{precision}f}"   # width and precision from variables
+```
+
+### Raw f-strings
+
+```python
+rf"C:\users\{path}\file.txt"   # backslashes literal; braces still interpolate
+```
+
+---
+
+## str.format()
+
+Useful when the template is a variable (can't do that with an f-string literal):
+
+```python
+"{} is {}".format("Alice", 30)          # positional
+"{0} and {0}".format("echo")            # reuse by index
+"{name}".format(name="Alice")           # keyword
+
+TEMPLATE = "Dear {name}, order #{id} shipped."
+TEMPLATE.format(**order_dict)           # fill from dict
+```
+
+Format specs work identically to f-strings: `"{:.2f}".format(3.14)`.
+
+---
+
+## %-formatting — legacy
+
+Avoid in new code. Still conventional in `logging` because formatting is deferred until the message is actually emitted:
+
+```python
+logger.debug("processing %s items", len(items))   # string not built if DEBUG is off
+```
+
+---
+
+## string.Template — for untrusted input
+
+No expressions, no arbitrary Python — safe when the template comes from user input or config:
+
+```python
+from string import Template
+Template("Hello, $name!").substitute(name="Alice")
+Template("Hi $name").safe_substitute()   # leaves unknown $vars intact instead of raising
+```
+
+---
+
+## String-specific format specs
 
 ```
-{value:[fill][align][sign][#][0][width][grouping][.precision][type]}
+{value:[fill][align][.precision]}
 ```
+
+Strings default to **left-aligned**; numbers default to right-aligned.
+
+```python
+f"{'text':<20}"      # 'text                '  — left-aligned (explicit)
+f"{'text':>20}"      # '                text'  — right-aligned
+f"{'text':^20}"      # '        text        '  — centred
+f"{'text':*^20}"     # '********text********'  — fill char before align
+```
+
+**Truncation** — `.precision` on a string means max character count:
+
+```python
+f"{'hello world':.5}"      # 'hello'
+f"{'hello world':<20.5}"   # 'hello               '  — truncate then pad
+```
+
+Fixed-width table columns that never overflow:
+
+```python
+for name, value in rows:
+    print(f"{name:<20.20} {value:>10.2f}")
+```
+
+---
+
+## Number format specs
+
+See the type codes, precision, sign, and separator options in the section below —
+they apply inside any `{}`, whether an f-string, `.format()`, or `format()` call.
 
 ### Type codes
 
@@ -14,68 +130,56 @@
 |------|--------|---------|
 | `f`  | Fixed-point | `f"{3.14:.2f}"` → `'3.14'` |
 | `e`/`E` | Scientific | `f"{12345:.2e}"` → `'1.23e+04'` |
-| `g`  | Fixed or scientific, whichever is shorter | `f"{0.00012:.3g}"` → `'0.00012'` |
-| `%`  | Percent (×100, appends %) | `f"{0.173:.1%}"` → `'17.3%'` |
+| `g`  | Fixed or scientific, shorter | `f"{3.14159:.4g}"` → `'3.142'` |
+| `%`  | Percent (×100) | `f"{0.173:.1%}"` → `'17.3%'` |
 | `d`  | Integer decimal | `f"{42:d}"` → `'42'` |
 | `b`/`x`/`X`/`o` | Binary / hex / HEX / octal | `f"{255:x}"` → `'ff'` |
 
 ### Precision
 
-`.precision` means **decimal places** for `f`/`e`/`E`/`%`, but **significant figures** for `g` and bare floats.
+`.precision` = **decimal places** for `f`/`e`/`%`; **significant figures** for `g`:
 
 ```python
-f"{3.14159:.2f}"   # '3.14'     — 2 decimal places
-f"{3.14159:.4g}"   # '3.142'    — 4 significant figures
+f"{3.14159:.2f}"   # '3.14'
+f"{3.14159:.4g}"   # '3.142'
 ```
 
-### Width and alignment
+### Width, alignment, padding
 
 ```python
-f"{3.14:10.2f}"    # '      3.14'  — right-aligned in 10 chars (default for numbers)
+f"{3.14:10.2f}"    # '      3.14'  — right-aligned in 10 (default for numbers)
 f"{3.14:<10.2f}"   # '3.14      '  — left-aligned
 f"{3.14:^10.2f}"   # '   3.14   '  — centred
-f"{3.14:010.2f}"   # '0000003.14'  — zero-padded to width 10
+f"{3.14:010.2f}"   # '0000003.14'  — zero-padded
 ```
 
 ### Sign
 
 ```python
-f"{3.14:+.2f}"     # '+3.14'   — always show sign
-f"{3.14: .2f}"     # ' 3.14'   — space for positive
+f"{3.14:+.2f}"    # '+3.14'
+f"{3.14: .2f}"    # ' 3.14'  — space for positive
 ```
 
-### Thousands separator
+### Separators
 
 ```python
 f"{1234567:,.2f}"   # '1,234,567.00'
 f"{1234567:_.2f}"   # '1_234_567.00'
 ```
 
-### Alternate form (`#`)
+### Alternate form
 
 ```python
 f"{255:#x}"    # '0xff'
+f"{255:#010x}" # '0x000000ff'
 f"{10:#b}"     # '0b1010'
 ```
 
-## Common patterns
-
-```python
-# Price table column, right-aligned 12 chars, comma thousands, 2 dp:
-f"{price:>12,.2f}"
-
-# Scientific with sign, 3 sig figs:
-f"{-0.000123:+.3e}"     # '-1.230e-04'
-
-# Hex with zero-padding to 8 digits:
-f"{255:#010x}"          # '0x000000ff'
-
-# Dynamic spec:
-spec = ",.2f"
-f"{price:{spec}}"       # nest an expression inside the spec field
-```
+---
 
 ## Custom __format__
+
+Any class can define how it responds to a format spec:
 
 ```python
 class Money:
