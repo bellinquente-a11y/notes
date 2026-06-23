@@ -63,6 +63,8 @@ Register free at alphavantage.co. `outputsize=compact` → last 100 days.
 
 ### Binance klines — no key, best rate limits
 
+See [binance.md](binance.md) for full column reference, pagination, and market mechanics.
+
 ```bash
 curl "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=90"
 ```
