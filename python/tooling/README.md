@@ -11,3 +11,16 @@
 | [testing-patterns.md](testing-patterns.md) | note | Practical testing patterns: external deps, file I/O, DB, stdout |
 | [terminal-tables.md](terminal-tables.md) | note | Print tables in the terminal: f-strings, tabulate, rich |
 | [testing-strategy.md](testing-strategy.md) | note | Testing strategy: pyramid, what to test, mocks, TDD, coverage |
+
+## Structure
+
+tooling/\
+├── [mypy.md](mypy.md)\
+├── [poetry.md](poetry.md)\
+├── [pydantic.md](pydantic.md)\
+├── [pyenv.md](pyenv.md)\
+├── [pytest.md](pytest.md)\
+├── [ruff.md](ruff.md)\
+├── [terminal-tables.md](terminal-tables.md)\
+├── [testing-patterns.md](testing-patterns.md)\
+└── [testing-strategy.md](testing-strategy.md)

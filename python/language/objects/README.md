@@ -7,3 +7,12 @@
 | [hash.md](hash.md) | note | `__hash__`: hash contract, `__eq__` coupling, mutability, dataclasses |
 | [oop.md](oop.md) | note | Inheritance, MRO, ABCs, Protocols, structural vs nominal typing |
 | [warnings.md](warnings.md) | note | `warnings.warn()`, stacklevel, filters, converting exceptions to warnings |
+
+## Structure
+
+objects/\
+├── [data-model.md](data-model.md)\
+├── [exceptions.md](exceptions.md)\
+├── [hash.md](hash.md)\
+├── [oop.md](oop.md)\
+└── [warnings.md](warnings.md)

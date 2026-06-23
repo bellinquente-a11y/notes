@@ -9,3 +9,14 @@
 | [itertools.md](itertools.md) | note | chain, islice, product, combinations — financial use cases |
 | [operator.md](operator.md) | note | attrgetter, itemgetter, methodcaller — faster and clearer than lambdas in sort keys |
 | [string-formatting.md](string-formatting.md) | ref | String formatting: f-strings, str.format(), Template, format spec mini-language |
+
+## Structure
+
+functional/\
+├── [comprehensions.md](comprehensions.md)\
+├── [functools.md](functools.md)\
+├── [iterators-generators.md](iterators-generators.md)\
+├── [itertools-groupby.md](itertools-groupby.md)\
+├── [itertools.md](itertools.md)\
+├── [operator.md](operator.md)\
+└── [string-formatting.md](string-formatting.md)
