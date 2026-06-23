@@ -9,4 +9,5 @@
 | [pytest.md](pytest.md) | ref | Test discovery and command quick-reference |
 | [ruff.md](ruff.md) | ref | Linter and formatter replacing flake8/black/isort |
 | [testing-patterns.md](testing-patterns.md) | note | Practical testing patterns: external deps, file I/O, DB, stdout |
+| [terminal-tables.md](terminal-tables.md) | note | Print tables in the terminal: f-strings, tabulate, rich |
 | [testing-strategy.md](testing-strategy.md) | note | Testing strategy: pyramid, what to test, mocks, TDD, coverage |
