@@ -9,7 +9,7 @@ Iteration is fundamental in data processing, especially to fetch data **lazily**
 - Iterable objects used in:
   - `for` loops
   - list, dict and set [comprehensions](comprehensions.md) (`[2*s for s in x]`)
-  - unpacking assignments (`*x`)
+  - unpacking assignments (`*x`) — see [unpacking.md](unpacking.md) for the full `*`/`**` operator reference
 
 ## Generators
 

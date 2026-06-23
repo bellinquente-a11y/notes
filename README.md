@@ -24,7 +24,8 @@ notes/\
 │   │   │   ├── [itertools-groupby.md](python/language/functional/itertools-groupby.md)\
 │   │   │   ├── [itertools.md](python/language/functional/itertools.md)\
 │   │   │   ├── [operator.md](python/language/functional/operator.md)\
-│   │   │   └── [string-formatting.md](python/language/functional/string-formatting.md)\
+│   │   │   ├── [string-formatting.md](python/language/functional/string-formatting.md)\
+│   │   │   └── [unpacking.md](python/language/functional/unpacking.md)\
 │   │   ├── objects/\
 │   │   │   ├── [data-model.md](python/language/objects/data-model.md)\
 │   │   │   ├── [exceptions.md](python/language/objects/exceptions.md)\
