@@ -8,3 +8,4 @@
 | [itertools-groupby.md](itertools-groupby.md) | note | groupby: consecutive grouping, key function, sort-first pattern, gotchas |
 | [itertools.md](itertools.md) | note | chain, islice, product, combinations — financial use cases |
 | [operator.md](operator.md) | note | attrgetter, itemgetter, methodcaller — faster and clearer than lambdas in sort keys |
+| [string-formatting.md](string-formatting.md) | ref | Format spec mini-language: type codes, precision, width, alignment, separators |
