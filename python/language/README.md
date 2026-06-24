@@ -22,6 +22,7 @@ language/\
 │   ├── [exceptions.md](objects/exceptions.md)\
 │   ├── [hash.md](objects/hash.md)\
 │   ├── [oop.md](objects/oop.md)\
+│   ├── [repository-di.md](objects/repository-di.md)\
 │   └── [warnings.md](objects/warnings.md)\
 └── runtime/\
     ├── [asyncio.md](runtime/asyncio.md)\
