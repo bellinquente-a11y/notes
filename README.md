@@ -58,5 +58,6 @@ notes/\
 │       └── [testing-strategy.md](python/tooling/testing-strategy.md)\
 └── tools/\
     ├── [binance.md](tools/binance.md)\
+    ├── [env-vars.md](tools/env-vars.md)\
     ├── [market-data-apis.md](tools/market-data-apis.md)\
     └── [mermaid.md](tools/mermaid.md)
