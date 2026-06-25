@@ -4,6 +4,7 @@ Learning notes and references across software engineering, ML, and AI topics.
 
 | Directory | Description |
 |-----------|-------------|
+| [numpy/](numpy/) | NumPy — arrays, broadcasting, vectorised operations |
 | [python/](python/) | Python language, tooling, and type system |
 | [git/](git/) | Git workflows, commands, and CI/CD |
 | [tools/](tools/) | Language-agnostic tools and notation |
@@ -11,6 +12,8 @@ Learning notes and references across software engineering, ML, and AI topics.
 ## Structure
 
 notes/\
+├── numpy/\
+│   └── [broadcasting.md](numpy/broadcasting.md)\
 ├── git/\
 │   ├── [git.md](git/git.md)\
 │   ├── [github-actions.md](git/github-actions.md)\
