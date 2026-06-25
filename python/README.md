@@ -17,6 +17,7 @@ python/\
 │   │   ├── [comprehensions.md](language/functional/comprehensions.md)\
 │   │   ├── [functools.md](language/functional/functools.md)\
 │   │   ├── [iterators-generators.md](language/functional/iterators-generators.md)\
+│   │   ├── [lazy-evaluation.md](language/functional/lazy-evaluation.md)\
 │   │   ├── [operator.md](language/functional/operator.md)\
 │   │   ├── [string-formatting.md](language/functional/string-formatting.md)\
 │   │   └── [unpacking.md](language/functional/unpacking.md)\
