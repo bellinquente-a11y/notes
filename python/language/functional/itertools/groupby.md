@@ -52,7 +52,7 @@ records = [
     {"name": "carol", "dept": "eng"},
 ]
 
-key = itemgetter("dept")  # or lambda r: r["dept"] — see operator.md
+key = itemgetter("dept")  # or lambda r: r["dept"] — see ../operator.md
 for dept, group in groupby(sorted(records, key=key), key=key):
     print(dept, [r["name"] for r in group])
 # eng ['alice', 'carol']
@@ -67,4 +67,4 @@ for dept, group in groupby(sorted(records, key=key), key=key):
 | Unsorted data, need counts or aggregations | `collections.Counter` / `defaultdict` |
 | DataFrames | `pandas.DataFrame.groupby` |
 
-See also: [itertools.md](itertools.md) for `chain`, `islice`, `product`, and `combinations`; [iterators-generators.md](iterators-generators.md) for the iterator protocol.
+See also: [core.md](core.md) for `chain`, `islice`, `product`, and `combinations`; [../iterators-generators.md](../iterators-generators.md) for the iterator protocol.

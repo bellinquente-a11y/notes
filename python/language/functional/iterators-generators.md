@@ -37,6 +37,6 @@ Avoid reinventing the wheel — use `itertools`.
 - **Mapping**: `accumulate`, `enumerate`, `map`
 - **Merging**: `chain`, `chain.from_iterable`, `product`, `zip`, `zip_longest`
 - **Multiple outputs**: `combinations`, `count`, `pairwise`, `cycle`, `permutations`, `repeat`
-- **Rearranging**: `[groupby](itertools-groupby.md)`, `reversed`, `tee`
+- **Rearranging**: `[groupby](itertools/groupby.md)`, `reversed`, `tee`
 - **Reducing**: `all`, `any`, `max`, `min`, `reduce`, `sum`
 

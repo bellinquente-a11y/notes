@@ -2,7 +2,7 @@
 
 All four operate on *iterators* — they are lazy and never materialise the full sequence in memory. This matters when your input is a tick stream, a 5000-ticker universe, or a cross of many scenario axes.
 
-See [itertools-groupby.md](itertools-groupby.md) for `groupby`.
+See [groupby.md](groupby.md) for `groupby` and [accumulate.md](accumulate.md) for running totals.
 
 ---
 
@@ -86,10 +86,6 @@ for dr, ds, dv in product(rate_shocks, spread_shocks, vol_shocks):
 # Grid search over model hyperparameters
 for lookback, threshold in product(range(10, 60, 5), [0.01, 0.02, 0.05]):
     backtest(lookback, threshold)
-
-# All (asset, benchmark) pairs for a tracking-error heatmap
-for asset, bmark in product(assets, benchmarks):
-    compute_tracking_error(asset, bmark)
 ```
 
 ---
@@ -114,10 +110,6 @@ for t1, t2 in combinations(tickers, 2):
 # All 3-stock baskets from a universe of 20 — C(20,3) = 1140
 for basket in combinations(universe, 3):
     backtest_basket(basket)
-
-# All pairs of maturities for a term-structure spread
-for d1, d2 in combinations(maturities, 2):
-    fit_spread(d1, d2)
 ```
 
 ---
@@ -163,4 +155,4 @@ top_pairs = list(
 )
 ```
 
-See [iterators-generators.md](iterators-generators.md) for the iterator protocol underlying all of these.
+See [../iterators-generators.md](../iterators-generators.md) for the iterator protocol underlying all of these.

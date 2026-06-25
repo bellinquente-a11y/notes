@@ -10,13 +10,16 @@
 python/\
 ├── language/\
 │   ├── functional/\
+│   │   ├── itertools/\
+│   │   │   ├── [accumulate.md](language/functional/itertools/accumulate.md)\
+│   │   │   ├── [core.md](language/functional/itertools/core.md)\
+│   │   │   └── [groupby.md](language/functional/itertools/groupby.md)\
 │   │   ├── [comprehensions.md](language/functional/comprehensions.md)\
 │   │   ├── [functools.md](language/functional/functools.md)\
 │   │   ├── [iterators-generators.md](language/functional/iterators-generators.md)\
-│   │   ├── [itertools-groupby.md](language/functional/itertools-groupby.md)\
-│   │   ├── [itertools.md](language/functional/itertools.md)\
 │   │   ├── [operator.md](language/functional/operator.md)\
-│   │   └── [string-formatting.md](language/functional/string-formatting.md)\
+│   │   ├── [string-formatting.md](language/functional/string-formatting.md)\
+│   │   └── [unpacking.md](language/functional/unpacking.md)\
 │   ├── objects/\
 │   │   ├── [data-model.md](language/objects/data-model.md)\
 │   │   ├── [exceptions.md](language/objects/exceptions.md)\
