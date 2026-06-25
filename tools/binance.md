@@ -92,7 +92,7 @@ def get_klines(symbol: str, interval: str = "1d", limit: int = 500) -> pd.DataFr
         "taker_buy_vol", "taker_buy_quote_vol", "ignore",
     ]
     df = pd.DataFrame(r.json(), columns=cols)
-    df["open_time"] = pd.to_datetime(df["open_time"], unit="ms", utc=True)
+    df["open_time"] = pd.to_datetime(df["open_time"], unit="ms", utc=True)  # see pandas/datetimes.md
     df.set_index("open_time", inplace=True)
     df.drop(columns=["close_time", "ignore"], inplace=True)
     float_cols = ["open","high","low","close","volume",
