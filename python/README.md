@@ -40,6 +40,7 @@ python/\
 │       ├── [entrypoint.md](language/runtime/entrypoint.md)\
 │       ├── [import-system.md](language/runtime/import-system.md)\
 │       ├── [logging.md](language/runtime/logging.md)\
+│       ├── [scopes.md](language/runtime/scopes.md)\
 │       └── [threading.md](language/runtime/threading.md)\
 └── tooling/\
     ├── [mypy.md](tooling/mypy.md)\
