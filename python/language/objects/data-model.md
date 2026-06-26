@@ -5,7 +5,7 @@
 - The key API of the Python language is the Data Model.
 - It is a class framework in which classes have special methods (dunder methods).
 - The advantage of dunder methods is uniformity and the ability to apply built-in functions to them.
-- Typical examples: `__init__`, `__len__`, `__getitem__`, `__repr__`, `__hash__` and arithmetic operators.
+- Typical examples: `__init__`, `__len__`, [`__getitem__`](subscriptable.md), `__repr__`, `__hash__` and arithmetic operators.
 - Emulating sequences is one of the most common uses.
 
 ## Pythonic Objects

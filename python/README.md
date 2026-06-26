@@ -26,6 +26,10 @@ python/\
 │   │   ├── [exceptions.md](language/objects/exceptions.md)\
 │   │   ├── [hash.md](language/objects/hash.md)\
 │   │   ├── [oop.md](language/objects/oop.md)\
+│   │   ├── [repository-di.md](language/objects/repository-di.md)\
+│   │   ├── [sets.md](language/objects/sets.md)\
+│   │   ├── [subscriptable.md](language/objects/subscriptable.md)\
+│   │   ├── [typing.md](language/objects/typing.md)\
 │   │   └── [warnings.md](language/objects/warnings.md)\
 │   └── runtime/\
 │       ├── [asyncio.md](language/runtime/asyncio.md)\
