@@ -42,12 +42,12 @@ notes/
 └── README.md
 ```
 
-Each subdirectory has a `README.md` table with three columns: **file**, **type** (`note` or `ref`), **one-line description**.
+Each subdirectory has a `README.md` with a table of three columns: **file**, **type** (`note` or `ref`), **one-line description**. Do not include a `## Structure` section — the MkDocs sidebar handles navigation.
 
 - `note` — narrative explanation of a concept (the "why" and "how")
 - `ref` — command/syntax quick-reference meant for lookup
 
-When adding a new file, add a row to the subdirectory `README.md`. When adding a new directory under `docs/`, add a row to `docs/index.md` and update the root `README.md` structure tree.
+When adding a new file, add a row to the subdirectory `README.md`. When adding a new directory under `docs/`, add a row to `docs/index.md`.
 
 ## Cross-linking
 
