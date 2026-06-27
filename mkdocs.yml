@@ -1,0 +1,32 @@
+site_name: Notes
+site_url: https://bellinquente-a11y.github.io/notes
+docs_dir: .
+exclude_docs: |
+  CLAUDE.md
+  _explain.md
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - content.code.copy
+    - navigation.sections
+    - navigation.indexes
+    - navigation.tabs
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search
