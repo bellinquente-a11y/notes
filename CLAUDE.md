@@ -23,13 +23,23 @@ During the EXPLAIN workflow, write new files, edit existing files, and save all 
 
 ## File organisation
 
+All notes live under `docs/`. The repo root contains only tooling files (`mkdocs.yml`, `CLAUDE.md`, `README.md`, `.gitignore`).
+
 ```
 notes/
-├── python/
-│   ├── language/   — Core Python: data model, iterators, generators, exceptions, stdlib
-│   └── tooling/    — pyenv, poetry, ruff, mypy, pydantic, pytest, testing strategy
-├── git/            — Git workflows, commands, tags, releases, GitHub Actions
-└── tools/          — Language-agnostic tools and notation (Mermaid, etc.)
+├── docs/
+│   ├── data/
+│   │   ├── numpy/    — Broadcasting, dtype system
+│   │   └── pandas/   — Chaining, indexing, datetimes, dtypes
+│   ├── finance/      — Binance, market data APIs
+│   ├── git/          — Git workflows, commands, tags, releases, GitHub Actions
+│   ├── python/
+│   │   ├── language/ — Core Python: data model, iterators, generators, exceptions, stdlib
+│   │   └── tooling/  — pyenv, poetry, ruff, mypy, pydantic, pytest, testing strategy
+│   └── tools/        — Language-agnostic tools and notation (Mermaid, etc.)
+├── mkdocs.yml
+├── CLAUDE.md
+└── README.md
 ```
 
 Each subdirectory has a `README.md` table with three columns: **file**, **type** (`note` or `ref`), **one-line description**.
@@ -37,7 +47,7 @@ Each subdirectory has a `README.md` table with three columns: **file**, **type**
 - `note` — narrative explanation of a concept (the "why" and "how")
 - `ref` — command/syntax quick-reference meant for lookup
 
-When adding a new file, add a row to the subdirectory `README.md`. When adding a new directory, add a row to the root `README.md`.
+When adding a new file, add a row to the subdirectory `README.md`. When adding a new directory under `docs/`, add a row to `docs/index.md` and update the root `README.md` structure tree.
 
 ## Cross-linking
 
