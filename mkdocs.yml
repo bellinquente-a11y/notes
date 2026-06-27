@@ -1,5 +1,5 @@
 site_name: Notes
-site_url: https://bellinquente-a11y.github.io/notes
+site_url: https://notes.pages.dev  # update once Cloudflare assigns a URL
 docs_dir: docs
 
 theme:
