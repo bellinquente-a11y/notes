@@ -12,17 +12,3 @@
 | [logging.md](logging.md) | note | stdlib logging: pipeline, levels, dictConfig, best practices, structured logging |
 | [scopes.md](scopes.md) | note | LEGB rule, local/global/nonlocal, closures, late-binding gotcha, class scope |
 | [threading.md](threading.md) | note | `ThreadPoolExecutor`, `Future` mechanics, `as_completed`, exception handling, shared state |
-
-## Structure
-
-runtime/\
-├── [asyncio.md](asyncio.md)\
-├── [cli.md](cli.md)\
-├── [concurrency.md](concurrency.md)\
-├── [context-managers.md](context-managers.md)\
-├── [datetime.md](datetime.md)\
-├── [entrypoint.md](entrypoint.md)\
-├── [import-system.md](import-system.md)\
-├── [logging.md](logging.md)\
-├── [scopes.md](scopes.md)\
-└── [threading.md](threading.md)

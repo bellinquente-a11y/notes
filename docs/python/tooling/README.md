@@ -11,19 +11,3 @@
 | [ruff.md](ruff.md) | ref | Linter and formatter replacing flake8/black/isort |
 | [terminal-tables.md](terminal-tables.md) | note | Print tables in the terminal: f-strings, tabulate, rich |
 | [testing/](testing/) | — | pytest, testing strategy, testing patterns |
-
-## Structure
-
-tooling/\
-├── testing/\
-│   ├── [pytest.md](testing/pytest.md)\
-│   ├── [testing-patterns.md](testing/testing-patterns.md)\
-│   └── [testing-strategy.md](testing/testing-strategy.md)\
-├── [aiohttp.md](aiohttp.md)\
-├── [mypy.md](mypy.md)\
-├── [poetry.md](poetry.md)\
-├── [pydantic.md](pydantic.md)\
-├── [pydantic-settings.md](pydantic-settings.md)\
-├── [pyenv.md](pyenv.md)\
-├── [ruff.md](ruff.md)\
-└── [terminal-tables.md](terminal-tables.md)
