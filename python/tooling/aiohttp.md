@@ -164,4 +164,4 @@ async for line in resp.content:
 ## See also
 
 - [asyncio.md](../language/runtime/asyncio.md) — event loop, gather, create_task
-- [market-data-apis.md](../../tools/market-data-apis.md) — free public endpoints to call with aiohttp
+- [market-data-apis.md](../../finance/market-data-apis.md) — free public endpoints to call with aiohttp

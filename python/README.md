@@ -43,12 +43,15 @@ python/\
 │       ├── [scopes.md](language/runtime/scopes.md)\
 │       └── [threading.md](language/runtime/threading.md)\
 └── tooling/\
+    ├── testing/\
+    │   ├── [pytest.md](tooling/testing/pytest.md)\
+    │   ├── [testing-patterns.md](tooling/testing/testing-patterns.md)\
+    │   └── [testing-strategy.md](tooling/testing/testing-strategy.md)\
+    ├── [aiohttp.md](tooling/aiohttp.md)\
     ├── [mypy.md](tooling/mypy.md)\
     ├── [poetry.md](tooling/poetry.md)\
     ├── [pydantic.md](tooling/pydantic.md)\
+    ├── [pydantic-settings.md](tooling/pydantic-settings.md)\
     ├── [pyenv.md](tooling/pyenv.md)\
-    ├── [pytest.md](tooling/pytest.md)\
     ├── [ruff.md](tooling/ruff.md)\
-    ├── [terminal-tables.md](tooling/terminal-tables.md)\
-    ├── [testing-patterns.md](tooling/testing-patterns.md)\
-    └── [testing-strategy.md](tooling/testing-strategy.md)
+    └── [terminal-tables.md](tooling/terminal-tables.md)

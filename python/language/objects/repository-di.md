@@ -115,4 +115,4 @@ This factory is the only place that knows both `PostgresTradeRepo` and `TradingS
 ## Related
 
 - [oop.md](oop.md) — Protocol vs ABC detail
-- [testing-patterns.md](../../tooling/testing-patterns.md) — seams, `tmp_path`, in-memory DB strategies
+- [testing-patterns.md](../../tooling/testing/testing-patterns.md) — seams, `tmp_path`, in-memory DB strategies
