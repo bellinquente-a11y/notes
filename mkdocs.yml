@@ -21,8 +21,12 @@ theme:
     - navigation.sections
     - navigation.indexes
     - navigation.tabs
+    - navigation.path
     - search.suggest
     - search.highlight
+
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
   - pymdownx.highlight:
