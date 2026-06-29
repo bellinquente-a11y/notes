@@ -127,6 +127,9 @@ for basket in combinations(universe, 3):
 
 ## Check size before iterating
 
+!!! warning "Combinatorial explosion: always compute size before enumerating"
+    `combinations(universe, 5)` over 500 assets produces 255 billion pairs. Even with lazy iteration, processing each one takes time — this will not finish. Use `math.comb(n, r)` to check the count before writing the loop, and switch to random sampling for large spaces.
+
 ```python
 from math import comb
 

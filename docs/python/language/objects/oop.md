@@ -86,6 +86,9 @@ class TradeRepo(Protocol):
 assert isinstance(PostgresTradeRepo(conn), TradeRepo)  # usable in pytest
 ```
 
+!!! warning "isinstance with @runtime_checkable only checks attribute names, not signatures"
+    A class with `def get(self, wrong_arg_name): return None` passes an `isinstance` check against a Protocol that requires `get(self, trade_id: int)`. The names match; the signatures don't. Use the assignability trick or `assert_type` (mypy) to catch signature mismatches — `isinstance` alone is insufficient.
+
 **Critical limitation**: `isinstance` only checks that the attribute *names* exist — not signatures. A class with `def get(self, x): return "nonsense"` passes.
 
 | Technique | Catches missing methods | Catches wrong signatures | Needs mypy |

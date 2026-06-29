@@ -66,6 +66,9 @@ Returns an array of arrays. Each inner array has **12 elements** (prices/volumes
 | 10 | `taker_buy_quote_asset_volume` | str | Quote value of taker buys |
 | 11 | `ignore` | str | Always `"0"` — discard |
 
+!!! tip "Buy ratio as a signal for buying aggression"
+    `taker_buy_base_asset_volume / volume` (columns 9 ÷ 5) gives the fraction of volume initiated by buyers. Values consistently above 0.5 indicate more aggressive buying; below 0.5 indicates selling pressure. This is a commonly used proxy in crypto market microstructure analysis.
+
 **Key distinctions:**
 
 - `volume` (5) = how many BTC changed hands. `quote_asset_volume` (7) = total USDT value — use this for cross-market comparisons.

@@ -76,6 +76,9 @@ finlib/
 3. Updates `poetry.lock` with exact pinned versions for all packages
 4. Installs into the virtual environment
 
+!!! note "Two files, two jobs: pyproject.toml is the intention; poetry.lock is the truth"
+    `pyproject.toml` records human-readable constraints (`^2.31.0`). `poetry.lock` records the exact resolved version of every dependency and transitive dependency. Commit both: `pyproject.toml` so humans can read the constraints; `poetry.lock` so `poetry install` on another machine produces an identical environment. Never hand-edit `poetry.lock`.
+
 **The two files:**
 
 ```

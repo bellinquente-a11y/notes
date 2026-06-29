@@ -78,6 +78,9 @@ Identical to list comprehensions but deduplicate automatically. Prefer over `set
 
 List comprehensions are faster than `for` + `.append()` (the append method is resolved once, not per iteration), but readability is the primary reason to prefer them.
 
+!!! tip "Use a generator expression when you only need one pass"
+    `[x**2 for x in range(1_000_000)]` allocates ~8 MB immediately. `sum(x**2 for x in range(1_000_000))` uses O(1) memory — the generator feeds values one at a time into `sum`, which never builds the list. Use `[...]` only when you need the list itself (indexing, multiple passes, `len`).
+
 For single-pass consumption, use a **generator expression** instead to avoid materialising the full list:
 ```python
 total = sum(x**2 for x in range(1_000_000))

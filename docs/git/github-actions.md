@@ -134,6 +134,9 @@ Share files between jobs or download after a run (kept 90 days):
 
 ## Useful patterns
 
+!!! note "Workflow files are code — they only change on the next trigger"
+    A workflow YAML edit takes effect the next time the triggering event fires. There's no "reload" — if you're debugging a failing push trigger, you must push again after each fix. This also means accidental changes to CI are immediately versioned and revertable via `git revert`.
+
 - **Skip a step conditionally**: `if: github.ref == 'refs/heads/main'`
 - **Don't fail on step error**: `continue-on-error: true`
 - **Deployment gate**: set `environment: production` on a job → requires manual approval in GitHub UI

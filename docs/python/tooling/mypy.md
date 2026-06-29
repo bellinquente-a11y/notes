@@ -60,5 +60,8 @@ strict = true
 
 ## Mental model
 
+!!! note "mypy checks type consistency, not correctness — it's a design aid, not a proof"
+    mypy can verify that a `float` is passed where a `float` is expected, but it cannot verify that the float is a valid price, that a calculation is numerically correct, or that business logic is sound. Think of it as enforcing the *contracts* between functions. Pair it with tests (which check behaviour) — they're complementary, not redundant.
+
 - Mypy is best viewed as a design aid.
 - It makes code contracts explicit and helps reveal unclear assumptions in your program.

@@ -82,6 +82,9 @@ class Stack(Generic[T]):
 
 ## Common errors at a glance
 
+!!! tip "'NoneType' object is not subscriptable — the variable you're indexing is None"
+    This is the most frequent subscript error in practice. Common causes: a function that forgets `return`, `dict.get()` returning `None` for a missing key, or an optional value that wasn't checked. Fix the source — add the missing `return`, use a default in `.get()`, or guard with `if x is not None`.
+
 | Error | Cause | Fix |
 |---|---|---|
 | `'NoneType' object is not subscriptable` | variable is `None` (missed `return`, `.get()` returned `None`) | check for `None` first |

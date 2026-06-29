@@ -52,4 +52,7 @@ __all__ = ['Trade', 'Portfolio']
 - Use re-exports in the top-level `__init__.py` to define your public API.
 - Don't import heavy dependencies at the top of `__init__.py` — it runs on every `import finlib`.
 
+!!! warning "Imports in __init__.py run on every import of the package"
+    `from finlib.models import Trade` triggers `finlib/models/__init__.py` to execute. Any slow import (numpy, pandas, a DB driver) placed there adds latency to every module that imports from your package. Keep `__init__.py` thin — only re-export symbols; let submodules do heavy lifting lazily.
+
 > Python 3.3+ also supports **namespace packages** (directories without `__init__.py`) for splitting a package across multiple directories. This is a niche feature; for normal projects always use `__init__.py`.

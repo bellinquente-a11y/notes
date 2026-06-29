@@ -30,6 +30,9 @@ for letter, group in groupby(words, key=lambda w: w[0]):
 # b ['banana', 'bee']
 ```
 
+!!! warning "Two rules that must both hold: sort first, consume each group immediately"
+    `groupby` only groups **adjacent** equal elements — unsorted input produces multiple groups for the same key. And the inner `group` iterator shares state with the outer loop: advancing past a key exhausts the previous group. Always sort by the key first, and always materialise each group with `list(g)` before the next iteration.
+
 ## Critical gotcha: consume each group before advancing
 
 The `group` iterator shares state with the outer iterator. Advancing to the next key exhausts the current group.

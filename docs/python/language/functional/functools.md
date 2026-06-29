@@ -58,6 +58,9 @@ process((1.0, 2.0))    # ✓
 
 Use `tuple` instead of `list`, `frozenset` instead of `set`, `frozen=True` dataclasses instead of mutable ones.
 
+!!! warning "Only cache pure functions — impure caches silently return stale results"
+    `@lru_cache` never re-calls the function for a seen input. If the result depends on a DB, file, clock, or any external state, the first result is frozen forever. There's no automatic invalidation; you'd have to call `.cache_clear()` manually. See the decision guide below.
+
 ### The determinism constraint
 
 The cache never re-calls the function for a previously seen input. If the output can change for the same input — reads from a DB, file, clock, or RNG — the cached result silently goes stale.
@@ -88,6 +91,9 @@ def fib(n: int) -> int:
 fib.cache_info()   # CacheInfo(hits=34, misses=10, maxsize=128, currsize=10)
 fib.cache_clear()  # wipe entire cache (no per-key invalidation in stdlib)
 ```
+
+!!! warning "@lru_cache on instance methods leaks memory"
+    Because `self` is part of the cache key, the module-level cache dict holds a strong reference to every instance ever passed to the method. The instance can never be garbage collected. Use `@functools.cached_property` instead for computed attributes with no arguments — it stores the result on the instance itself and is collected with it.
 
 ### Pitfall: caching instance methods
 

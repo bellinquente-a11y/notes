@@ -12,6 +12,9 @@ lazy  = (x * 2 for x in range(1_000_000))   # 104 bytes — a state machine
 
 `range`, `map`, `filter`, `zip`, `enumerate`, `reversed`, `dict.keys/values/items`, generator expressions, and all of `itertools` are lazy. List/dict/set comprehensions are eager.
 
+!!! warning "A generator can only be iterated once — after that it's exhausted"
+    Once consumed, a generator yields nothing. Calling `list(gen)` twice returns an empty list the second time. If you need multiple passes (sorting, two separate loops), materialise to a list first with `data = list(gen)`.
+
 ## Forcing evaluation ("sinks")
 
 A lazy iterator does nothing until consumed:
@@ -67,6 +70,9 @@ result = list(islice(
 ```
 
 Each stage hands one element at a time to the next. Memory = sum of stage state, not data size.
+
+!!! tip "sum() and max() are the best sinks — they stream without allocating"
+    `list(gen)` and `sum(gen)` both consume the generator, but `list` allocates O(n) memory first. `sum(gen)` and `max(gen)` maintain O(1) state (a running total or current max), streaming through without ever building the intermediate collection. Prefer them when you only need a scalar result.
 
 ## When eager wins
 

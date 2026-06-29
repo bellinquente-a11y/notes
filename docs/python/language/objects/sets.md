@@ -2,6 +2,9 @@
 
 An unordered collection of **unique, hashable** elements backed by a hash table. O(1) membership testing; no duplicates.
 
+!!! warning "{} creates a dict, not a set — use set() for an empty set"
+    This is the most common set gotcha. `{}` has been a dict literal since Python 1; set literals require at least one element: `{1}`. For an empty set, always write `set()`.
+
 ## Creation
 
 ```python

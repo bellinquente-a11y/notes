@@ -101,6 +101,9 @@ logging.getLogger().addHandler(handler)
 
 ## Testing
 
+!!! tip "capture_logs() makes log assertions trivially easy — no patching needed"
+    `capture_logs()` is a context manager that temporarily replaces the processor chain and collects events as plain dicts. You can assert on event names, log levels, and structured fields directly. Compare this to stdlib `logging` tests, which require `logging.handlers.MemoryHandler` or `caplog` fixtures and string parsing.
+
 `capture_logs()` replaces the processor chain temporarily and returns all events as a list of dicts:
 
 ```python

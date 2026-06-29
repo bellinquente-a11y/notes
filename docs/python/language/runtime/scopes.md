@@ -85,6 +85,9 @@ double = make_multiplier(2)
 double(5)  # → 10
 ```
 
+!!! warning "Closures capture the variable, not its value — the late-binding gotcha"
+    All three lambdas in `[lambda: i for i in range(3)]` share the same `i` variable. By the time any of them is called, the loop has finished and `i == 2`. The fix is the default-argument trick: `lambda i=i: i` captures the *current value* at definition time because default arguments are evaluated once when the `lambda` statement executes.
+
 ### Late-binding gotcha
 
 Closures capture the variable, not its value at capture time:
@@ -100,6 +103,9 @@ Fix: bind the value as a default argument (evaluated at definition time):
 funcs = [lambda i=i: i for i in range(3)]
 funcs[0]()  # → 0
 ```
+
+!!! note "Class scope is not part of the LEGB chain for methods"
+    A bare name inside a method skips the class body entirely, jumping straight from Local to Enclosing (outer functions) to Global. Class attributes must always be accessed as `self.x` or `ClassName.x` — never as a bare `x` inside a method.
 
 ## Class scope is not enclosing scope
 

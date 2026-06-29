@@ -29,6 +29,9 @@ git tag -d v1.0.0                       # delete locally
 git push origin --delete v1.0.0         # delete on remote
 ```
 
+!!! warning "Tags are not pushed by git push — you must push them explicitly"
+    `git push` only sends commits and branch refs. Tags are ignored unless you add `--tags` (all tags) or name one explicitly: `git push origin v1.0.0`. Forgetting this is a common cause of "tag exists locally but not on GitHub" confusion.
+
 > Tags are **not** pushed with `git push` — you must push them explicitly.
 
 ### Semantic versioning

@@ -90,6 +90,9 @@ A Unix timestamp is seconds since 1970-01-01 00:00:00 UTC. It has no timezone �
 
 ### Seconds → datetime
 
+!!! warning "Always pass tz= to fromtimestamp — without it you get naive local time"
+    `datetime.fromtimestamp(ts)` uses the local machine's timezone, producing a naive datetime. In CI, servers, or Docker containers, "local" may be UTC; on a developer's machine it may not be. Always pass `tz=timezone.utc` explicitly. `datetime.utcfromtimestamp()` is deprecated in 3.12 for the same reason — it also returns naive UTC.
+
 ```python
 from datetime import datetime, timezone
 
@@ -112,7 +115,8 @@ ts_ms = 1719000000000          # e.g. from Binance, JavaScript Date.now()
 dt = datetime.fromtimestamp(ts_ms / 1000, tz=timezone.utc)
 ```
 
-Quick sanity check: if the timestamp is > ~2 × 10¹⁰ it is almost certainly milliseconds, not seconds.
+!!! tip "Sanity check: if the timestamp is > ~2 × 10¹⁰ it's milliseconds, not seconds"
+    A Unix second timestamp for 2024 is ~1.7 × 10⁹ (10 digits). A millisecond timestamp is ~1.7 × 10¹² (13 digits). Passing milliseconds to `fromtimestamp()` without dividing by 1000 silently produces a date in the year 56,000. This is the most common financial data parsing bug.
 
 ### datetime → integer timestamp
 

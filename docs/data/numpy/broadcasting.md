@@ -60,5 +60,8 @@ Python loops box every number and dispatch through the interpreter on each itera
 
 ## Gotchas
 
+!!! warning "keepdims is almost always required after a reduction"
+    `A.mean(axis=1)` returns shape `(M,)` — this aligns on the **column** axis when broadcast back, not the row axis. Use `keepdims=True` to get `(M, 1)`, which broadcasts correctly along columns.
+
 - `keepdims=True` is essential when reducing and then broadcasting back: `A.mean(axis=1)` gives shape `(M,)` which aligns on the wrong axis; `keepdims=True` gives `(M, 1)` which broadcasts correctly.
 - Two arrays that *look* compatible may silently produce the wrong shape — always check `.shape` on intermediate results when debugging.

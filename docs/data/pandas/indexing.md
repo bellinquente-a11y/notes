@@ -20,7 +20,8 @@ Step 1 (`df[df['age'] > 18]`) returns a new object (view or copy — not guarant
 df.loc[df['age'] > 18, 'name'] = 'adult'   # correct
 ```
 
-**Rule: reading can chain; writing must use `.loc` on the original.**
+!!! warning "Reading can chain; writing must use .loc on the original"
+    `df[mask]['col'] = v` is two separate operations. The first may return a copy, and the write lands on that copy — `df` is silently unchanged. `.loc[mask, 'col'] = v` is one operation and always modifies `df` directly. This applies under both old pandas and Copy-on-Write semantics.
 
 ### Explicit `.copy()` for an independent subset
 

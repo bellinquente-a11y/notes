@@ -97,6 +97,9 @@ f(*[1, 2], **{"c": 3, "d": 4})   # f(1, 2, c=3, d=4)
 
 ---
 
+!!! note "* and ** use different protocols — a class can support one but not the other"
+    `*x` requires `__iter__` (iteration). `**x` requires `keys()` + `__getitem__` (mapping). A class with only `keys()` and `__getitem__` works with `**` in function calls but raises `TypeError` with `*`. This is why dicts support both, but a custom mapping that lacks `__iter__` only works with `**`.
+
 ## Protocol summary
 
 | Operator | Requires | Does NOT require |

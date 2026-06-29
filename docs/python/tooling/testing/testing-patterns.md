@@ -252,6 +252,9 @@ with patch("mymodule.httpx.get", side_effect=[httpx.TimeoutException(""), mock_r
 
 ### Patch where it's used, not where it's defined
 
+!!! warning "Patch where the name is *used*, not where it's *defined*"
+    `from httpx import get` binds `get` in `mymodule`'s namespace. Patching `httpx.get` replaces the original, but `mymodule.get` still points to the old function. The rule: patch the dotted path of the name as it appears in the module under test, e.g. `"mymodule.get"`. If it uses `import httpx`, patch `"mymodule.httpx.get"`.
+
 ```python
 # mymodule.py uses:  from httpx import get
 with patch("httpx.get", ...):      # WRONG — has no effect in mymodule

@@ -24,6 +24,9 @@
 
 ## `@dataclass`
 
+!!! tip "Use frozen=True to get hashability and immutability for free"
+    `@dataclass` alone generates `__eq__` but sets `__hash__ = None`, making instances unhashable (can't be used in sets or as dict keys). `@dataclass(frozen=True)` also generates `__hash__` and prevents attribute mutation — the right default for value objects like `Trade`, `Point`, or `Price`.
+
 - `@dataclass` is a decorator from the `dataclasses` module.
 - It automatically generates boilerplate methods like `__init__` and `__repr__`.
 - Mainly used for classes that store data.

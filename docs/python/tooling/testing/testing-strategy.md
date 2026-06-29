@@ -45,6 +45,9 @@ One test, one behaviour. If a test has 10 assertions, split it into 10 tests.
 | **Mock** | Stub that records calls | Assert a side effect was triggered |
 | **Fake** | Lightweight real implementation (e.g. in-memory dict) | When a stub is too thin |
 
+!!! tip "Mock at your own boundary — don't mock what you don't own"
+    Mocking third-party library internals (e.g. `httpx.Response` internals) lets the mock drift from the real API — the library updates and your tests keep passing while your code breaks. Instead, mock at the boundary you own: your function that calls the library, or your repository interface. See the [testing-patterns.md](testing-patterns.md) decision guide.
+
 Don't mock what you don't own — mocking third-party library internals lets the mock drift from reality. Mock at your own boundary.
 
 ```python

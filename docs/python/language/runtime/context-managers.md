@@ -2,6 +2,9 @@
 
 Used to do something temporarily, then reliably undo it. Big advantage: hard to leave the environment in a bad state.
 
+!!! note "The key guarantee: cleanup runs even if an exception is raised"
+    `__exit__` (or the `finally` block in `@contextmanager`) is called regardless of whether the `with` body raised. This makes context managers the correct pattern for any resource that needs paired setup/teardown — files, locks, DB connections, temporary state changes — where a bare `try/finally` would work but is more verbose and easier to get wrong.
+
 ```python
 with manager() as x:
     do_work(x)

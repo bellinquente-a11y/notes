@@ -79,6 +79,9 @@ df.query('status == "active"')
 df.query('date > @cutoff')      # @ = Python variable
 ```
 
+!!! tip "assign() lambdas see columns added earlier in the same call"
+    Within one `.assign()` call, `lambda d: ...` receives the DataFrame as it exists at that point — including columns defined by earlier keyword arguments in the same call. This lets you build derived columns in sequence without chaining multiple `.assign()` calls.
+
 ### 2. Add / transform columns — `.assign()`
 
 See the section above. Key: lambdas see columns added earlier in the same call.

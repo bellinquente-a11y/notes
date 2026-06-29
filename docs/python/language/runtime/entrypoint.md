@@ -34,6 +34,9 @@ This is how `python -m pytest`, `python -m http.server`, etc. work.
 
 ## Async `main`: what changes
 
+!!! warning "Calling async def main() without asyncio.run() silently does nothing"
+    `main()` returns a coroutine object. Without `asyncio.run()`, the object is created and immediately discarded — the body never executes. Python emits a `RuntimeWarning: coroutine 'main' was never awaited` but does not raise an exception. The program appears to finish successfully.
+
 Calling `async def main()` returns an inert **coroutine object** — nothing runs:
 
 ```python

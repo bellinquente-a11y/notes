@@ -218,6 +218,9 @@ app.dependency_overrides[get_settings] = lambda: Settings(api_key="test")
 
 ## Gotchas
 
+!!! warning "python-dotenv not installed → env_file is silently ignored"
+    If `python-dotenv` is not in the environment, `model_config = SettingsConfigDict(env_file=".env")` does nothing — no error, no warning. Fields that should come from `.env` get their defaults or raise `ValidationError` for required fields. Add `python-dotenv` alongside `pydantic-settings` and pin it in your dependencies.
+
 - `python-dotenv` not installed → `env_file` silently ignored
 - Relative `Path` defaults resolve from the process working directory, not the project root
 - `SecretStr` requires `.get_secret_value()` to access the real string

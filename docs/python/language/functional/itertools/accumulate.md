@@ -60,6 +60,9 @@ drawdowns = [(p - pk) / pk for p, pk in zip(prices, peaks)]
 
 ## `accumulate` vs `reduce`
 
+!!! note "accumulate keeps every intermediate value; reduce collapses to one"
+    Use `accumulate` when the path matters (NAV series, drawdown history, running P&L). Use `reduce` when only the final result matters (total, product of all). `accumulate` is lazy; `reduce` consumes everything before returning.
+
 | | `accumulate` | `functools.reduce` |
 |---|---|---|
 | Returns | iterator of all intermediate values | single final value |

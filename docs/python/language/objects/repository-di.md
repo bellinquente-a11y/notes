@@ -83,6 +83,9 @@ class InMemoryTradeRepo:
         return [t for t in self._db.values() if t.status == "OPEN"]
 ```
 
+!!! tip "Prefer a fake over a mock for repositories"
+    A fake (like `InMemoryTradeRepo`) actually implements the behaviour correctly — `list_open()` really filters by status. A mock just records calls and returns canned values. Fakes catch logic bugs in callers; mocks only catch that the right method was called with the right args. Fakes also survive refactors; mocks break when implementation details change.
+
 This is a **fake**, not a mock — it actually behaves correctly. Prefer fakes over mocks for repositories; mocks tie tests to implementation details.
 
 ## Tests — no database needed

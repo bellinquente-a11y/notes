@@ -68,6 +68,9 @@ Format specs work identically to f-strings: `"{:.2f}".format(3.14)`.
 
 ## %-formatting — legacy
 
+!!! tip "Use %-style in logging calls — the string is only built if the message is emitted"
+    `log.debug(f"parsed {n} records")` always builds the string, even if DEBUG is disabled. `log.debug("parsed %d records", n)` skips string construction entirely when the level is filtered out. In hot paths or tight loops, this difference matters.
+
 Avoid in new code. Still conventional in `logging` because formatting is deferred until the message is actually emitted:
 
 ```python

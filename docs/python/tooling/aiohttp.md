@@ -6,6 +6,9 @@ Async HTTP client (and server) library for [asyncio](../language/runtime/asyncio
 
 ## ClientSession — the core abstraction
 
+!!! warning "Create one ClientSession per application, not one per request"
+    Each `ClientSession()` creates a new TCP connection pool. Creating and destroying a session per request throws away those connections, adding TLS handshake overhead on every call and defeating HTTP keep-alive. Create one session at startup (or in the top-level `async with` block) and share it across all requests.
+
 Manages a connection pool, cookie jar, and request defaults. **Create one session per application, not one per request.**
 
 ```python

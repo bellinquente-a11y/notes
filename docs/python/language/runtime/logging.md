@@ -91,6 +91,9 @@ logging.config.dictConfig({
 
 ## Library rule
 
+!!! warning "Libraries must never call basicConfig or add handlers"
+    If a library calls `basicConfig`, it silently configures the root logger for every application that imports it — hijacking the application's logging setup. Libraries should only add a `NullHandler` to their own logger. Configuration belongs exclusively to the application entry point.
+
 Libraries **never** call `basicConfig` or add handlers. Add only a `NullHandler` to prevent "No handler found" warnings:
 
 ```python

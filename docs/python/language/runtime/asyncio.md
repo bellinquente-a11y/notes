@@ -2,6 +2,9 @@
 
 See [concurrency.md](concurrency.md) for the comparison with threads and the decision guide.
 
+!!! note "async def defines a factory, not a running task — calling it does nothing"
+    `async def fetch(url)` is a function that *returns* a coroutine object. The body doesn't run until something drives it with `await` or schedules it as a Task. This surprises people used to regular functions, where calling = executing.
+
 ## async def: coroutine function vs coroutine object
 
 `async def` defines a **coroutine function**. Calling it returns an inert **coroutine object** — the body does not run:
@@ -93,6 +96,9 @@ Use `create_task()` to overlap sequential work with background tasks. Use `gathe
 ## Event loop — mental model
 
 Single-threaded scheduler: runs one coroutine at a time, switches at every `await`. Concurrency comes from cooperative yielding, not parallelism.
+
+!!! warning "Any blocking call freezes the entire event loop"
+    The event loop is single-threaded. A `time.sleep(5)` or `requests.get(url)` inside `async def` blocks the thread for the full duration — no other coroutine runs. Replace with `await asyncio.sleep()` and async-native libraries (`aiohttp`, `asyncpg`, `aiofiles`). For unavoidable sync calls, use `await loop.run_in_executor(None, blocking_fn)` to offload to a thread pool.
 
 Consequence: **any blocking call freezes all other coroutines**:
 

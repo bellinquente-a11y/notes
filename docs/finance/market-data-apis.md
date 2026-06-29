@@ -97,6 +97,9 @@ Coin IDs are slugs (`bitcoin`, `ethereum`). Free tier: ~10–30 req/min — add 
 
 ## Gotchas
 
+!!! warning "Timestamp units differ across every API"
+    Binance returns Unix **milliseconds**, Kraken returns Unix **seconds**, Yahoo Finance returns pandas `Timestamps`, and CoinGecko mixes formats. Always check and convert explicitly — passing milliseconds where seconds are expected silently produces dates in the year 2554.
+
 - **Timestamps**: Binance = Unix ms, Kraken = Unix s, Yahoo = pandas Timestamps — parse carefully.
 - **Intraday data** is usually restricted to recent history on free tiers.
 - **Survivorship bias**: delisted tickers are inconsistent across free APIs.

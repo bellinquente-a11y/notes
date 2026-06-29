@@ -23,6 +23,9 @@ Allowed value types: `str`, `int`, `bool`, `bytes`, `None`, Enum members. Not va
 
 ### Subtype direction
 
+!!! warning "A plain str variable fails assignment to a Literal type"
+    `Literal['BUY']` is a subtype of `str`, but `str` is *not* a subtype of `Literal['BUY', 'SELL']`. This means passing a `str` variable (even one that happens to hold `'BUY'`) to a `Literal`-typed parameter is a mypy error. You must either narrow the variable first (e.g. via a branch or `assert`) or use a `Literal` annotation at the assignment site.
+
 `Literal['BUY']` is a **subtype** of `str` — narrowing is always safe.  
 `str` is **not** a subtype of `Literal['BUY']` — a bare `str` variable could be anything.
 

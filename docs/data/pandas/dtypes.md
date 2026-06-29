@@ -37,6 +37,9 @@ Capital-I types: `Int8`, `Int16`, `Int32`, `Int64`, `UInt8`, …, `BooleanDtype`
 
 ## `pd.NA` vs `np.nan` vs `None`
 
+!!! note "Three missing-value sentinels that don't compare equal"
+    `None`, `np.nan`, and `pd.NA` are distinct objects with different types and boolean semantics. Mixing them in the same column (e.g. after a join) produces silent inconsistencies in `.isna()` and boolean indexing. The modern pandas convention is `pd.NA` for extension types (`Int64`, `StringDtype`, `BooleanDtype`) and `np.nan` only for plain `float64` columns.
+
 | Value | Type | Used in |
 |-------|------|---------|
 | `None` | Python object | `object` columns, Python containers |

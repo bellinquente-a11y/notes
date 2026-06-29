@@ -6,6 +6,9 @@
 
 **The hash contract**: if `a == b` then `hash(a) == hash(b)`. Violating it silently corrupts sets and dicts.
 
+!!! warning "Defining __eq__ alone makes your class unhashable"
+    Python sets `__hash__ = None` automatically when you define `__eq__` without `__hash__`. The reason: two objects that compare equal must have the same hash — if you define equality by value but keep the default identity-based hash, equal objects could end up in different dict buckets, silently corrupting lookups. Python makes this impossible by removing hashability until you explicitly define both.
+
 ## The `__eq__` / `__hash__` coupling
 
 Python enforces the contract by managing `__hash__` automatically:

@@ -47,6 +47,9 @@ except json.JSONDecodeError as e:
 
 ## stacklevel — point at the caller, not your internals
 
+!!! tip "stacklevel=2 is almost always the right value for library code"
+    With the default `stacklevel=1`, the warning points to the line inside your library where `warn()` is called — not useful to the caller. `stacklevel=2` points to whoever called your function, which is where the fix should be made. Increment further if `warn()` is nested inside a helper called by your public API.
+
 `stacklevel=1` (default) points the warning at the `warn()` call — usually wrong. Use `stacklevel=2` to point at whoever called your function:
 
 ```python

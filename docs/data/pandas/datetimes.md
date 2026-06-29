@@ -70,6 +70,9 @@ s.dt.normalize()          # set time to midnight
 
 ## Naive vs aware — the one rule
 
+!!! warning "Naive and aware timestamps cannot be mixed"
+    Comparing or combining a naive `datetime64` with a tz-aware one raises `TypeError` at every layer (Python, NumPy, pandas). The fix is to commit to UTC from the moment data is loaded — pass `utc=True` to `pd.to_datetime()` and never produce naive datetimes for time-series data.
+
 Naive and aware timestamps cannot be compared or combined — this holds at every layer (Python, NumPy, pandas). Pick one convention (UTC throughout is simplest) and apply it consistently from the moment data is loaded.
 
 ## Conversions

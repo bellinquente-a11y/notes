@@ -17,6 +17,13 @@
 
 I/O-bound work only needs concurrency (one core is fine while threads wait). CPU-bound work needs parallelism (multiple cores actually computing).
 
+!!! note "Preemptive vs cooperative concurrency"
+    **Preemptive** (threads): the OS interrupts a thread at any point — between any two bytecode instructions — and switches to another. The thread has no say. Consequence: shared data can be corrupted at any instruction boundary, so you need locks.
+
+    **Cooperative** (asyncio): a coroutine runs uninterrupted until it explicitly yields with `await`. The scheduler only switches at those yield points. Consequence: no preemption surprises — but a coroutine that never `await`s blocks everything.
+
+    The practical difference: in asyncio, you can reason about atomicity between `await` points; in threaded code, no such guarantee exists without explicit locking.
+
 ---
 
 ## The GIL

@@ -2,6 +2,9 @@
 
 The `operator` module provides C-implemented callables for attribute, item, and method access. They replace common lambdas used as sort keys, `map` arguments, and `groupby` key functions.
 
+!!! tip "Picklability is the decisive advantage for multiprocessing"
+    Lambda functions cannot be pickled, which means they can't be passed across process boundaries in `ProcessPoolExecutor` or `multiprocessing.Pool`. `itemgetter`, `attrgetter`, and `methodcaller` are all picklable, making them the only correct choice when using parallel processes.
+
 Three reasons to prefer them over lambdas:
 - **Faster** — no Python stack frame overhead (~20–40% on CPython for large sorts)
 - **Declarative** — state what is accessed, not how

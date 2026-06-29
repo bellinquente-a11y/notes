@@ -136,6 +136,9 @@ echo ${MYAPP_KEY:-"not set"}           # show fallback if unset
 
 ## Security
 
+!!! warning "Env vars are not a security boundary between processes on the same host"
+    Any process running as the same OS user can read another process's environment via `/proc/<pid>/environ` or `ps e`. Env vars are safe for keeping secrets *out of source code* and *out of logs*, but they don't protect against a compromised co-tenant process. For strong isolation, use a secrets manager (Vault, AWS Secrets Manager) that issues scoped credentials per service.
+
 - **Never commit `.env`** with real secrets — always gitignore it
 - **Never hardcode secrets** in source — once in git history, assume compromised
 - Env vars are visible to all processes on the host running as the same user (`ps e`) — not a security boundary between processes on the same machine

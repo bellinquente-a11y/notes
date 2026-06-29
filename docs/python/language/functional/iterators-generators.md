@@ -13,6 +13,9 @@ Iteration is fundamental in data processing, especially to fetch data **lazily**
 
 ## Generators
 
+!!! note "A generator is an iterator you write with yield instead of __next__"
+    A generator function suspends at each `yield`, preserving local state between calls. This lets you express complex iteration logic as sequential code without building a full collection in memory. The compiler converts the function body into a state machine automatically.
+
 - A **generator function** is a function with the `yield` keyword (`return` not needed).
 - It returns a **generator** object, which is an iterator built by the compiler.
 - Alternatively, use a **generator expression**: `(2*s for s in x)`.

@@ -37,6 +37,9 @@ BaseException
     └── RuntimeError    general runtime failure
 ```
 
+!!! warning "Never catch BaseException or bare except — you'll swallow Ctrl+C and sys.exit()"
+    `except Exception` is the correct catch-all boundary. `except BaseException` and bare `except:` also catch `KeyboardInterrupt` and `SystemExit`, which prevents the user from stopping the program and breaks `sys.exit()` calls.
+
 Never catch `BaseException` or bare `except:` — you'll swallow `Ctrl+C` and `sys.exit()`.
 
 ## The four clauses
@@ -55,6 +58,9 @@ finally:
     # ALWAYS runs — use for cleanup
     cleanup()
 ```
+
+!!! tip "Use the else clause to separate the success path from error handling"
+    Code in `else` runs only when no exception was raised — this is subtly different from code after the `try` block, which runs regardless. It prevents accidentally catching exceptions raised by your *result processing* code, and makes the intent ("this is the happy path") explicit.
 
 `else` is underused: it clearly marks "success path" code without accidentally including it inside the error-catching scope.
 
