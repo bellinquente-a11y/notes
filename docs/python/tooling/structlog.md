@@ -20,6 +20,23 @@ log.info("order_placed", order_id=123, user="alice")
 # → {"event": "order_placed", "order_id": 123, "user": "alice", ...}
 ```
 
+## stdlib vs structlog: when to use which
+
+!!! warning "Libraries must always use stdlib"
+    A library that imports structlog forces consumers to install and configure it. Libraries call `logging.getLogger(__name__)` only — configuration belongs to the application.
+
+| Situation | Use |
+|---|---|
+| Script / CLI tool | stdlib — `basicConfig` is one line |
+| Library / reusable package | stdlib — always |
+| Service / API / async app | structlog |
+| Per-request context (`request_id`, `trace_id`) without `extra={}` boilerplate | structlog (`bind_contextvars`) |
+| JSON output for log aggregator | structlog or stdlib + `python-json-logger` |
+| Simple test assertions on log output | structlog (`capture_logs()`) |
+| Need `RotatingFileHandler`, `SMTPHandler`, external `dictConfig` file | stdlib |
+
+They also compose: structlog can sit on top of stdlib (stdlib mode), so third-party libs using `logging.getLogger` route through the same handler as your structlog calls.
+
 ## Log methods
 
 | Method | Level | Notes |
