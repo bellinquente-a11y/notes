@@ -169,6 +169,60 @@ def report_pnl(trades):
 
 Test `compute_pnl` directly; leave `report_pnl` to a single smoke test or skip it entirely.
 
+## MagicMock
+
+`MagicMock` accepts any attribute access or method call without raising `AttributeError` — returning a new child `MagicMock` each time. It's a stand-in for any object without needing to subclass it.
+
+```python
+from unittest.mock import MagicMock
+
+m = MagicMock()
+m.foo()                  # → MagicMock
+m.bar.baz.qux            # → MagicMock (arbitrary depth)
+```
+
+**Set return values:**
+
+```python
+m.get_price.return_value = 42.0
+m.session.get.return_value.json.return_value = {"price": 42.0}   # chained
+```
+
+**Side effects** — overrides `return_value`:
+
+```python
+m.fetch.side_effect = ValueError("bad")             # always raises
+m.fetch.side_effect = [42.0, 43.0, ValueError()]    # sequential — pops per call
+m.fetch.side_effect = lambda s: PRICES[s]           # dynamic
+```
+
+**Call inspection:**
+
+```python
+m.send_alert.assert_called_once()
+m.send_alert.assert_called_once_with("BTC", threshold=1000)
+m.send_alert.assert_not_called()
+m.send_alert.call_count          # int
+m.send_alert.call_args           # most recent: (args, kwargs)
+m.send_alert.call_args_list      # all calls in order
+```
+
+`unittest.mock.ANY` is an equality wildcard that matches anything:
+
+```python
+m.send.assert_called_once_with(to="ops@example.com", body=ANY)
+```
+
+**`spec`** — constrains the mock to a real class's interface; typos raise `AttributeError`:
+
+```python
+m = MagicMock(spec=Notifier)
+m.sned_email(...)   # AttributeError — typo caught immediately
+```
+
+!!! note "MagicMock vs Mock"
+    `MagicMock` implements dunder methods (`__len__`, `__iter__`, `__enter__`, `__exit__`, …) so it works as an iterator, context manager, etc. Use `MagicMock` by default; drop to `Mock` only if you want dunder access to raise `AttributeError`.
+
 ## Testing functions that make network calls
 
 The goal: test what your code does **with** the response, not whether the network is up. Never hit a real endpoint in a unit test.
