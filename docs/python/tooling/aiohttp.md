@@ -156,6 +156,54 @@ async for line in resp.content:
 
 ---
 
+## Retry
+
+!!! warning "Sync retry decorators silently fail on async functions"
+    A sync wrapper calls `func(*args, **kwargs)`, which returns a coroutine object — not a result. The try/except never sees a network error; the coroutine is discarded unrun. The async wrapper must be `async def` and must `await` the call.
+
+```python
+def async_retry(max_attempts=3, base_delay=1.0):
+    def decorator(func):
+        async def wrapper(*args, **kwargs):          # must be async
+            for attempt in range(max_attempts):
+                try:
+                    return await func(*args, **kwargs)   # must await
+                except aiohttp.ClientResponseError as e:
+                    if e.status < 500 or attempt == max_attempts - 1:
+                        raise
+                    await asyncio.sleep(base_delay * 2**attempt)
+                except (aiohttp.ClientError, asyncio.TimeoutError):
+                    if attempt == max_attempts - 1:
+                        raise
+                    await asyncio.sleep(base_delay * 2**attempt)
+        return wrapper
+    return decorator
+```
+
+**Exceptions to catch:**
+
+| Exception | Cause |
+|---|---|
+| `aiohttp.ClientError` | Base class: DNS, connection refused, bad response |
+| `asyncio.TimeoutError` | Timeout exceeded |
+
+Don't retry 4xx — check `e.status >= 500` on `ClientResponseError` first.
+
+**Timeout inside the retried function** — use `asyncio.timeout(n)` (Python 3.11+) to cover the whole block, or `asyncio.wait_for(coro, timeout=n)` for older versions:
+
+```python
+@async_retry(max_attempts=3)
+async def fetch(session, url):
+    async with asyncio.timeout(10):      # Python 3.11+
+        async with session.get(url) as resp:
+            resp.raise_for_status()
+            return await resp.json()
+```
+
+For a batteries-included version, `tenacity.AsyncRetrying` supports the same pattern without hand-rolling the loop.
+
+---
+
 ## Gotchas
 
 - `resp.json()` raises if `Content-Type` is not JSON — use `await resp.json(content_type=None)` to skip the check.
