@@ -272,6 +272,63 @@ If the module uses `import httpx` and calls `httpx.get(...)`, patch `"mymodule.h
 | Sequential call sequence (first fails, second succeeds) | `side_effect=[...]` list |
 | Async network call | `patch` + `AsyncMock` |
 
+## Testing async code
+
+Without pytest-asyncio, `async def test_*` returns a coroutine object that pytest never awaits — the body never runs and the test passes vacuously.
+
+```bash
+poetry add --group dev pytest-asyncio
+```
+
+Enable globally in `pyproject.toml` so every `async def test_*` is automatically run in an event loop:
+
+```toml
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+```
+
+Without `asyncio_mode = "auto"`, decorate each async test individually:
+
+```python
+@pytest.mark.asyncio
+async def test_fetch():
+    result = await fetch(url)
+    assert result["status"] == "ok"
+```
+
+### AsyncMock
+
+!!! warning "MagicMock is not awaitable — use AsyncMock for async functions"
+    `await MagicMock()()` raises `TypeError`. `AsyncMock` makes the mock awaitable and makes its return value also an async mock, so `await mock.json()` works without extra setup.
+
+```python
+from unittest.mock import AsyncMock, MagicMock, patch
+
+async def test_fetch_price():
+    mock_resp = AsyncMock()
+    mock_resp.json.return_value = {"price": 42.0}
+    mock_resp.raise_for_status = MagicMock()   # raise_for_status is sync
+
+    with patch("mymodule.session.get", return_value=mock_resp):
+        assert await mymodule.fetch_price("BTC") == 42.0
+```
+
+If the code uses `async with session.get(...) as resp`, the mock also needs `__aenter__`/`__aexit__`:
+
+```python
+mock_resp.__aenter__ = AsyncMock(return_value=mock_resp)
+mock_resp.__aexit__ = AsyncMock(return_value=False)
+```
+
+Async fixtures work the same way — no extra decorator needed with `asyncio_mode = "auto"`:
+
+```python
+@pytest.fixture
+async def session():
+    async with aiohttp.ClientSession() as s:
+        yield s
+```
+
 ## Related notes
 
 - [`testing-strategy.md`](testing-strategy.md) — philosophy, pyramid, mocks, TDD
