@@ -20,6 +20,31 @@ log.info("order_placed", order_id=123, user="alice")
 # → {"event": "order_placed", "order_id": 123, "user": "alice", ...}
 ```
 
+## Log methods
+
+| Method | Level | Notes |
+|---|---|---|
+| `log.debug(event, **kw)` | DEBUG | |
+| `log.info(event, **kw)` | INFO | |
+| `log.warning(event, **kw)` | WARNING | |
+| `log.error(event, **kw)` | ERROR | |
+| `log.critical(event, **kw)` | CRITICAL | |
+| `log.exception(event, **kw)` | ERROR | captures current exception automatically — use inside `except` blocks |
+
+`log.exception` is shorthand for `log.error(..., exc_info=True)` — no manual `sys.exc_info()` needed.
+
+!!! tip "Level filtering is zero-cost"
+    `make_filtering_bound_logger(logging.INFO)` bakes the minimum level into the class at config time. Calls below the threshold become no-ops — no dict construction, no processor chain traversal.
+
+To suppress an event from inside a processor, raise `structlog.DropEvent`:
+
+```python
+def drop_health_checks(logger, method, event_dict):
+    if event_dict.get("event") == "health_check":
+        raise structlog.DropEvent()
+    return event_dict
+```
+
 ## Bound logger
 
 `log.bind(**kw)` returns a new logger with those keys permanently attached:
