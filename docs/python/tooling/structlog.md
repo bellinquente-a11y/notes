@@ -90,20 +90,86 @@ Each processor is a callable `(logger, method, event_dict) -> event_dict`. They 
 
 ## Configuration
 
-Call once at startup:
+`structlog.configure()` is called **once at the entry point** (never in library code). It sets four things:
+
+```python
+structlog.configure(
+    processors=[...],       # pipeline: list of (logger, method, event_dict) → event_dict
+    wrapper_class=...,      # what get_logger() returns
+    logger_factory=...,     # what performs final I/O
+    context_class=dict,     # storage for bound context
+)
+```
+
+### Native mode (structlog owns I/O)
+
+structlog writes to stdout directly. Use when you don't need to share a pipeline with stdlib libraries.
 
 ```python
 structlog.configure(
     processors=[
-        structlog.contextvars.merge_contextvars,
+        structlog.contextvars.merge_contextvars,   # must be first
         structlog.processors.add_log_level,
         structlog.processors.TimeStamper(fmt="iso"),
-        structlog.dev.ConsoleRenderer(),          # swap for JSONRenderer() in prod
+        structlog.dev.ConsoleRenderer(),            # dev; swap for JSONRenderer() in prod
     ],
     wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
     logger_factory=structlog.PrintLoggerFactory(),
 )
 ```
+
+### stdlib mode (shared pipeline with third-party libraries)
+
+structlog preprocesses; stdlib handlers do the routing (file, SMTP, etc.). Third-party `logging.getLogger()` calls and structlog calls share one renderer.
+
+```python
+# 1. structlog hands off to stdlib
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.stdlib.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,  # must be last
+    ],
+    wrapper_class=structlog.stdlib.BoundLogger,
+    logger_factory=structlog.stdlib.LoggerFactory(),
+)
+
+# 2. stdlib renders what structlog sends
+formatter = structlog.stdlib.ProcessorFormatter(
+    processor=structlog.dev.ConsoleRenderer(),
+    foreign_pre_chain=[                       # handles logs from stdlib loggers (httpx, etc.)
+        structlog.stdlib.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+    ],
+)
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+logging.getLogger().addHandler(handler)
+logging.getLogger().setLevel(logging.INFO)
+```
+
+!!! note "foreign_pre_chain is required in stdlib mode"
+    Records arriving from stdlib loggers (e.g. httpx, sqlalchemy) have no `event` key. `foreign_pre_chain` preprocesses them before the formatter runs. Without it, those records error.
+
+### Dev vs prod processor chain
+
+| Processor | Dev | Prod |
+|---|---|---|
+| `merge_contextvars` | yes | yes |
+| `add_log_level` | yes | yes |
+| `TimeStamper(fmt="iso")` | yes | yes |
+| `ExceptionRenderer()` | yes — pretty console | — |
+| `dict_tracebacks` | — | yes — exceptions as JSON-safe dict |
+| `ConsoleRenderer()` | yes | — |
+| `JSONRenderer()` | — | yes |
+
+### `wrapper_class` and `logger_factory`
+
+| Parameter | Native mode | stdlib mode |
+|---|---|---|
+| `wrapper_class` | `make_filtering_bound_logger(logging.INFO)` — level baked in, zero-cost filtering | `structlog.stdlib.BoundLogger` |
+| `logger_factory` | `PrintLoggerFactory()` | `stdlib.LoggerFactory()` |
 
 ## Async: `contextvars` integration
 
@@ -119,27 +185,7 @@ async def handle_request(request):
     log.info("request_received")
 ```
 
-Requires `merge_contextvars` in the processor chain.
-
-## stdlib integration
-
-Route structlog through stdlib so structlog and `logging.getLogger(...)` share one pipeline:
-
-```python
-structlog.configure(
-    logger_factory=structlog.stdlib.LoggerFactory(),
-    wrapper_class=structlog.stdlib.BoundLogger,
-    processors=[
-        ...
-        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
-    ],
-)
-
-formatter = structlog.stdlib.ProcessorFormatter(processor=structlog.dev.ConsoleRenderer())
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-logging.getLogger().addHandler(handler)
-```
+Requires `merge_contextvars` as the first processor in the chain.
 
 ## Testing
 
