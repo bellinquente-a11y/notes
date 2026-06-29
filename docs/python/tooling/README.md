@@ -11,4 +11,4 @@
 | [ruff.md](ruff.md) | ref | Linter and formatter replacing flake8/black/isort |
 | [structlog.md](structlog.md) | note | Structured logging: processor pipeline, context binding, JSON output |
 | [terminal-tables.md](terminal-tables.md) | note | Print tables in the terminal: f-strings, tabulate, rich |
-| [testing/](testing/) | — | pytest, testing strategy, testing patterns |
+| [testing/](testing/) | — | pytest, testing strategy, patterns, mocking |
