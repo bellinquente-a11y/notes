@@ -24,7 +24,7 @@ class Trade(BaseModel):
     qty: int
     side: Literal['BUY', 'SELL']
 
-    @field_validator('symbol')  # for custom validation logic
+    @field_validator('symbol')  # see pydantic-validators.md for full validator docs
     @classmethod
     def symbol_uppercase(cls, v: str) -> str:
         return v.upper()
