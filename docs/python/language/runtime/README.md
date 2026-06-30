@@ -10,5 +10,6 @@
 | [entrypoint.md](entrypoint.md) | note | `__name__`, `if __name__ == "__main__"` guard, `__main__.py`, async `main` with `asyncio.run()` |
 | [import-system.md](import-system.md) | note | Modules, packages, `__init__.py`, `sys.path`, public API |
 | [logging.md](logging.md) | note | stdlib logging: pipeline, levels, dictConfig, best practices, structured logging |
+| [pathlib.md](pathlib.md) | ref | pathlib.Path: object-oriented filesystem paths, replacing os.path |
 | [scopes.md](scopes.md) | note | LEGB rule, local/global/nonlocal, closures, late-binding gotcha, class scope |
 | [threading.md](threading.md) | note | `ThreadPoolExecutor`, `Future` mechanics, `as_completed`, exception handling, shared state |

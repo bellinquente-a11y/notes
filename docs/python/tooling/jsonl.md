@@ -1,6 +1,6 @@
 # JSON Lines (JSONL)
 
-One JSON object per line. Append-friendly, streamable, human-readable — no infrastructure required.
+One JSON object per line. Append-friendly, streamable, human-readable — no infrastructure required. Uses [`pathlib.Path`](../language/runtime/pathlib.md) for file access.
 
 ```
 {"symbol": "AAPL", "qty": 10.0, "price": 182.5}
