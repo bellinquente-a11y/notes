@@ -33,6 +33,29 @@ with p.open("a", encoding="utf-8") as f:  # for append or line-by-line
     f.write("line\n")
 ```
 
+## `p.open()` arguments
+
+`p.open()` mirrors the built-in `open()` exactly.
+
+| Argument | Values | Default |
+|---|---|---|
+| `mode` | `"r"`, `"w"`, `"a"`, `"rb"`, `"wb"`, `"r+"`, … | `"r"` |
+| `encoding` | `"utf-8"`, `"latin-1"`, … | platform default |
+| `newline` | `None`, `""`, `"\n"`, `"\r\n"` | `None` |
+| `buffering` | `-1` (default), `0` (unbuffered, binary only), `n` (buffer size) | `-1` |
+
+Common modes:
+
+| mode | meaning |
+|---|---|
+| `"r"` | read text (default) |
+| `"w"` | write text, truncate |
+| `"a"` | write text, append |
+| `"rb"` / `"wb"` | read / write binary |
+| `"r+"` | read + write, no truncate |
+
+Always pass `encoding="utf-8"` explicitly — the platform default varies and `"utf-8"` is almost always what you want for text files.
+
 ## Existence and creation
 
 ```python
