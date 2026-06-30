@@ -3,6 +3,7 @@
 | File | Type | Description |
 |------|------|-------------|
 | [aiohttp.md](aiohttp.md) | note | Async HTTP client: ClientSession, concurrency, streaming, error handling |
+| [jsonl.md](jsonl.md) | note | JSON Lines: append-friendly, streamable records with Pydantic serialisation |
 | [mypy.md](mypy.md) | note | Static type checking: concepts, configuration, mental model |
 | [poetry.md](poetry.md) | note | Dependency and virtual environment management |
 | [pydantic.md](pydantic.md) | note | Data validation and parsing at application boundaries |
