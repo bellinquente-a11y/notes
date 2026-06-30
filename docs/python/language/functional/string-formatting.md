@@ -180,6 +180,27 @@ f"{10:#b}"     # '0b1010'
 
 ---
 
+## Splitting strings
+
+```python
+"a,b,c".split(",")           # ['a', 'b', 'c']
+"a, b, c".split(", ")        # ['a', 'b', 'c']
+
+# Strip whitespace around each item after splitting
+[s.strip() for s in "a , b , c".split(",")]   # ['a', 'b', 'c']
+
+# Limit number of splits
+"a,b,c,d".split(",", maxsplit=2)   # ['a', 'b', 'c,d']
+
+# Reverse: join a list back into a string
+",".join(["a", "b", "c"])    # 'a,b,c'
+```
+
+- `split()` with no argument splits on any whitespace and removes empty strings: `"a  b\tc".split()` → `['a', 'b', 'c']`.
+- For CSV with quoted fields, use the [`csv`](https://docs.python.org/3/library/csv.html) module instead of `split`.
+
+---
+
 ## Custom __format__
 
 Any class can define how it responds to a format spec:
