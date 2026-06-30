@@ -14,6 +14,33 @@
 - Use `__eq__` and `__hash__` to support equality testing and use in sets/dicts.
 - `__call__` makes an object callable (i.e., `obj(x)`).
 - Decorators `@classmethod` (e.g. alternative constructor) and `@staticmethod` (not very useful).
+
+### @classmethod
+
+Receives the class as first argument (`cls`) instead of the instance. Called on the class or any instance.
+
+```python
+class Trade:
+    def __init__(self, symbol: str, price: float, side: str):
+        self.symbol = symbol
+        self.price = price
+        self.side = side
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "Trade":       # alternative constructor
+        return cls(data["symbol"], data["price"], data["side"])
+
+    @classmethod
+    def from_string(cls, s: str) -> "Trade":         # "AAPL:182.5:BUY"
+        symbol, price, side = s.split(":")
+        return cls(symbol, float(price), side)
+
+trade = Trade.from_dict({"symbol": "AAPL", "price": 182.5, "side": "BUY"})
+```
+
+The main use is **alternative constructors** — multiple named ways to build an instance from different input formats. Using `cls(...)` instead of `Trade(...)` means subclasses get the right type back.
+
+`@classmethod` is also required by Pydantic for [`@field_validator`](../../tooling/pydantic-validators.md).
 - Implement `__format__` that parses `format_spec` to use:
   - `format(obj, format_spec)`
   - `'1 BRL = {rate:0.2f} USD'.format(rate=brl)`
