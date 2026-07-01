@@ -12,4 +12,5 @@
 | [logging.md](logging.md) | note | stdlib logging: pipeline, levels, dictConfig, best practices, structured logging |
 | [pathlib.md](pathlib.md) | ref | pathlib.Path: object-oriented filesystem paths, replacing os.path |
 | [scopes.md](scopes.md) | note | LEGB rule, local/global/nonlocal, closures, late-binding gotcha, class scope |
+| [subprocess.md](subprocess.md) | ref | Run shell commands from Python: subprocess.run(), shell=True, Popen |
 | [threading.md](threading.md) | note | `ThreadPoolExecutor`, `Future` mechanics, `as_completed`, exception handling, shared state |
