@@ -3,7 +3,7 @@
 | File | Type | Description |
 |------|------|-------------|
 | [asyncio.md](asyncio.md) | note | async def, await, asyncio.run(), gather(), create_task() — core mechanics |
-| [cli.md](cli.md) | ref | Running Python from the terminal: `-c`, `-m`, scripts |
+| [cli.md](cli.md) | ref | sys.argv, argparse: flags, types, subcommands, testing |
 | [concurrency.md](concurrency.md) | note | GIL, threading, multiprocessing, asyncio — overview and decision guide |
 | [context-managers.md](context-managers.md) | note | `with` statement, class-based and `@contextmanager` |
 | [datetime.md](datetime.md) | note | datetime from strings and integer timestamps; timezone awareness; strptime, fromisoformat, fromtimestamp |
