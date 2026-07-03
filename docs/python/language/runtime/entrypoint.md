@@ -61,6 +61,47 @@ if __name__ == "__main__":
 
 `asyncio.run()` always creates a **fresh** loop (no reuse), handles task cleanup, and must be called from synchronous code. Calling it inside an already-running event loop raises `RuntimeError` — inside async code, just `await main()`.
 
+## Console scripts — installed executables
+
+Registering a console script in `pyproject.toml` tells pip to create a real shell
+command that calls your `main()` directly.
+
+```toml
+# Poetry
+[tool.poetry.scripts]
+finlib-pipeline = "finlib.pipeline.cli:main"
+
+# Standard (any build backend)
+[project.scripts]
+finlib-pipeline = "finlib.pipeline.cli:main"
+```
+
+The value is `"dotted.module.path:callable"`. Pip generates a wrapper at
+`.venv/bin/finlib-pipeline` that imports the module and calls `main()` with no
+arguments — so `main()` must read `sys.argv` itself (e.g. via [argparse](cli.md)).
+
+```python
+# finlib/pipeline/cli.py
+def main() -> None:          # no arguments — pip calls it bare
+    parser = argparse.ArgumentParser(...)
+    args = parser.parse_args()
+    ...
+
+if __name__ == "__main__":   # keep the guard: still works as python cli.py
+    main()
+```
+
+The return value is passed to `sys.exit()` — return `None` for exit code 0, an int for
+anything else.
+
+`poetry install` registers the script immediately in the virtualenv; `pip install
+finlib` makes it available globally after packaging.
+
+!!! tip "Console script vs python -m"
+    `python -m finlib.pipeline.cli` works without an install step — use it during
+    development. The console script (`finlib-pipeline`) is for end users and deployed
+    environments where the package is installed.
+
 ## Patterns at a glance
 
 | Scenario | Pattern |
@@ -68,6 +109,7 @@ if __name__ == "__main__":
 | Sync script | `def main()` + `if __name__ == "__main__": main()` |
 | Async script | `async def main()` + `if __name__ == "__main__": asyncio.run(main())` |
 | Runnable package | `__main__.py` in package |
+| Installed shell command | `[tool.poetry.scripts]` / `[project.scripts]` in `pyproject.toml` |
 | Test an async entry point | `asyncio.run(main())` in the test body |
 
 ## Related

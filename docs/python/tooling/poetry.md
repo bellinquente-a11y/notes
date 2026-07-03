@@ -145,6 +145,19 @@ poetry add ../local-pkg --editable                   # local editable path
 
 ---
 
+## Console scripts
+
+Register a shell command that pip installs into the environment's `bin/`:
+
+```toml
+[tool.poetry.scripts]
+finlib-pipeline = "finlib.pipeline.cli:main"
+```
+
+Value format: `"dotted.module:callable"`. See [entrypoint.md](../language/runtime/entrypoint.md) for how to write `main()` and how this compares to `python -m`.
+
+---
+
 ## Running code
 
 If you `python ...` you use the default environment on your machine. Instead, 
