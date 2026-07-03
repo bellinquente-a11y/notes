@@ -79,4 +79,5 @@ notes/\
 │       └── [terminal-tables.md](python/tooling/terminal-tables.md)\
 └── tools/\
     ├── [env-vars.md](tools/env-vars.md)\
+    ├── [markdown.md](tools/markdown.md)\
     └── [mermaid.md](tools/mermaid.md)
