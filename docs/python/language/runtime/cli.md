@@ -117,6 +117,19 @@ No assertion required — any uncaught exception (including `SystemExit`) fails 
 
 `argv[0]` must be present (argparse skips it), `argv[1:]` are the tokens parsed.
 
+**`patch.object` variant** — takes the live `sys` object instead of a string path; IDE-navigable, no typo risk:
+
+```python
+import sys
+from unittest.mock import patch
+
+def test_main_smoke():
+    with patch.object(sys, "argv", ["cli", "--symbols", "BTCUSDT", "--limit", "5"]):
+        main()
+```
+
+`patch.object(target, attribute, new)` replaces `target.attribute` with `new` for the duration of the block.
+
 **`monkeypatch` variant** — same effect, no import:
 
 ```python
