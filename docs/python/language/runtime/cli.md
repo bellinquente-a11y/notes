@@ -95,14 +95,60 @@ group.add_argument("--verbose", action="store_true")
 
 ### Testing
 
-Pass a list directly so tests don't touch real `sys.argv`:
+**Level 1 — test the parser directly** (pass a list; never touches real `sys.argv`):
 
 ```python
 args = parser.parse_args(["file.txt", "--count", "5"])
 ```
 
+**Level 2 — smoke-test the full entry point** by patching `sys.argv` and calling `main()`.
+Needed because in a pytest session `sys.argv` contains pytest's own arguments, which argparse
+will reject or misparse. `sys` is a singleton, so patching `"sys.argv"` affects all code:
+
+```python
+from unittest.mock import patch
+
+def test_main_smoke():
+    with patch("sys.argv", ["myprog", "--count", "5", "file.txt"]):
+        main()   # raises → test fails; returns normally → test passes
+```
+
+No assertion required — any uncaught exception (including `SystemExit`) fails the test.
+
+`argv[0]` must be present (argparse skips it), `argv[1:]` are the tokens parsed.
+
+**`monkeypatch` variant** — same effect, no import:
+
+```python
+def test_main_smoke(monkeypatch):
+    monkeypatch.setattr("sys.argv", ["myprog", "--count", "5", "file.txt"])
+    main()
+```
+
+**Asserting a clean exit** — if `main()` calls `sys.exit(0)`, that raises `SystemExit`:
+
+```python
+import pytest
+
+def test_main_exits_cleanly():
+    with pytest.raises(SystemExit) as exc_info:
+        with patch("sys.argv", ["myprog", "--count", "5"]):
+            main()
+    assert exc_info.value.code == 0
+```
+
+**Asserting bad-input rejection** (argparse exits with code 2 on parse error):
+
+```python
+def test_missing_required_arg():
+    with pytest.raises(SystemExit) as exc_info:
+        with patch("sys.argv", ["myprog"]):   # missing required arg
+            main()
+    assert exc_info.value.code == 2
+```
+
 !!! tip "Extract logic from parsing"
-    Keep `parse_args()` in `main()`; pass the namespace into functions. Then unit-test those functions without invoking the parser at all.
+    Keep `parse_args()` in `main()`; pass the namespace into pure functions. Unit-test those functions directly — no patching needed, no parser involved.
 
 !!! warning "Error handling"
     `parse_args()` calls `sys.exit(2)` on bad input. Use `ArgumentParser(exit_on_error=False)` (Python 3.9+) to catch `ArgumentError` instead.
