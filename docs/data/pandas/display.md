@@ -46,6 +46,40 @@ print(df.to_string(
 
 Other useful `to_string` kwargs: `float_format`, `col_space` (min column width), `max_rows`, `max_cols`.
 
+## Formatting a DatetimeIndex
+
+pandas has no global display option for timestamp format. The three patterns:
+
+**Print a formatted copy** — create a string index for display only; original is unchanged:
+
+```python
+print(df.set_axis(df.index.strftime("%Y-%m-%d %H:%M")).to_string())
+```
+
+**Mutate the index** — converts DatetimeIndex → StringIndex permanently (loses `.dt` and resampling):
+
+```python
+df.index = df.index.strftime("%Y-%m-%d")
+```
+
+**Jupyter — `df.style.format_index`** (pandas ≥ 1.3):
+
+```python
+df.style.format_index("{:%Y-%m-%d %H:%M}")
+```
+
+Common `strftime` tokens for financial data:
+
+| Token | Example | Meaning |
+|-------|---------|---------|
+| `%Y-%m-%d` | `2024-01-15` | ISO date |
+| `%Y-%m-%d %H:%M` | `2024-01-15 09:30` | minute precision |
+| `%Y-%m-%d %H:%M:%S` | `2024-01-15 09:30:00` | second precision |
+| `%d %b %Y` | `15 Jan 2024` | human-readable |
+
+!!! tip "Prefer set_axis over index mutation"
+    `df.set_axis(df.index.strftime(...))` returns a new DataFrame and leaves the original intact, so you keep DatetimeIndex functionality for any downstream work.
+
 ## Jupyter — `df.style`
 
 `Styler` is for HTML/notebook output only; has no effect on `print()`.
