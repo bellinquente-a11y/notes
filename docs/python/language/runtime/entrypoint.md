@@ -97,6 +97,21 @@ anything else.
 `poetry install` registers the script immediately in the virtualenv; `pip install
 finlib` makes it available globally after packaging.
 
+### Running the script
+
+```bash
+poetry run finlib-pipeline          # run inside the venv, no activation needed
+poetry run finlib-pipeline --help   # pass arguments the same way
+```
+
+`poetry run` is the standard development invocation — it finds the venv automatically
+regardless of which directory you're in. Alternatively, activate the shell first:
+
+```bash
+poetry shell          # activates the venv in a subshell
+finlib-pipeline       # now available directly on PATH
+```
+
 !!! tip "Console script vs python -m"
     `python -m finlib.pipeline.cli` works without an install step — use it during
     development. The console script (`finlib-pipeline`) is for end users and deployed
