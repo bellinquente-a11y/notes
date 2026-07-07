@@ -56,6 +56,7 @@ notes/\
 │   │   │   ├── [hash.md](python/language/objects/hash.md)\
 │   │   │   ├── [mutation.md](python/language/objects/mutation.md)\
 │   │   │   ├── [oop.md](python/language/objects/oop.md)\
+│   │   │   ├── [queues.md](python/language/objects/queues.md)\
 │   │   │   ├── [repository-di.md](python/language/objects/repository-di.md)\
 │   │   │   ├── [sets.md](python/language/objects/sets.md)\
 │   │   │   ├── [subscriptable.md](python/language/objects/subscriptable.md)\

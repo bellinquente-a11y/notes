@@ -110,3 +110,4 @@ unique = [x for x in lst if not (x in seen or seen.add(x))]  # O(n)
 
 - [sets.md](sets.md) — set operations and O(1) membership in detail
 - [hash.md](hash.md) — `__hash__` contract, why mutability breaks dicts
+- [queues.md](queues.md) — deque and heapq API in full
