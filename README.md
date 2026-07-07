@@ -92,4 +92,5 @@ notes/\
 └── tools/\
     ├── [env-vars.md](tools/env-vars.md)\
     ├── [markdown.md](tools/markdown.md)\
-    └── [mermaid.md](tools/mermaid.md)
+    ├── [mermaid.md](tools/mermaid.md)\
+    └── [zsh.md](tools/zsh.md)
