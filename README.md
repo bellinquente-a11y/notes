@@ -50,6 +50,7 @@ notes/\
 │   │   │   ├── [string-formatting.md](python/language/functional/string-formatting.md)\
 │   │   │   └── [unpacking.md](python/language/functional/unpacking.md)\
 │   │   ├── objects/\
+│   │   │   ├── [complexity.md](python/language/objects/complexity.md)\
 │   │   │   ├── [data-model.md](python/language/objects/data-model.md)\
 │   │   │   ├── [exceptions.md](python/language/objects/exceptions.md)\
 │   │   │   ├── [hash.md](python/language/objects/hash.md)\

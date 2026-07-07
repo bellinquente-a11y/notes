@@ -2,6 +2,7 @@
 
 | File | Type | Description |
 |------|------|-------------|
+| [complexity.md](complexity.md) | ref | Big-O intuition, Python dict as hash table, data structure selection table |
 | [data-model.md](data-model.md) | note | Dunder methods, pythonic objects, `@dataclass` |
 | [exceptions.md](exceptions.md) | note | Exception hierarchy, EAFP, raising/chaining, custom exceptions, best practices |
 | [hash.md](hash.md) | note | `__hash__`: hash contract, `__eq__` coupling, mutability, dataclasses |
