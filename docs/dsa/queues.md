@@ -102,4 +102,4 @@ max_val = -heapq.heappop(h)
 ## See also
 
 - [complexity.md](complexity.md) — full Big-O table for all built-in structures
-- [sets.md](sets.md) — O(1) membership, set operations
+- [sets.md](../python/language/objects/sets.md) — O(1) membership, set operations

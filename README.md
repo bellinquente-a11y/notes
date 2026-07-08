@@ -13,6 +13,9 @@ Learning notes and references across software engineering, ML, and AI topics.
 ## Structure
 
 notes/\
+├── dsa/\
+│   ├── [complexity.md](dsa/complexity.md)\
+│   └── [queues.md](dsa/queues.md)\
 ├── data/\
 │   ├── numpy/\
 │   │   ├── [broadcasting.md](data/numpy/broadcasting.md)\
@@ -50,13 +53,11 @@ notes/\
 │   │   │   ├── [string-formatting.md](python/language/functional/string-formatting.md)\
 │   │   │   └── [unpacking.md](python/language/functional/unpacking.md)\
 │   │   ├── objects/\
-│   │   │   ├── [complexity.md](python/language/objects/complexity.md)\
 │   │   │   ├── [data-model.md](python/language/objects/data-model.md)\
 │   │   │   ├── [exceptions.md](python/language/objects/exceptions.md)\
 │   │   │   ├── [hash.md](python/language/objects/hash.md)\
 │   │   │   ├── [mutation.md](python/language/objects/mutation.md)\
 │   │   │   ├── [oop.md](python/language/objects/oop.md)\
-│   │   │   ├── [queues.md](python/language/objects/queues.md)\
 │   │   │   ├── [repository-di.md](python/language/objects/repository-di.md)\
 │   │   │   ├── [sets.md](python/language/objects/sets.md)\
 │   │   │   ├── [subscriptable.md](python/language/objects/subscriptable.md)\
