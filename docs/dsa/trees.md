@@ -115,6 +115,33 @@ def postorder_iterative(root):
 
 ---
 
+## Binary Search Trees (BSTs)
+
+A Binary Search Tree (BST) is a binary tree with one invariant: for every node, all values in its **left** subtree are smaller, and all values in its **right** subtree are larger. This holds recursively at every level.
+
+```
+        8
+       / \
+      3   10
+     / \    \
+    1   6    14
+```
+
+!!! note "Why it matters"
+    The invariant turns search into a guided descent — at each node, discard the subtree that can't contain the target. In a balanced BST (height ≈ log n), search, insert, and delete are all **O(log n)**, matching binary search on a sorted array while also supporting O(log n) insert/delete (a sorted array needs O(n) shifts).
+
+| Operation | Balanced BST | Sorted array |
+|-----------|-------------|--------------|
+| Search    | O(log n)    | O(log n)     |
+| Insert    | O(log n)    | O(n)         |
+| Delete    | O(log n)    | O(n)         |
+
+**The balance problem** — a naive BST degenerates to O(n) height if values are inserted in sorted order. Self-balancing variants (AVL tree, Red-Black tree) fix this; in Python use `sortedcontainers.SortedList` / `SortedDict`.
+
+**Applications**: dynamic sorted sets, range queries, k-th smallest, database indexes (B-Trees are a generalisation), interval overlap queries.
+
+---
+
 ## BST validation
 
 Inorder of a valid BST is always sorted. Validate by threading a valid range through recursion:
