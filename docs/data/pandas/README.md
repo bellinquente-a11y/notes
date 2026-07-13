@@ -7,3 +7,4 @@
 | [datetimes.md](datetimes.md) | note | Timestamp, DatetimeIndex, .dt accessor, tz handling, resampling |
 | [dtypes.md](dtypes.md) | note | dtype system — nullable types, categoricals, StringDtype, pd.NA |
 | [indexing.md](indexing.md) | note | Views vs copies, SettingWithCopyWarning, `.loc` rules, Copy-on-Write |
+| [iteration.md](iteration.md) | note | `__iter__` asymmetry, `.items()`, `iterrows()` vs `itertuples()`, scalar access |
