@@ -10,6 +10,7 @@
 | [oop.md](oop.md) | note | Inheritance, MRO, ABCs, Protocols, structural vs nominal typing |
 | [repository-di.md](repository-di.md) | note | Repository pattern + dependency injection: Protocol interface, in-memory fake, testable services |
 | [sets.md](sets.md) | note | `set` and `frozenset`: creation, mutation, set operations, O(1) membership, gotchas |
+| [structural-typing.md](structural-typing.md) | note | Structural vs nominal typing: Protocol, ABC, runtime_checkable, mental model |
 | [subscriptable.md](subscriptable.md) | note | `__getitem__`, `__class_getitem__`, generic aliases, pre-3.9 annotation fixes |
 | [typing.md](typing.md) | note | `typing` module: `Literal`, `TypeAlias`, `overload` — restrict and narrow types |
 | [warnings.md](warnings.md) | note | `warnings.warn()`, stacklevel, filters, converting exceptions to warnings |

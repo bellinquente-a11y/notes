@@ -61,6 +61,7 @@ notes/\
 │   │   │   ├── [oop.md](python/language/objects/oop.md)\
 │   │   │   ├── [repository-di.md](python/language/objects/repository-di.md)\
 │   │   │   ├── [sets.md](python/language/objects/sets.md)\
+│   │   │   ├── [structural-typing.md](python/language/objects/structural-typing.md)\
 │   │   │   ├── [subscriptable.md](python/language/objects/subscriptable.md)\
 │   │   │   ├── [typing.md](python/language/objects/typing.md)\
 │   │   │   └── [warnings.md](python/language/objects/warnings.md)\

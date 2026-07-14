@@ -98,4 +98,4 @@ assert isinstance(PostgresTradeRepo(conn), TradeRepo)  # usable in pytest
 
 Use both: mypy for correctness, `isinstance` test to document intent and catch omissions.
 
-See also: [data-model.md](data-model.md) for dunder methods and `@dataclass`; [repository-di.md](repository-di.md) for Protocol-based dependency injection.
+See also: [data-model.md](data-model.md) for dunder methods and `@dataclass`; [repository-di.md](repository-di.md) for Protocol-based dependency injection; [structural-typing.md](structural-typing.md) for the deeper nominal vs structural type-theory framing.
