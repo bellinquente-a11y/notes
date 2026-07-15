@@ -87,7 +87,8 @@ notes/\
 │       │   ├── [pytest.md](python/tooling/testing/pytest.md)\
 │       │   ├── [testing-patterns.md](python/tooling/testing/testing-patterns.md)\
 │       │   └── [testing-strategy.md](python/tooling/testing/testing-strategy.md)\
-│       ├── [aiohttp.md](python/tooling/aiohttp.md)\
+│       ├── [aiohttp.md](python/tooling/aiohttp.md)
+│       ├── [fastapi.md](python/tooling/fastapi.md)\
 │       ├── [jsonl.md](python/tooling/jsonl.md)\
 │       ├── [mypy.md](python/tooling/mypy.md)\
 │       ├── [poetry.md](python/tooling/poetry.md)\

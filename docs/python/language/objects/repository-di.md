@@ -119,3 +119,4 @@ This factory is the only place that knows both `PostgresTradeRepo` and `TradingS
 
 - [oop.md](oop.md) — Protocol vs ABC detail
 - [testing-patterns.md](../../tooling/testing/testing-patterns.md) — seams, `tmp_path`, in-memory DB strategies
+- [fastapi.md](../../tooling/fastapi.md) — how `Depends()` extends this pattern to request-scoped resources
