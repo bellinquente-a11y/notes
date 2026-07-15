@@ -1,3 +1,4 @@
 .python-version
 _explain.md
 site/
+.claude/settings.local.json

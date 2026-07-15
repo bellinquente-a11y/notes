@@ -57,3 +57,4 @@ tags:
 - No multi-paragraph docstrings or wall-of-text sections.
 - Use MkDocs admonition boxes (`!!! note`, `!!! tip`, `!!! warning`) to highlight key concepts — mental models, common pitfalls, or non-obvious distinctions worth calling out. Aim for 2–3 per page; don't use them for routine information that flows naturally as prose or bullets.
 - Expand every acronym in full on its first use in each document (including `_explain.md`), e.g. "Abstract Syntax Tree (AST)".
+- The repo and site are public: never include personal identifiers, real credentials, real account data, or local filesystem paths in notes — use placeholder values in examples.
