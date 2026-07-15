@@ -36,7 +36,7 @@ class Trade(BaseModel):
 trade = Trade(symbol="ES", price="5230.5", qty="10", side="BUY")
 ```
 
-[`Literal`](../language/objects/typing.md) restricts `side` to the two valid strings; Pydantic raises `ValidationError` at parse time for any other value.
+[`Literal`](../../language/objects/typing.md) restricts `side` to the two valid strings; Pydantic raises `ValidationError` at parse time for any other value.
 
 ## Typical Uses
 
@@ -73,7 +73,7 @@ trade.model_dump(exclude_unset=True)             # drop fields not explicitly se
 trade.model_dump(mode="json")                    # coerce to JSON-safe types (e.g. Decimal → str)
 ```
 
-`model_dump_json()` accepts the same arguments and returns a JSON string directly — faster than `json.dumps(model.model_dump())` because Pydantic serialises without an intermediate dict. See [jsonl.md](jsonl.md) for the file-persistence pattern.
+`model_dump_json()` accepts the same arguments and returns a JSON string directly — faster than `json.dumps(model.model_dump())` because Pydantic serialises without an intermediate dict. See [jsonl.md](../jsonl.md) for the file-persistence pattern.
 
 ## Notes
 - BaseModel is the core Pydantic class
@@ -82,7 +82,7 @@ trade.model_dump(mode="json")                    # coerce to JSON-safe types (e.
 - Current major version is Pydantic v2
 
 
-## When to use Pydantic vs dataclass (see [data-model.md](../language/objects/data-model.md#dataclass))?
+## When to use Pydantic vs dataclass (see [data-model.md](../../language/objects/data-model.md#dataclass))?
 
 !!! note "Pydantic at boundaries, dataclass for internal models"
     Pydantic validates and coerces untrusted data (API responses, user input, config files) at the edges of your system. Once data is inside, plain dataclasses are lighter and don't impose runtime validation overhead. Using Pydantic everywhere adds cost without benefit for objects that are constructed from already-validated data inside the system.

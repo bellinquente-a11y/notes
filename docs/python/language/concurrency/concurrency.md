@@ -132,4 +132,4 @@ await loop.run_in_executor(None, blocking_fn, arg)   # offload sync call to thre
 - [threading.md](threading.md) — `ThreadPoolExecutor` API, futures, `as_completed`, shared state
 - [asyncio.md](asyncio.md) — full async/await deep dive
 - [functools.md](../functional/functools.md) — `@lru_cache` thread-safety note
-- [context-managers.md](context-managers.md) — `async with` uses `__aenter__`/`__aexit__`
+- [context-managers.md](../runtime/context-managers.md) — `async with` uses `__aenter__`/`__aexit__`

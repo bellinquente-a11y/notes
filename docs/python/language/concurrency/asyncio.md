@@ -186,5 +186,5 @@ async def increment():
 ## Related notes
 
 - [concurrency.md](concurrency.md) — threads vs asyncio decision guide, GIL, multiprocessing
-- [context-managers.md](context-managers.md) — `async with` protocol (`__aenter__`/`__aexit__`)
+- [context-managers.md](../runtime/context-managers.md) — `async with` protocol (`__aenter__`/`__aexit__`)
 - [../../tooling/aiohttp.md](../../tooling/aiohttp.md) — async HTTP client built on asyncio

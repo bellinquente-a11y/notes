@@ -171,7 +171,7 @@ Test `compute_pnl` directly; leave `report_pnl` to a single smoke test or skip i
 
 ## Testing multiple implementations against one contract
 
-When you have two or more concrete classes that share an interface ([`Protocol`](../../language/objects/protocols.md)), run the same test suite against all of them with a **parametrized fixture** — no test duplication, no `isinstance`.
+When you have two or more concrete classes that share an interface ([`Protocol`](../../language/objects/structural-typing.md)), run the same test suite against all of them with a **parametrized fixture** — no test duplication, no `isinstance`.
 
 ### The fixture
 
