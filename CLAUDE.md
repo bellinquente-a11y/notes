@@ -6,45 +6,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repo is a personal knowledge base. The user asks Claude to explain topics; Claude writes a detailed explanation to a temporary file for immediate reading, and a concise `.md` file capturing the key points for permanent reference.
 
-## Workflow
+## Workflows
 
-I will ask you to explain a topic by starting the query with the uppercase string `EXPLAIN`. 
-If I ask you toe `EXPLAIN BRIEFLY` try to keep the output coincise.
-When asked to explain a topic:
-1. **Write the detailed explanation to `_explain.md`** at the repo root — more depth than the permanent file, including intuition and context. Then immediately open it with `open _explain.md`. This file is gitignored and never committed.
-2. **Review folder structure** (read the `README.md` files only) to understand whether a change in an existing file is needed vs. the creation of a new file or folder. Try to keep the number of files limited. That means either:
-    a. Add the information to an exisitng file if makes sense; otherwise,
-    b. Merge the new information with existing information into a new file.
-   It is imperative to keep good logic in structuring the information.
-3. **Write an `.md` file** in the appropriate directory. The file should be more succinct than the terminal explanation but still informative: prefer bullet points and short code examples over prose. Keep the title short.
-4. **Update `README.md`** in the relevant subdirectory and the root `README.md` if a new directory is created.
-5. **Update other .md files** with appropriate links, only if needed. The aim is to maintain conceptual links between different topics.
-6. **Commit changes** with an appropriate message — do not prompt for confirmation before committing.
+The workflows live as project skills in `.claude/skills/`. When a query starts with one of these uppercase keywords, invoke the corresponding skill:
 
-During the EXPLAIN workflow, write new files, edit existing files, and save all changes without prompting for confirmation. This applies to the `_explain.md` file as well.
+| Keyword | Skill | What it does |
+|---------|-------|--------------|
+| `EXPLAIN` (or `EXPLAIN BRIEFLY`) | `/explain` | Deep dive to `_explain.md` + permanent note |
+| `ADD TOPIC` | `/add-topic` | Concise note only, no `_explain.md` |
+| `RESTRUCTURE` | `/restructure` | Survey structure, propose reorganisation, execute after approval |
+| `AUDIT` | `/audit` | Check notes for stale claims, fix after approval |
+
+During these workflows, write and edit files without prompting for confirmation, and commit when the skill says to. Before any commit that touches `docs/`, run `mkdocs build --strict` — it must exit 0.
 
 ## File organisation
 
-All notes live under `docs/`. The repo root contains only tooling files (`mkdocs.yml`, `CLAUDE.md`, `README.md`, `.gitignore`).
+All notes live under `docs/`; the repo root contains only tooling files (`mkdocs.yml`, `CLAUDE.md`, `README.md`, `.gitignore`, `.github/`, `.claude/`). Top-level areas: `data/` (numpy, pandas), `dsa/`, `finance/`, `git/`, `python/` (`language/` and `tooling/`), and `tools/`. Subfolders evolve — consult the `README.md` files for the current layout rather than assuming it.
 
-```
-notes/
-├── docs/
-│   ├── data/
-│   │   ├── numpy/    — Broadcasting, dtype system
-│   │   └── pandas/   — Chaining, indexing, datetimes, dtypes
-│   ├── finance/      — Binance, market data APIs
-│   ├── git/          — Git workflows, commands, tags, releases, GitHub Actions
-│   ├── python/
-│   │   ├── language/ — Core Python: data model, iterators, generators, exceptions, stdlib
-│   │   └── tooling/  — pyenv, poetry, ruff, mypy, pydantic, pytest, testing strategy
-│   └── tools/        — Language-agnostic tools and notation (Mermaid, etc.)
-├── mkdocs.yml
-├── CLAUDE.md
-└── README.md
-```
-
-Each subdirectory has a `README.md` with a table of three columns: **file**, **type** (`note` or `ref`), **one-line description**. Do not include a `## Structure` section — the MkDocs sidebar handles navigation.
+Each subdirectory has a `README.md` with a table of three columns: **file**, **type** (`note` or `ref`), **one-line description**, sorted alphabetically by filename. Do not include a `## Structure` section — the MkDocs sidebar handles navigation.
 
 - `note` — narrative explanation of a concept (the "why" and "how")
 - `ref` — command/syntax quick-reference meant for lookup
@@ -55,6 +34,21 @@ When adding a new file, add a row to the subdirectory `README.md`. When adding a
 
 Link related files using relative markdown links. Prefer linking on the first meaningful mention of a topic (e.g. if `mypy.md` mentions Poetry, link it). Don't link every occurrence — once per file is enough.
 
+## Tags
+
+Notes carry frontmatter tags for cross-cutting themes (rendered by the Material tags plugin; index at `docs/tags.md`):
+
+```yaml
+---
+tags:
+  - testing
+---
+```
+
+- Controlled vocabulary — use only: `cli`, `concurrency`, `config`, `design-patterns`, `errors`, `logging`, `packaging`, `performance`, `testing`, `typing`.
+- 0–3 tags per note; only where the theme genuinely applies. Many notes need no tags.
+- Extend the vocabulary only when at least 3 notes would carry the new tag; update this list when you do.
+
 ## Note style
 
 - Lead with what the thing is and why it matters, then how to use it.
@@ -63,34 +57,3 @@ Link related files using relative markdown links. Prefer linking on the first me
 - No multi-paragraph docstrings or wall-of-text sections.
 - Use MkDocs admonition boxes (`!!! note`, `!!! tip`, `!!! warning`) to highlight key concepts — mental models, common pitfalls, or non-obvious distinctions worth calling out. Aim for 2–3 per page; don't use them for routine information that flows naturally as prose or bullets.
 - Expand every acronym in full on its first use in each document (including `_explain.md`), e.g. "Abstract Syntax Tree (AST)".
-
-## ADD TOPIC workflow
-
-I will ask you to add a topic by starting the query with the uppercase string `ADD TOPIC`. Use this for topics already broadly understood that just need capturing in the repo — no `_explain.md` is generated.
-
-When asked to add a topic:
-1. **Review folder structure** (read the `README.md` files only) to find the right location.
-2. **Write a concise `.md` file** (or add a section to an existing file) following the note style guidelines below. Keep it brief — bullet points and short code examples, no prose explanations.
-3. **Update `README.md`** in the relevant subdirectory (and root `README.md` if a new directory is created).
-4. **Update other `.md` files** with links, only if needed.
-5. **Commit changes** with an appropriate message — do not prompt for confirmation before committing.
-
-## RESTRUCTURE workflow
-
-I will ask you to restructure the project by starting the query with the uppercase string `RESTRUCTURE`. When asked to restructure:
-
-1. **Survey the current structure cheaply**: read only the `README.md` files in each directory and run `wc -l` on every `.md` file to get line counts. Do **not** open individual note files unless their line count exceeds ~200 and you need to understand their content to split them sensibly.
-2. **Identify problems**: flag any file with >200 lines and any folder with >10 files (excluding `README.md`).
-3. **Propose a new structure** that resolves the problems by introducing subfolders. Requirements:
-   - Group topics by logical criteria (e.g. language feature area, tool category) — never by arbitrary criteria like alphabetical order or file size alone.
-   - Keep the total number of new folders minimal — only introduce a subfolder when it contains at least 3 files.
-   - Files >200 lines may be split into two focused files; propose the split with a one-line rationale.
-4. **Output both the old and the proposed structure as directory-tree diagrams in the terminal** (use `tree`-style ASCII art). Annotate each file with its line count and each folder with its file count.
-5. **Do not move, rename, or create any file or folder yet.** Wait for explicit approval before acting.
-6. **Ask for clarification** if a grouping decision is genuinely ambiguous (e.g. a file that belongs equally well in two places).
-
-Once approved and the restructuring is executed:
-
-7. **Update all README files** to reflect the new folder structure: add rows for new files/folders, remove rows for moved ones, and fix any table entries whose paths have changed.
-8. **Update all cross-file hyperlinks** in every `.md` file to point to the new paths.
-9. **Sort all README table rows alphabetically** by filename within each directory.
