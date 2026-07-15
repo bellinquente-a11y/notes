@@ -57,6 +57,10 @@ notes/\
 │   │   │   ├── [string-formatting.md](docs/python/language/functional/string-formatting.md)\
 │   │   │   └── [unpacking.md](docs/python/language/functional/unpacking.md)\
 │   │   ├── objects/\
+│   │   │   ├── typing/\
+│   │   │   │   ├── [structural-typing.md](docs/python/language/objects/typing/structural-typing.md)\
+│   │   │   │   ├── [subscriptable.md](docs/python/language/objects/typing/subscriptable.md)\
+│   │   │   │   └── [typing.md](docs/python/language/objects/typing/typing.md)\
 │   │   │   ├── [data-model.md](docs/python/language/objects/data-model.md)\
 │   │   │   ├── [exceptions.md](docs/python/language/objects/exceptions.md)\
 │   │   │   ├── [hash.md](docs/python/language/objects/hash.md)\
@@ -65,9 +69,6 @@ notes/\
 │   │   │   ├── [oop.md](docs/python/language/objects/oop.md)\
 │   │   │   ├── [repository-di.md](docs/python/language/objects/repository-di.md)\
 │   │   │   ├── [sets.md](docs/python/language/objects/sets.md)\
-│   │   │   ├── [structural-typing.md](docs/python/language/objects/structural-typing.md)\
-│   │   │   ├── [subscriptable.md](docs/python/language/objects/subscriptable.md)\
-│   │   │   ├── [typing.md](docs/python/language/objects/typing.md)\
 │   │   │   └── [warnings.md](docs/python/language/objects/warnings.md)\
 │   │   └── runtime/\
 │   │       ├── [cli.md](docs/python/language/runtime/cli.md)\
@@ -86,9 +87,11 @@ notes/\
 │       │   ├── [pydantic-settings.md](docs/python/tooling/pydantic/pydantic-settings.md)\
 │       │   └── [pydantic-validators.md](docs/python/tooling/pydantic/pydantic-validators.md)\
 │       ├── testing/\
+│       │   ├── [contract-tests.md](docs/python/tooling/testing/contract-tests.md)\
 │       │   ├── [hypothesis.md](docs/python/tooling/testing/hypothesis.md)\
 │       │   ├── [mocking.md](docs/python/tooling/testing/mocking.md)\
 │       │   ├── [pytest.md](docs/python/tooling/testing/pytest.md)\
+│       │   ├── [structlog-testing.md](docs/python/tooling/testing/structlog-testing.md)\
 │       │   ├── [testing-patterns.md](docs/python/tooling/testing/testing-patterns.md)\
 │       │   └── [testing-strategy.md](docs/python/tooling/testing/testing-strategy.md)\
 │       ├── [aiohttp.md](docs/python/tooling/aiohttp.md)\

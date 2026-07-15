@@ -36,7 +36,7 @@ class Trade(BaseModel):
 trade = Trade(symbol="ES", price="5230.5", qty="10", side="BUY")
 ```
 
-[`Literal`](../../language/objects/typing.md) restricts `side` to the two valid strings; Pydantic raises `ValidationError` at parse time for any other value.
+[`Literal`](../../language/objects/typing/typing.md) restricts `side` to the two valid strings; Pydantic raises `ValidationError` at parse time for any other value.
 
 ## Typical Uses
 
