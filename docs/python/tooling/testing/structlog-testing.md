@@ -1,3 +1,9 @@
+---
+tags:
+  - testing
+  - logging
+---
+
 # Testing structlog Logs
 
 How to assert on log output from [structlog](../structlog.md) in tests.

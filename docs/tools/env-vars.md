@@ -1,3 +1,8 @@
+---
+tags:
+  - config
+---
+
 # Environment Variables — macOS / Unix
 
 ## What is "the environment"?

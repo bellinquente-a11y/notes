@@ -1,3 +1,8 @@
+---
+tags:
+  - testing
+---
+
 # Testing — Strategy
 
 Tests are executable claims about behaviour. They exist to enable *change* safely — refactors, upgrades, onboarding — not to reach a coverage number.

@@ -1,3 +1,9 @@
+---
+tags:
+  - testing
+  - concurrency
+---
+
 # Testing — Mocking
 
 Patterns for replacing dependencies with controlled substitutes. Use mocks when you can't inject a seam (see [testing-patterns.md](testing-patterns.md)) or when you need to assert a side effect was triggered.

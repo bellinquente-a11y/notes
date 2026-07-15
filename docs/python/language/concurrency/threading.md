@@ -1,3 +1,8 @@
+---
+tags:
+  - concurrency
+---
+
 # Threading — `concurrent.futures` API
 
 `ThreadPoolExecutor` is the high-level interface for running I/O-bound work across threads. See [concurrency.md](concurrency.md) for when to use threads vs multiprocessing vs asyncio.

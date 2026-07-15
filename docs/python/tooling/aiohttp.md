@@ -1,3 +1,8 @@
+---
+tags:
+  - concurrency
+---
+
 # aiohttp
 
 Async HTTP client (and server) library for [asyncio](../language/concurrency/asyncio.md). The standard replacement for `requests` in async code — suspends the coroutine during network waits instead of blocking the thread.

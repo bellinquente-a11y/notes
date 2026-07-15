@@ -1,3 +1,8 @@
+---
+tags:
+  - cli
+---
+
 # subprocess
 
 Run shell commands from Python. Prefer `subprocess.run()` over `os.system()` — it captures output and handles errors.

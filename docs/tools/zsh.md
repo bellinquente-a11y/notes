@@ -1,3 +1,8 @@
+---
+tags:
+  - cli
+---
+
 # zsh
 
 Default shell on macOS (since Catalina). Superset of bash with better tab completion, globbing, and prompt customisation. Config lives in `~/.zshrc`.

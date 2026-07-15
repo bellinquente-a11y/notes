@@ -1,3 +1,8 @@
+---
+tags:
+  - testing
+---
+
 # Hypothesis
 
 Property-based testing: instead of hand-picking inputs, you declare *invariants* that must hold for all valid inputs, and Hypothesis generates hundreds of random cases to falsify them. When a failure is found, it **shrinks** the input to the smallest counterexample.

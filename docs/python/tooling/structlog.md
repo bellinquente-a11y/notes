@@ -1,3 +1,8 @@
+---
+tags:
+  - logging
+---
+
 # structlog
 
 Third-party logging library that makes structured (key=value) logging the natural default. Every log call produces a dictionary; renderers output it as JSON, coloured console text, or anything else. Sits on top of (or beside) stdlib [`logging`](../language/runtime/logging.md).

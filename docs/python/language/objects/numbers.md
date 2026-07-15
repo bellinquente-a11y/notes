@@ -1,3 +1,8 @@
+---
+tags:
+  - testing
+---
+
 # Python — Float Comparison
 
 ## Why `==` fails

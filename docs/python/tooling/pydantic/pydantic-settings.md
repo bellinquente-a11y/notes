@@ -1,3 +1,8 @@
+---
+tags:
+  - config
+---
+
 # pydantic-settings
 
 `pydantic-settings` extends [Pydantic](pydantic.md) with `BaseSettings`: a model that reads field values from [environment variables](../../../tools/env-vars.md) and `.env` files automatically. Use it for all configuration — API keys, file paths, feature flags, timeouts.

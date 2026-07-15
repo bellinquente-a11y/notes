@@ -1,3 +1,8 @@
+---
+tags:
+  - performance
+---
+
 # Lazy vs Eager Evaluation
 
 **Eager**: compute everything now, store the full result in memory.  

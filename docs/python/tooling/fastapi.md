@@ -1,3 +1,10 @@
+---
+tags:
+  - concurrency
+  - design-patterns
+  - typing
+---
+
 # FastAPI
 
 FastAPI maps Python functions to HTTP endpoints. Its core idea: **type annotations are the single source of truth** — FastAPI reads them at decoration time and derives parsing, validation, serialisation, and API documentation automatically.

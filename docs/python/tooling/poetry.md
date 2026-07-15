@@ -1,3 +1,8 @@
+---
+tags:
+  - packaging
+---
+
 # Poetry
 
 ## What is Poetry?

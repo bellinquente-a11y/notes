@@ -1,3 +1,8 @@
+---
+tags:
+  - typing
+---
+
 # Pydantic
 
 Pydantic is a Python library used for data validation and parsing using type hints.

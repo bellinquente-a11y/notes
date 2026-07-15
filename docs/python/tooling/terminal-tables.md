@@ -1,3 +1,8 @@
+---
+tags:
+  - cli
+---
+
 # Printing Tables in the Terminal
 
 Three options in increasing power:

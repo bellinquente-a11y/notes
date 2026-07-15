@@ -1,3 +1,8 @@
+---
+tags:
+  - typing
+---
+
 # Structural Typing
 
 Two ways a type system decides "is X acceptable where T is expected?":

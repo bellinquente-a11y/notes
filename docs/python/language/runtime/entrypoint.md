@@ -1,3 +1,9 @@
+---
+tags:
+  - cli
+  - packaging
+---
+
 # Python Entry Points
 
 ## `__name__` and the guard

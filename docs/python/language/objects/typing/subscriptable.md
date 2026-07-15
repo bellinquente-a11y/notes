@@ -1,3 +1,8 @@
+---
+tags:
+  - typing
+---
+
 # Subscriptable Types
 
 `obj[key]` is syntactic sugar for `type(obj).__getitem__(obj, key)`. A type that doesn't define `__getitem__` raises:

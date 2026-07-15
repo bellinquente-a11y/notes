@@ -1,3 +1,8 @@
+---
+tags:
+  - errors
+---
+
 # Warnings
 
 Warnings are advisory — they print a message and execution continues. Use them for deprecations, non-fatal anomalies, or when you catch an exception but the program can still proceed.

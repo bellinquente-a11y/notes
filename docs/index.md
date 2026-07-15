@@ -10,3 +10,5 @@ Learning notes and references across software engineering, ML, and AI topics.
 | [git/](git/README.md) | Git workflows, commands, and CI/CD |
 | [python/](python/README.md) | Python language, tooling, and type system |
 | [tools/](tools/README.md) | Language-agnostic tools and notation |
+
+Or browse notes by cross-cutting theme on the [tags page](tags.md).

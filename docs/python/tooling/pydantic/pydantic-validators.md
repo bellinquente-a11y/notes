@@ -1,3 +1,8 @@
+---
+tags:
+  - typing
+---
+
 # Pydantic — Validators
 
 Two families: `@field_validator` (one field) and `@model_validator` (whole model). Each runs in `before` (raw input) or `after` (parsed) mode.

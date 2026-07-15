@@ -1,3 +1,9 @@
+---
+tags:
+  - concurrency
+  - performance
+---
+
 # Concurrency in Python: GIL, Threads, Processes, asyncio
 
 ## Foundations

@@ -1,3 +1,8 @@
+---
+tags:
+  - errors
+---
+
 # Exceptions
 
 Python uses exceptions for *all* error conditions — no error codes, no `(value, err)` returns. The happy path stays clean; failures can't be silently ignored.

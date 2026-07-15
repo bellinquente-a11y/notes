@@ -1,3 +1,8 @@
+---
+tags:
+  - logging
+---
+
 # Logging (stdlib)
 
 Python's `logging` module routes diagnostic messages through a configurable pipeline. Prefer it over `print`: you get severity filtering, multiple destinations, structured metadata, and zero-code reconfiguration.

@@ -1,3 +1,8 @@
+---
+tags:
+  - testing
+---
+
 # pytest
 
 pytest is the standard Python testing framework. It automatically discovers files named `test_*.py` and functions named `test_*`.

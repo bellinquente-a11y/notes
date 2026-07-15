@@ -1,3 +1,8 @@
+---
+tags:
+  - typing
+---
+
 # Classes: Inheritance and ABCs
 
 ## Inheritance

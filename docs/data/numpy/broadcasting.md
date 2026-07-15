@@ -1,3 +1,8 @@
+---
+tags:
+  - performance
+---
+
 # Broadcasting
 
 NumPy applies element-wise operations to arrays of different shapes by *virtually stretching* smaller arrays to match — no data is copied, no Python loop is written.

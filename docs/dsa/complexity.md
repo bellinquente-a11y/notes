@@ -1,3 +1,8 @@
+---
+tags:
+  - performance
+---
+
 # Complexity and Data Structure Choice
 
 Big-O describes how work *scales* with input size — not raw speed. The question: **if I double n, what happens to the work?**

@@ -1,3 +1,8 @@
+---
+tags:
+  - typing
+---
+
 # Mypy
 
 ## What mypy is

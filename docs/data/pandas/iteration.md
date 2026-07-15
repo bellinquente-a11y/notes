@@ -1,3 +1,8 @@
+---
+tags:
+  - performance
+---
+
 # Pandas — Iteration
 
 ## `__iter__` asymmetry

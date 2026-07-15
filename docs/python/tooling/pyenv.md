@@ -1,3 +1,8 @@
+---
+tags:
+  - packaging
+---
+
 # pyenv
 
 pyenv lets you install and switch between multiple Python versions.

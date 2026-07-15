@@ -1,3 +1,9 @@
+---
+tags:
+  - cli
+  - testing
+---
+
 # Python CLI
 
 ## Running Python from the shell

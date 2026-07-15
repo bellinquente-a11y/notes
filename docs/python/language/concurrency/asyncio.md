@@ -1,3 +1,8 @@
+---
+tags:
+  - concurrency
+---
+
 # asyncio — Core Mechanics
 
 See [concurrency.md](concurrency.md) for the comparison with threads and the decision guide.

@@ -1,3 +1,8 @@
+---
+tags:
+  - testing
+---
+
 # Testing — Patterns
 
 Practical patterns for testing functions with external dependencies or side effects.
