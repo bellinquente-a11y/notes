@@ -97,6 +97,23 @@ def test_query(db):   # runs twice
 
 Use `request.param` to access the current parameter. See [contract-tests.md](contract-tests.md) for the pattern applied to Protocol implementations.
 
+## `@pytest.mark.parametrize` — one test body, many cases
+
+Unlike a parametrized fixture, this parametrizes the test function directly — no fixture needed:
+
+```python
+@pytest.mark.parametrize("qty,price,expected", [
+    (10, 5.0, 50.0),
+    (0, 5.0, 0.0),
+    (-1, 5.0, -5.0),
+], ids=["normal", "zero", "negative"])
+def test_notional(qty, price, expected):
+    assert qty * price == expected
+```
+
+!!! tip "Use `ids=`"
+    Without `ids=`, a failure reports `test_notional[10-5.0-50.0]` — the raw values. With `ids=`, it reports `test_notional[negative]`, which tells you which case failed without decoding tuples.
+
 ## `autouse` — implicit fixtures
 
 ```python

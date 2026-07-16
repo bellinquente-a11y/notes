@@ -25,6 +25,18 @@ def test_rejects_negative_quantity():
 
 The `Trade` model used here follows the pattern in [`pydantic.md`](../pydantic/pydantic.md).
 
+### `pytest.raises(..., match=)`
+
+`match=` checks the exception message against a regex, so the test verifies both the error type *and* that the message is actually useful:
+
+```python
+def test_rejects_negative_quantity():
+    with pytest.raises(ValueError, match="quantity must be positive"):
+        Trade(symbol='BHP', quantity=-10, price=45.5, side='BUY')
+```
+
+Without `match=`, a test can pass even if the exception message is empty or unhelpful.
+
 ### Run
 
 Pytest automatically:
