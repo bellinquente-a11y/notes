@@ -12,3 +12,5 @@ Learning notes and references across software engineering, ML, and AI topics.
 | [tools/](tools/README.md) | Language-agnostic tools and notation |
 
 Or browse notes by cross-cutting theme on the [tags page](tags.md).
+
+For spaced-repetition review of these notes, open the [quiz app](quiz/index.html).

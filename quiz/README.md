@@ -1,14 +1,21 @@
-# Quiz decks
+# Quiz banks
 
-Anki question banks generated from the notes under `docs/`, compiled into a single
-`notes.apkg` for spaced-repetition review on the phone (AnkiMobile).
+Question banks generated from the notes under `docs/`, reviewed with spaced
+repetition in the web quiz app at
+[`/quiz/`](https://bellinquente-a11y.github.io/notes/quiz/) on the published
+site (works in any browser — add it to the phone home screen for an app-like
+experience). No Anki or paid apps involved.
 
 ## Layout
 
 - `banks/` — one YAML file per note, mirroring the `docs/` tree. These are the
   source of truth and are committed.
-- `build_deck.py` — compiles all banks into `notes.apkg` (gitignored artifact).
-- `requirements.txt` — build dependencies (`genanki`, `pyyaml`).
+- `build_web.py` — validates all banks and compiles them into
+  `docs/quiz/data.json` (gitignored artifact, consumed by the app).
+- `../docs/quiz/index.html` — the quiz app: a single self-contained HTML file
+  with SM-2 spaced-repetition scheduling; progress lives in the browser's
+  `localStorage`, with export/import buttons for backup.
+- `requirements.txt` — build dependency (`pyyaml`).
 
 ## Bank format
 
@@ -20,37 +27,41 @@ questions:
     type: mcq                              # mcq | recall
     q: What does `scope="module"` mean?
     options:                               # 3-5 entries; FIRST one is the correct
-      - Shared within a file               # answer (build shuffles display order)
+      - Shared within a file               # answer (the app shuffles display order)
       - New per test
       - Shared across the run
-    explain: One-line reinforcement shown on the back.
+    explain: One-line reinforcement shown after answering.
   - id: why-yield-fixtures
     type: recall
     q: Why are yield fixtures preferred over addfinalizer?
-    answer: Short model answer shown on the back.
+    answer: Short model answer shown on reveal.
 ```
 
 Only backtick `code` markup is supported in text fields.
 
-## Build and import
+## Build and review
 
 ```bash
 pip3 install -r quiz/requirements.txt   # once
-python3 quiz/build_deck.py              # writes quiz/notes.apkg
+python3 quiz/build_web.py               # writes docs/quiz/data.json
 ```
 
-Import: AirDrop `notes.apkg` to the phone and open it in AnkiMobile, or import in
-Anki desktop and sync via AnkiWeb.
+The GitHub Actions docs workflow runs the same build before `mkdocs build`, so
+pushing to `main` publishes the updated questions automatically — nothing to
+sync or re-import.
 
-Card identity is stable across rebuilds (guid = bank path + question id), so
-re-importing an updated deck edits cards in place and **preserves scheduling
-history**. Renaming a question `id` or moving a bank file creates a new card —
-don't do it to existing questions.
+Card identity is stable across rebuilds (scheduling state is keyed by
+`bank path + question id`), so editing question text in place **preserves
+scheduling history**. Renaming a question `id` or moving a bank file creates a
+new card — don't do it to existing questions.
+
+Review progress is stored per browser in `localStorage`; use the app's
+Export/Import buttons to back it up or move it between devices.
 
 ## Conventions
 
 - Question volume: ≤8 per `core` note, ≤4 per `detail` note; roughly 70% mcq / 30% recall.
 - Questions test understanding, not trivia; distractors must be plausible.
-- Card tags: tier (`core`/`detail`) + top-level area (`python`, `data`, …) for
-  filtered decks in Anki.
+- Cards inherit their tier (`core`/`detail`) and top-level area (`python`,
+  `data`, …) from the bank; the app filters on both.
 - The `QUIZ` workflow (see `.claude/skills/quiz/`) maintains these banks.

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Notes Quiz</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1c1c1e; --muted: #6e6e73; --card: #f2f2f7;
+    --accent: #3f51b5; --accent-fg: #ffffff; --border: #d1d1d6;
+    --good: #1a7f37; --good-bg: #e6f4ea; --bad: #b3261e; --bad-bg: #fbe9e7;
+    --code-bg: #e8e8ed;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e; --fg: #f2f2f7; --muted: #98989d; --card: #2c2c2e;
+      --accent: #7986cb; --accent-fg: #111111; --border: #3a3a3c;
+      --good: #4caf7d; --good-bg: #1d3326; --bad: #ef5350; --bad-bg: #3a2222;
+      --code-bg: #3a3a3c;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+             env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 16px 16px 48px; }
+  h1 { font-size: 22px; margin: 8px 0 4px; }
+  .muted { color: var(--muted); font-size: 14px; }
+  code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px;
+         font-size: 88%; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  button {
+    font: inherit; color: inherit; background: var(--card);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  button:active { filter: brightness(0.92); }
+  .primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
+  .row { display: flex; gap: 10px; margin-top: 12px; }
+  .row button { flex: 1; }
+
+  /* home */
+  .deck {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; text-align: left; margin-top: 10px;
+  }
+  .deck .counts { font-size: 14px; color: var(--muted); white-space: nowrap; margin-left: 12px; }
+  .counts b { color: var(--accent); }
+  .toggles { display: flex; gap: 8px; margin: 14px 0 4px; align-items: center; }
+  .toggles button { padding: 6px 12px; border-radius: 999px; font-size: 14px; }
+  .toggles button.on { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  details { margin-top: 22px; }
+  summary { cursor: pointer; color: var(--muted); }
+  details .row button { font-size: 14px; }
+  label { display: block; margin-top: 10px; font-size: 14px; }
+  input[type=number] {
+    font: inherit; width: 70px; margin-left: 8px; background: var(--card);
+    color: inherit; border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px;
+  }
+
+  /* session */
+  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  header button { padding: 6px 12px; font-size: 14px; }
+  .q { font-weight: 600; font-size: 19px; margin: 6px 0 16px; overflow-wrap: break-word; }
+  .opt {
+    display: block; width: 100%; text-align: left; margin-top: 10px; overflow-wrap: break-word;
+  }
+  .opt.correct { background: var(--good-bg); border-color: var(--good); color: inherit; }
+  .opt.wrong { background: var(--bad-bg); border-color: var(--bad); color: inherit; }
+  .opt:disabled { opacity: 1; cursor: default; }
+  .explain { margin-top: 16px; padding: 12px; background: var(--card); border-radius: 10px; overflow-wrap: break-word; }
+  .src { margin-top: 12px; font-size: 14px; }
+  .src a { color: var(--accent); }
+  .answer { margin-top: 16px; overflow-wrap: break-word; }
+  .grades { position: sticky; bottom: 12px; }
+  .grades button { font-weight: 600; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main id="app"><p class="muted">Loading…</p></main>
+<script>
+"use strict";
+
+const STORE_KEY = "kbquiz-v1";
+const DAY = 86400e3;
+let DATA = null;   // {generated, banks:[{path, note, tier, area, questions:[…]}]}
+let STATE = null;  // {version, settings:{newPerSession, tiers}, cards:{key:{ease,ivl,due,reps,lapses}}}
+let session = null;
+
+/* ---------- persistence ---------- */
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STORE_KEY));
+    if (s && s.version === 1 && s.cards) return s;
+  } catch (e) { /* corrupt → start fresh */ }
+  return { version: 1, settings: { newPerSession: 20, tiers: { core: true, detail: true } }, cards: {} };
+}
+function saveState() { localStorage.setItem(STORE_KEY, JSON.stringify(STATE)); }
+
+/* ---------- SM-2 scheduling ---------- */
+
+function gradeCard(key, grade) {  // grade: "again" | "hard" | "good" | "easy"
+  const now = Date.now();
+  let c = STATE.cards[key] || { ease: 2.5, ivl: 0, due: now, reps: 0, lapses: 0 };
+  if (grade === "again") {
+    c.ease = Math.max(1.3, c.ease - 0.2);
+    if (c.reps > 0) c.lapses += 1;
+    c.ivl = 0;                       // relearn: due immediately, graduates at 1d
+    c.due = now;
+  } else {
+    if (grade === "hard") { c.ease = Math.max(1.3, c.ease - 0.15); }
+    if (grade === "easy") { c.ease += 0.15; }
+    if (c.ivl === 0) {               // new or relearning card graduates
+      c.ivl = grade === "easy" ? 4 : 1;
+    } else {
+      const factor = grade === "hard" ? 1.2 : grade === "easy" ? c.ease * 1.3 : c.ease;
+      c.ivl = Math.max(c.ivl + 1, Math.round(c.ivl * factor));
+    }
+    c.reps += 1;
+    c.due = now + c.ivl * DAY;
+  }
+  STATE.cards[key] = c;
+  saveState();
+}
+
+/* ---------- card pool ---------- */
+
+function allCards() {  // respects tier toggles
+  const out = [];
+  for (const bank of DATA.banks) {
+    if (!STATE.settings.tiers[bank.tier]) continue;
+    for (const q of bank.questions) {
+      out.push({ key: bank.path + "#" + q.id, bank, q });
+    }
+  }
+  return out;
+}
+function isDue(card) { const s = STATE.cards[card.key]; return s && s.due <= Date.now(); }
+function isNew(card) { return !STATE.cards[card.key]; }
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/* ---------- rendering helpers ---------- */
+
+function mdInline(text) {  // backtick code spans only, everything else escaped
+  return String(text).split("`").map((part, i) => {
+    part = part.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return i % 2 ? "<code>" + part + "</code>" : part;
+  }).join("");
+}
+function noteLink(bank) {
+  const href = "../" + bank.note.replace(/\.md$/, "") + "/";
+  return `<div class="src">Source: <a href="${href}" target="_blank" rel="noopener">${bank.note}</a></div>`;
+}
+function el(html) {
+  const t = document.createElement("template");
+  t.innerHTML = html.trim();
+  return t.content.firstChild;
+}
+const app = document.getElementById("app");
+
+/* ---------- home screen ---------- */
+
+function renderHome() {
+  session = null;
+  const cards = allCards();
+  const areas = {};
+  for (const c of cards) {
+    const a = areas[c.bank.area] || (areas[c.bank.area] = { due: 0, fresh: 0 });
+    if (isDue(c)) a.due += 1; else if (isNew(c)) a.fresh += 1;
+  }
+  const totalDue = cards.filter(isDue).length;
+  const totalNew = cards.filter(isNew).length;
+
+  app.innerHTML = "";
+  app.appendChild(el(`<h1>Notes Quiz</h1>`));
+  app.appendChild(el(`<p class="muted">${cards.length} cards · updated ${DATA.generated}</p>`));
+
+  const toggles = el(`<div class="toggles"><span class="muted">Tiers:</span></div>`);
+  for (const tier of ["core", "detail"]) {
+    const b = el(`<button class="${STATE.settings.tiers[tier] ? "on" : ""}">${tier}</button>`);
+    b.onclick = () => {
+      const t = STATE.settings.tiers;
+      t[tier] = !t[tier];
+      if (!t.core && !t.detail) t[tier] = true;  // never filter everything out
+      saveState(); renderHome();
+    };
+    toggles.appendChild(b);
+  }
+  app.appendChild(toggles);
+
+  const all = el(`<button class="deck primary"><span>Review all</span>
+    <span class="counts">${totalDue} due · ${totalNew} new</span></button>`);
+  all.onclick = () => startSession(null);
+  app.appendChild(all);
+
+  for (const area of Object.keys(areas).sort()) {
+    const a = areas[area];
+    const b = el(`<button class="deck"><span>${area}</span>
+      <span class="counts"><b>${a.due}</b> due · ${a.fresh} new</span></button>`);
+    b.onclick = () => startSession(area);
+    app.appendChild(b);
+  }
+
+  const tools = el(`<details><summary>Settings & backup</summary></details>`);
+  const cap = el(`<label>New cards per session
+    <input type="number" min="0" max="200" value="${STATE.settings.newPerSession}"></label>`);
+  cap.querySelector("input").onchange = (e) => {
+    STATE.settings.newPerSession = Math.max(0, parseInt(e.target.value, 10) || 0);
+    saveState(); renderHome();
+  };
+  tools.appendChild(cap);
+
+  const backup = el(`<div class="row">
+    <button id="exp">Export progress</button>
+    <button id="imp">Import progress</button></div>`);
+  backup.querySelector("#exp").onclick = exportState;
+  backup.querySelector("#imp").onclick = importState;
+  tools.appendChild(backup);
+  tools.appendChild(el(`<p class="muted">Progress lives in this browser's storage.
+    Export before clearing website data or switching devices.</p>`));
+  app.appendChild(tools);
+}
+
+/* ---------- backup ---------- */
+
+function exportState() {
+  const json = JSON.stringify(STATE);
+  const blob = new Blob([json], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "quiz-progress-" + new Date().toISOString().slice(0, 10) + ".json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(json).then(
+      () => alert("Downloaded, and copied to clipboard as a fallback."),
+      () => {});
+  }
+}
+function importState() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "application/json,.json";
+  input.onchange = () => {
+    const file = input.files[0];
+    if (!file) return;
+    file.text().then((text) => {
+      try {
+        const s = JSON.parse(text);
+        if (!s || s.version !== 1 || typeof s.cards !== "object") throw new Error("bad format");
+        STATE = s; saveState(); renderHome();
+        alert("Progress imported.");
+      } catch (e) { alert("Not a valid progress file."); }
+    });
+  };
+  input.click();
+}
+
+/* ---------- session ---------- */
+
+function startSession(area) {
+  const pool = allCards().filter((c) => !area || c.bank.area === area);
+  const due = pool.filter(isDue).sort((a, b) => STATE.cards[a.key].due - STATE.cards[b.key].due);
+  const fresh = shuffle(pool.filter(isNew)).slice(0, STATE.settings.newPerSession);
+  const queue = due.concat(fresh);
+  if (!queue.length) { alert("Nothing due here — come back later."); return; }
+  session = { queue, i: 0, done: 0, again: 0, total: queue.length };
+  renderCard();
+}
+
+function requeue(card) {  // "again" → card comes back later this session
+  const pos = Math.min(session.queue.length, session.i + 1 + 5);
+  session.queue.splice(pos, 0, card);
+  session.total += 1;
+}
+
+function renderCard() {
+  if (session.i >= session.queue.length) { renderDone(); return; }
+  const card = session.queue[session.i];
+  app.innerHTML = "";
+  app.appendChild(el(`<header><span class="muted">${session.done + 1} / ${session.total}</span>
+    <button id="quit">End session</button></header>`));
+  app.querySelector("#quit").onclick = renderHome;
+  app.appendChild(el(`<div class="q">${mdInline(card.q.q)}</div>`));
+  if (card.q.type === "mcq") renderMcq(card); else renderRecall(card);
+}
+
+function advance() { session.i += 1; session.done += 1; renderCard(); }
+
+function renderMcq(card) {
+  const order = shuffle(card.q.options.map((_, i) => i));
+  const buttons = [];
+  for (const idx of order) {
+    const b = el(`<button class="opt">${mdInline(card.q.options[idx])}</button>`);
+    b.onclick = () => reveal(idx, b);
+    buttons.push({ idx, b });
+    app.appendChild(b);
+  }
+  function reveal(chosen, chosenBtn) {
+    for (const { idx, b } of buttons) {
+      b.disabled = true;
+      if (idx === 0) b.classList.add("correct");
+    }
+    const correct = chosen === 0;
+    if (!correct) chosenBtn.classList.add("wrong");
+    if (card.q.explain) app.appendChild(el(`<div class="explain">${mdInline(card.q.explain)}</div>`));
+    app.appendChild(el(noteLink(card.bank)));
+
+    const row = el(`<div class="row grades"></div>`);
+    if (correct) {
+      const good = el(`<button class="primary">Good</button>`);
+      const easy = el(`<button>Easy</button>`);
+      good.onclick = () => { gradeCard(card.key, "good"); advance(); };
+      easy.onclick = () => { gradeCard(card.key, "easy"); advance(); };
+      row.appendChild(good); row.appendChild(easy);
+    } else {
+      const again = el(`<button class="primary">Continue (again)</button>`);
+      again.onclick = () => { gradeCard(card.key, "again"); session.again += 1; requeue(card); advance(); };
+      row.appendChild(again);
+    }
+    app.appendChild(row);
+    row.scrollIntoView({ block: "end" });
+  }
+}
+
+function renderRecall(card) {
+  const show = el(`<div class="row grades"><button class="primary">Show answer</button></div>`);
+  show.firstChild.onclick = () => {
+    show.remove();
+    app.appendChild(el(`<div class="answer">${mdInline(card.q.answer)}</div>`));
+    app.appendChild(el(noteLink(card.bank)));
+    const row = el(`<div class="row grades"></div>`);
+    for (const [label, g] of [["Again", "again"], ["Hard", "hard"], ["Good", "good"], ["Easy", "easy"]]) {
+      const b = el(`<button class="${g === "good" ? "primary" : ""}">${label}</button>`);
+      b.onclick = () => {
+        gradeCard(card.key, g);
+        if (g === "again") { session.again += 1; requeue(card); }
+        advance();
+      };
+      row.appendChild(b);
+    }
+    app.appendChild(row);
+    row.scrollIntoView({ block: "end" });
+  };
+  app.appendChild(show);
+}
+
+function renderDone() {
+  app.innerHTML = "";
+  app.appendChild(el(`<h1>Session complete</h1>`));
+  app.appendChild(el(`<p>${session.done} cards reviewed · ${session.again} needed a retry.</p>`));
+  const b = el(`<div class="row"><button class="primary">Back to decks</button></div>`);
+  b.firstChild.onclick = renderHome;
+  app.appendChild(b);
+}
+
+/* ---------- boot ---------- */
+
+STATE = loadState();
+fetch("data.json")
+  .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then((data) => { DATA = data; renderHome(); })
+  .catch((e) => {
+    app.innerHTML = `<h1>Notes Quiz</h1>
+      <p>Could not load <code>data.json</code> (${e.message}).
+      Run <code>python3 quiz/build_web.py</code> before building the site.</p>`;
+  });
+</script>
+</body>
+</html>
