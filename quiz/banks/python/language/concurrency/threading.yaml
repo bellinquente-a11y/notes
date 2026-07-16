@@ -1,0 +1,34 @@
+note: python/language/concurrency/threading.md
+tier: detail
+questions:
+  - id: submit-vs-result
+    type: mcq
+    q: In `ThreadPoolExecutor`, where does blocking actually happen?
+    options:
+      - At `.result()` — `submit()` returns a Future immediately
+      - At `submit()` — it waits for a free worker
+      - At pool creation, which pre-runs the tasks
+      - At the end of the `with` block only
+    explain: "`submit` schedules and returns at once. Iterating `.result()` in submission order means waiting on f1 even if f2 finished first — use `as_completed` for completion order."
+  - id: thread-exceptions
+    type: mcq
+    q: A function raises inside a worker thread. When does the exception surface?
+    options:
+      - When you call `.result()` on its Future — it is captured, not propagated
+      - Immediately in the main thread
+      - Never — thread exceptions are printed and discarded
+      - When the pool's `with` block exits
+    explain: "`f.exception()` inspects without raising; `as_completed` still yields failed futures, so you can handle errors per task without aborting the batch."
+  - id: increment-not-atomic
+    type: mcq
+    q: Why is `counter += 1` unsafe across threads even with the GIL?
+    options:
+      - It compiles to LOAD/ADD/STORE bytecodes and the GIL can switch threads between any two of them
+      - The GIL only protects I/O operations
+      - Integer objects are not thread-safe in CPython
+      - It is safe — the GIL makes every statement atomic
+    explain: Another thread can read the pre-increment value between the bytecodes, silently losing updates. Wrap read-modify-write in `threading.Lock()` or communicate via `queue.Queue`.
+  - id: as-completed-idiom
+    type: recall
+    q: What is the idiomatic pattern for processing thread-pool results as they arrive, keeping track of which input each result belongs to?
+    answer: "Build a dict `{pool.submit(fn, x): x for x in items}`, then `for f in as_completed(futures):` recover the input with `futures[f]` and call `f.result()` in a try/except. Futures arrive in completion order, not submission order."

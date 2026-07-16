@@ -1,0 +1,65 @@
+note: python/language/concurrency/asyncio.md
+tier: core
+questions:
+  - id: coroutine-object
+    type: mcq
+    q: "What does `result = fetch(url)` do when `fetch` is an `async def` function?"
+    options:
+      - Creates an inert coroutine object without running the body — the classic missing-`await` bug
+      - Runs `fetch` to completion synchronously
+      - Schedules `fetch` on the event loop immediately
+      - Raises `TypeError` outside an event loop
+    explain: "`async def` defines a factory: calling it returns a coroutine object; nothing runs until `await` or `create_task` drives it. Discarding it unrun gives a RuntimeWarning."
+  - id: await-semantics
+    type: mcq
+    q: What happens at `await expr` inside a coroutine?
+    options:
+      - The coroutine suspends and yields control to the event loop, which can run other coroutines
+      - The whole thread blocks until `expr` completes
+      - A new thread is spawned to evaluate `expr`
+      - The expression is queued to run after the coroutine returns
+    explain: "`await` is suspension, not blocking — the loop resumes the coroutine when the awaitable completes. Only awaitables (coroutines, Tasks, Futures) can be awaited, only inside `async def`."
+  - id: gather-exceptions
+    type: mcq
+    q: By default, what does `asyncio.gather(a(), b(), c())` do when `b()` raises?
+    options:
+      - The first exception propagates to the caller and the remaining tasks are cancelled
+      - All three run to completion; exceptions are returned in the results list
+      - The failed coroutine is retried once
+      - The exception is swallowed and its slot is None
+    explain: "With `return_exceptions=True` you get the other behaviour: everything runs and exceptions come back as values to inspect with `isinstance(r, Exception)`."
+  - id: gather-vs-create-task
+    type: mcq
+    q: When would you use `asyncio.create_task()` instead of `gather()`?
+    options:
+      - To start a coroutine in the background and overlap it with other sequential work, awaiting it later
+      - To run a coroutine in a separate thread
+      - When you need results in completion order
+      - When the coroutine must not be scheduled immediately
+    explain: "`create_task` schedules immediately without awaiting — fire and overlap. `gather` is for a batch you collect all at once (results in submission order)."
+  - id: semaphore-use
+    type: mcq
+    q: What is the primary use of `asyncio.Semaphore(10)` around a fetch coroutine?
+    options:
+      - Capping concurrency — at most 10 coroutines run the guarded block at once
+      - Retrying failed fetches up to 10 times
+      - Sharing one connection between 10 coroutines
+      - Rate-limiting to 10 requests per second
+    explain: Each `async with sem:` decrements the counter; at 0 the next coroutine waits. Prevents `gather()` from firing hundreds of requests simultaneously.
+  - id: async-race
+    type: mcq
+    q: The event loop is single-threaded — can shared state still race between coroutines?
+    options:
+      - Yes, if a coroutine `await`s in the middle of a read-modify-write, another coroutine can interleave
+      - No, single-threaded code cannot race
+      - Only when using `run_in_executor`
+      - Only on multi-core machines
+    explain: Switches happen at every `await`. `asyncio.Lock` serialises the critical section — it's `Semaphore(1)` with clearer intent (and not thread-safe across threads).
+  - id: asyncio-run
+    type: recall
+    q: What does `asyncio.run(main())` do, and where can it be called?
+    answer: It bridges sync code into async — creates an event loop, runs the one top-level coroutine to completion, then closes the loop. Only callable from synchronous code, never inside a running loop; one loop at a time.
+  - id: blocking-fix
+    type: recall
+    q: How do you handle an unavoidable blocking call (e.g. a sync SDK) inside async code?
+    answer: "Offload it: `await loop.run_in_executor(None, blocking_fn, arg)` runs it in a thread pool so the event loop keeps scheduling other coroutines. Prefer async-native libraries (aiohttp, asyncpg, aiofiles) where they exist."

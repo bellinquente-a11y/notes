@@ -1,0 +1,56 @@
+note: python/language/concurrency/concurrency.md
+tier: core
+questions:
+  - id: gil-what-it-protects
+    type: mcq
+    q: What does the Global Interpreter Lock (GIL) actually protect?
+    options:
+      - CPython internals (reference counts) — not your shared data, which still needs locks
+      - All shared Python objects, making threaded code automatically safe
+      - The memory of each thread from other threads
+      - Only C extension state
+    explain: Only one thread executes Python bytecode at a time because refcounting isn't thread-safe — but concurrent access to a list/dict still requires explicit locking.
+  - id: gil-released-when
+    type: mcq
+    q: When is the GIL released, making threads genuinely useful?
+    options:
+      - During blocking I/O calls and in C extensions that release it (e.g. numpy)
+      - Never — that's why threads are useless in Python
+      - Whenever a thread calls `time.sleep(0)` explicitly
+      - When fewer threads than cores are running
+    explain: While one thread waits on network/disk (GIL released), another runs Python code. This is why threads work for I/O-bound tasks and numpy-heavy code.
+  - id: cpu-bound-tool
+    type: mcq
+    q: Why does CPU-bound pure-Python work need `ProcessPoolExecutor` rather than threads?
+    options:
+      - The GIL limits execution to one thread at a time; separate processes each have their own interpreter and GIL
+      - Threads cannot execute arithmetic instructions
+      - Processes share memory more efficiently than threads
+      - Thread pools are capped at the number of cores
+    explain: Multiprocessing gives real parallelism across cores — at the cost of pickling data between processes and slow (~100ms) process startup.
+  - id: preemptive-vs-cooperative
+    type: mcq
+    q: What is the key difference between threads (preemptive) and asyncio (cooperative) scheduling?
+    options:
+      - The OS can interrupt a thread between any two instructions; a coroutine runs uninterrupted until it hits `await`
+      - Threads switch only at I/O; coroutines switch at any time
+      - Cooperative scheduling requires multiple cores
+      - Preemptive scheduling means threads never need locks
+    explain: In asyncio you can reason about atomicity between `await` points; threaded code has no such guarantee without locks. The flip side — a coroutine that never awaits blocks everything.
+  - id: blocking-in-async
+    type: mcq
+    q: What happens if you call `requests.get()` (blocking) inside an `async def` coroutine?
+    options:
+      - The entire event loop freezes until the call returns
+      - Only that coroutine pauses; others continue
+      - asyncio detects it and offloads to a thread automatically
+      - It raises `RuntimeError`
+    explain: The loop is single-threaded — a blocking call starves every other task. Use an async library or `loop.run_in_executor(None, blocking_fn)`.
+  - id: concurrency-vs-parallelism
+    type: recall
+    q: Distinguish concurrency from parallelism, and say which kind of workload needs which.
+    answer: Concurrency = multiple tasks in progress at once, possibly interleaved on one core; parallelism = tasks literally running simultaneously on separate cores. I/O-bound work only needs concurrency (cores idle during waits); CPU-bound work needs parallelism.
+  - id: decision-guide
+    type: recall
+    q: "Give the tool of choice for: I/O-bound few tasks; I/O-bound massive concurrency; CPU-bound pure Python; CPU-bound numpy."
+    answer: ThreadPoolExecutor; asyncio with async libraries; ProcessPoolExecutor; often plain threads — numpy releases the GIL in its C layer, so profile before reaching for processes.
