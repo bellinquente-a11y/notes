@@ -1,0 +1,34 @@
+note: python/language/runtime/file-io.md
+tier: detail
+questions:
+  - id: w-truncates
+    type: mcq
+    q: What is the danger of opening an existing file with mode `'w'`?
+    options:
+      - It truncates the file immediately and silently — use `'r+'` to update or `'a'` to append
+      - It locks the file against other processes
+      - It fails if the file exists
+      - It converts the file to text encoding
+    explain: "`'x'` is the exclusive-create mode that fails if the file exists; `'w'` destroys content with no prompt."
+  - id: encoding-explicit
+    type: mcq
+    q: Why always pass `encoding='utf-8'` when opening text files?
+    options:
+      - The default encoding is platform-dependent — the same file can decode differently on another machine
+      - Python refuses to open files without it since 3.10
+      - It doubles read performance
+      - Binary mode requires it
+    explain: Locale-dependent defaults are a classic cross-platform bug source. Binary mode (`'b'`) skips encoding and newline translation entirely.
+  - id: line-iteration
+    type: mcq
+    q: What is the memory-efficient way to process a huge text file line by line?
+    options:
+      - "`for line in f:` — the file object is a lazy iterator"
+      - "`f.readlines()` then loop"
+      - "`f.read().split('\\n')`"
+      - "`csv.reader(f)` regardless of format"
+    explain: "readlines()/read() load the whole file. For binary, stream chunks: `while chunk := f.read(4096):`."
+  - id: pickle-security
+    type: recall
+    q: What is the security rule for pickle, and when do the pathlib shortcuts suffice?
+    answer: "Never unpickle untrusted data — pickle.load executes arbitrary code. For simple one-shot reads/writes, `Path.read_text()`/`write_text()` (and bytes variants) beat open(); use open() when you need streaming, modes, or partial reads. CSV needs `newline=''` in open() since the csv module manages line endings."

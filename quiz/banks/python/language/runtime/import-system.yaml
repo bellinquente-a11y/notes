@@ -1,0 +1,47 @@
+note: python/language/runtime/import-system.md
+tier: core
+questions:
+  - id: init-py-role
+    type: mcq
+    q: What does `__init__.py` do, and what is the main rule about its contents?
+    options:
+      - It makes a directory an importable package; keep it thin — everything in it runs on every import of the package
+      - It is required to run the package as a script
+      - It lists dependencies for pip
+      - It compiles the package to bytecode
+    explain: Heavy imports (numpy, DB drivers) in `__init__.py` add startup latency for every caller. Re-export names; let submodules do the heavy lifting.
+  - id: relative-imports
+    type: mcq
+    q: "Where are relative imports (`from .trade import Trade`) valid?"
+    options:
+      - Only inside a package — they fail when the file is run directly as `__main__`
+      - Everywhere, including scripts
+      - Only in `__init__.py` files
+      - Only for sibling modules, never parents
+    explain: "Dots are levels up: `.` current package, `..` parent. Scripts, entry points, and tests should use absolute imports."
+  - id: circular-imports
+    type: mcq
+    q: What is the best fix for a circular import between `trade.py` and `portfolio.py`?
+    options:
+      - Restructure — extract the shared types into a third module that neither imports
+      - Wrap both imports in try/except ImportError
+      - Merge the two modules
+      - Import with importlib instead of the import statement
+    explain: "Fallbacks in order: deferred import inside the function that needs it, or a `TYPE_CHECKING` guard when only annotations need the name (with `from __future__ import annotations`)."
+  - id: all-and-reexport
+    type: mcq
+    q: "What does `__all__` control, and why write `from .trade import Trade as Trade` in `__init__.py`?"
+    options:
+      - "`__all__` defines what `import *` exposes (the canonical public API); the `as X` form marks the re-export as intentional for mypy"
+      - "`__all__` prevents any other name from being imported; `as` renames on conflict"
+      - "`__all__` speeds up imports; `as` creates an alias"
+      - Both are only stylistic
+    explain: mypy treats plain `from .x import X` in `__init__.py` as a private import by default; the redundant-looking `as X` signals a deliberate re-export.
+  - id: sys-path
+    type: recall
+    q: How does Python find modules when you `import x`?
+    answer: It searches the directories in `sys.path` in order (script dir / cwd, PYTHONPATH, site-packages). `module.__file__` shows where a loaded module came from; imported modules get bytecode-cached in `__pycache__`.
+  - id: lazy-loading
+    type: recall
+    q: How do large libraries make `mylib.analysis` import only on first access?
+    answer: "A module-level `__getattr__(name)` in `__init__.py` that imports and returns the submodule on attribute access (PEP 562) — the pattern used by scipy, pandas, and sklearn to keep base import fast."

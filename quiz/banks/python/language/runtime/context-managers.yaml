@@ -1,0 +1,34 @@
+note: python/language/runtime/context-managers.md
+tier: core
+questions:
+  - id: key-guarantee
+    type: mcq
+    q: What is the key guarantee of a context manager?
+    options:
+      - Cleanup (`__exit__` / the finally block) runs even if the `with` body raises
+      - The managed resource is created lazily
+      - Exceptions inside the block are suppressed
+      - The block runs atomically
+    explain: "`with` is equivalent to setup + try/finally cleanup — the correct pattern for paired setup/teardown: files, locks, DB connections, temporary state changes."
+  - id: exit-return
+    type: mcq
+    q: "What does the return value of `__exit__(exc_type, exc_val, exc_tb)` control?"
+    options:
+      - Returning True suppresses the exception raised in the block; False/None lets it propagate
+      - Whether `__enter__` runs again
+      - The value bound by `as`
+      - Nothing — it is ignored
+    explain: "Returning False (or nothing) is the normal case. Deliberate suppression is what `contextlib.suppress(FileNotFoundError)` packages up."
+  - id: contextmanager-decorator
+    type: mcq
+    q: "In a `@contextmanager` generator, what plays the roles of `__enter__` and `__exit__`?"
+    options:
+      - The value yielded is the `__enter__` result; code in the `finally` after the yield is the cleanup
+      - The return value is `__enter__`; the yield is `__exit__`
+      - The docstring declares both
+      - The first and last statements, respectively
+    explain: "Setup runs before `yield value`; wrap the yield in try/finally so cleanup runs even when the body raises (the exception is thrown into the generator at the yield point)."
+  - id: enter-as
+    type: recall
+    q: "In `with manager() as x:` — what exactly is `x`?"
+    answer: "The return value of `__enter__()` (or the yielded value in a `@contextmanager` generator) — not the manager object itself, unless `__enter__` returns self, as file objects do."

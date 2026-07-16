@@ -1,0 +1,34 @@
+note: python/language/runtime/datetime.md
+tier: detail
+questions:
+  - id: fromtimestamp-tz
+    type: mcq
+    q: "Why must you pass `tz=timezone.utc` to `datetime.fromtimestamp(ts)`?"
+    options:
+      - Without it you get naive local time — which differs between your laptop, CI, and Docker containers
+      - fromtimestamp raises without a tz argument
+      - The timestamp itself carries a timezone that must match
+      - It's only needed on Windows
+    explain: "The same footgun in reverse: `.timestamp()` on a naive datetime assumes local time. Always round-trip with aware datetimes. `utcfromtimestamp` is deprecated (3.12) because it also returns naive."
+  - id: ms-vs-s
+    type: mcq
+    q: You parse a Unix timestamp and get a date in the year 56,000. What happened?
+    options:
+      - It was milliseconds (13 digits) fed to a seconds API — divide by 1000 first
+      - The timestamp overflowed int64
+      - The timezone offset was applied twice
+      - Nothing — that's the max representable date
+    explain: "Sanity check: ~1.7e9 (10 digits) is seconds for 2024; ~1.7e12 (13 digits) is milliseconds (JS, Binance, most financial APIs)."
+  - id: replace-vs-astimezone
+    type: mcq
+    q: "What is the difference between `dt.replace(tzinfo=tz)` and `dt.astimezone(tz)`?"
+    options:
+      - replace relabels the wall-clock time (changes the instant); astimezone keeps the instant and shifts the display
+      - They are equivalent for aware datetimes
+      - astimezone only works with UTC
+      - replace converts; astimezone attaches
+    explain: Use replace only to attach a tz to a naive datetime you know is already in that zone. For named zones use `zoneinfo.ZoneInfo` (pytz is legacy).
+  - id: parser-choice
+    type: recall
+    q: "Which parser for: a known fixed format, an ISO 8601 API string, an unknown user-supplied string?"
+    answer: "`datetime.strptime(s, fmt)` with explicit codes; `datetime.fromisoformat(s)` (3.11+ handles trailing Z); `dateutil.parser.parse(s)` — convenient but can silently misparse ambiguous strings like 01/02/03."

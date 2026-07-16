@@ -1,0 +1,34 @@
+note: python/language/runtime/match.md
+tier: detail
+questions:
+  - id: capture-gotcha
+    type: mcq
+    q: "With `BUY = \"BUY\"`, why is `case BUY:` wrong in a match statement?"
+    options:
+      - A bare name in a pattern is a capture variable — it matches anything and rebinds BUY
+      - Constants must be lowercase in patterns
+      - String constants can't be matched
+      - It raises SyntaxError
+    explain: "Match against literals (`case \"BUY\":`) or dotted names (`case Side.BUY:`) — only those are treated as values to compare."
+  - id: class-pattern
+    type: mcq
+    q: "What does `case BuyOrder(symbol=s, qty=q):` do?"
+    options:
+      - Checks the type AND extracts the fields into local variables s and q in one pattern
+      - Constructs a new BuyOrder and compares it
+      - Matches any object with those attribute names
+      - Calls BuyOrder.__match__ with s and q
+    explain: Type-plus-destructuring dispatch is the main use case — it replaces isinstance chains.
+  - id: sequence-patterns
+    type: mcq
+    q: "Which pattern matches a non-empty list, binding head and tail?"
+    options:
+      - "`case [first, *rest]:`"
+      - "`case (first, rest):`"
+      - "`case list(first, rest):`"
+      - "`case [first | *rest]:`"
+    explain: "Dict patterns work similarly: `case {\"type\": \"trade\", \"qty\": qty}:` matches any dict containing those keys. First matching case wins, no fallthrough."
+  - id: match-vs-ifelif
+    type: recall
+    q: When is match the right tool versus if/elif or dict dispatch?
+    answer: "match: dispatching on type or structure (replaces isinstance chains, with destructuring and guards like `case BuyOrder(qty=q) if q > 1000:`). if/elif: arbitrary boolean conditions. dict dispatch (`actions.get(cmd, default)()`): simple value-to-callable mapping, and the pre-3.10 fallback."

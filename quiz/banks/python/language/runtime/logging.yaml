@@ -1,0 +1,56 @@
+note: python/language/runtime/logging.md
+tier: core
+questions:
+  - id: pipeline
+    type: mcq
+    q: What is the stdlib logging pipeline?
+    options:
+      - Logger → Handler → Formatter (with optional Filters at logger and handler) → output
+      - Formatter → Logger → Handler → output
+      - Logger → Formatter → Filter → output
+      - Handler → Logger → Formatter → output
+    explain: The Logger is what code calls; Handlers route records to destinations; Formatters render them; Filters gate acceptance. Loggers are named with dotted paths mirroring the package hierarchy.
+  - id: library-rule
+    type: mcq
+    q: What is the one logging action a library is allowed to take?
+    options:
+      - Add a `NullHandler` to its top-level logger — never call `basicConfig` or add real handlers
+      - Call `basicConfig` with sensible defaults
+      - Attach a console handler at WARNING level
+      - Set the root level to INFO
+    explain: "`basicConfig` in a library hijacks the root logger of every importing application. NullHandler just silences the 'no handlers found' warning while records still propagate to the app's handlers."
+  - id: percent-style
+    type: mcq
+    q: "Why `log.debug(\"parsed %d records from %s\", n, fname)` instead of an f-string?"
+    options:
+      - Interpolation is deferred until the record is actually emitted — no formatting cost when the level filters it out
+      - "%-style supports more format specifiers"
+      - f-strings break structured handlers
+      - It is purely a style convention
+    explain: With f-strings you pay string formatting on every call, even for DEBUG messages that will be discarded in production.
+  - id: propagation
+    type: mcq
+    q: How can a single handler on the root logger capture output from `myapp.services.orders`?
+    options:
+      - "Records bubble up the dotted-name hierarchy (`propagate=True` by default) to root's handlers"
+      - Root polls all loggers periodically
+      - It can't — each logger needs its own handler
+      - Only if the child logger sets `parent=root`
+    explain: "This is why apps configure handlers once on root, then use per-logger levels (`\"httpx\": {\"level\": \"WARNING\"}`) to tune subtrees."
+  - id: log-exception
+    type: mcq
+    q: "Inside an `except` block, what is the right way to log the error with its traceback?"
+    options:
+      - "`log.exception(\"risky() failed\")` — equivalent to `log.error(..., exc_info=True)`"
+      - "`log.error(str(e))`"
+      - "`log.critical(e.args)`"
+      - "`log.debug(traceback.format_exc())`"
+    explain: "`log.exception` captures the active traceback automatically; only valid inside an except block."
+  - id: app-setup
+    type: recall
+    q: Where and how should an application configure logging?
+    answer: "Once, at the entry point, before other imports fire: `logging.config.dictConfig` (or `basicConfig` for scripts) setting root level + handlers, with `disable_existing_loggers: False`, and per-logger overrides to turn up one subtree or silence noisy deps. Every module then just does `log = logging.getLogger(__name__)`."
+  - id: production-sinks
+    type: recall
+    q: What logging setup details matter in production?
+    answer: "Rotating files (RotatingFileHandler / TimedRotatingFileHandler) so logs don't grow unbounded; JSON formatting for aggregators (python-json-logger or structlog); and QueueHandler/QueueListener to offload blocking file writes from async or latency-sensitive code."

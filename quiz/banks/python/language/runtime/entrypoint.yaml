@@ -1,0 +1,34 @@
+note: python/language/runtime/entrypoint.md
+tier: detail
+questions:
+  - id: name-guard
+    type: mcq
+    q: "Why does a file need `if __name__ == \"__main__\":` even if you never plan to import it?"
+    options:
+      - Tooling like pytest and mypy imports files — without the guard, top-level code runs as a side effect
+      - Python refuses to run scripts without the guard
+      - The guard enables bytecode caching
+      - It's needed for command-line arguments to work
+    explain: "`__name__` is `\"__main__\"` when run directly and the dotted module name when imported — the guard makes a file usable as both script and library."
+  - id: async-main-bug
+    type: mcq
+    q: "An `async def main()` is called as `main()` in the guard. What happens?"
+    options:
+      - A coroutine object is created and discarded — the body never runs, only a RuntimeWarning appears
+      - It runs synchronously
+      - "`RuntimeError: no event loop`"
+      - The interpreter blocks forever
+    explain: "The program even appears to finish successfully. The fix is `asyncio.run(main())`, which creates a fresh loop, drives the coroutine, and closes the loop."
+  - id: main-py
+    type: mcq
+    q: "What does adding a `__main__.py` to a package enable?"
+    options:
+      - "`python -m mypackage` runs it — how `python -m pytest` and `python -m http.server` work"
+      - "`import mypackage` executes it automatically"
+      - It marks the package as an application for pip
+      - Nothing — the name is reserved
+    explain: "`python -m` is also the standard dev invocation before a console script is installed."
+  - id: console-scripts
+    type: recall
+    q: "How does `finlib-pipeline = \"finlib.pipeline.cli:main\"` in pyproject.toml become a shell command?"
+    answer: "pip/poetry generate a wrapper executable in the venv bin that imports the module and calls `main()` with no arguments — so main must parse `sys.argv` itself (argparse). Its return value goes to `sys.exit()`: None means exit 0. Run via `poetry run finlib-pipeline` during development."

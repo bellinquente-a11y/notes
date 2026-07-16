@@ -1,0 +1,52 @@
+note: python/language/runtime/scopes.md
+tier: core
+questions:
+  - id: legb
+    type: mcq
+    q: In what order does Python resolve a bare name?
+    options:
+      - Local → Enclosing → Global → Built-in, stopping at the first hit
+      - Global → Local → Enclosing → Built-in
+      - Built-in → Global → Enclosing → Local
+      - Local → Global only; enclosing scopes need explicit capture
+    explain: The LEGB rule. Each module, function call, and class body has its own namespace (a dict of names to objects).
+  - id: unboundlocal
+    type: mcq
+    q: "A function prints a module-level `x`, then assigns `x = 20` later in the body. Why does the print raise `UnboundLocalError`?"
+    options:
+      - Python classifies names at compile time — any name assigned anywhere in the function is local for the whole function
+      - The global was deleted by the assignment
+      - print resolves names right-to-left
+      - Assignments hoist to the top like in JavaScript
+    explain: The most common scope bug. Declare `global x` if you really mean the module-level name.
+  - id: global-when
+    type: mcq
+    q: When do you need the `global` keyword?
+    options:
+      - Only when rebinding a module-level name — mutating a mutable global (`.append`) works without it
+      - Whenever you touch a global inside a function
+      - Only for reading globals inside nested functions
+      - Never — it is deprecated
+    explain: Reading falls through LEGB naturally, and mutation doesn't rebind the name. `nonlocal` is the same idea one scope up, for enclosing-function variables.
+  - id: late-binding
+    type: mcq
+    q: "What does `[lambda: i for i in range(3)][0]()` return, and why?"
+    options:
+      - "2 — closures capture the variable, not its value; all three lambdas share the final `i`"
+      - "0 — each lambda captures its own iteration"
+      - "It raises NameError — `i` is out of scope"
+      - "None"
+    explain: "The fix is the default-argument trick — `lambda i=i: i` — because defaults are evaluated once at definition time."
+  - id: class-scope
+    type: mcq
+    q: Why does a bare `x` inside a method fail to find the class attribute `x`?
+    options:
+      - Class scope is not in the LEGB chain for methods — access it as `self.x` or `ClassName.x`
+      - Class attributes are private by default
+      - Methods run before the class body
+      - It only fails with `__slots__`
+    explain: A method's name lookup jumps from Local straight to Enclosing/Global, skipping the class namespace entirely.
+  - id: closure-mechanics
+    type: recall
+    q: How does a closure like `make_multiplier(n)` work?
+    answer: The inner function references `n` as a free variable, capturing the enclosing variable itself (a cell), not a copy of its value. The binding outlives the outer call. To rebind such a variable from inside, declare it `nonlocal`.
