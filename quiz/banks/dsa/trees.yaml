@@ -1,0 +1,52 @@
+note: dsa/trees.md
+tier: core
+questions:
+  - id: traversal-orders
+    type: mcq
+    q: "For the tree with root 4, left subtree {2,1,3}, right subtree {6,5,7} — which traversal yields 1 2 3 4 5 6 7?"
+    options:
+      - Inorder (left → root → right)
+      - Preorder (root → left → right)
+      - Postorder (left → right → root)
+      - Level-order (BFS)
+    explain: Inorder on a BST always produces sorted output — that's the basis of "kth smallest" problems and BST validation.
+  - id: traversal-use-cases
+    type: mcq
+    q: Which traversal is the natural fit for deleting a tree or evaluating an expression tree?
+    options:
+      - Postorder — children must be processed before their parent
+      - Preorder — the root decides what happens below
+      - Inorder — operators sit between operands
+      - BFS — free nodes level by level
+    explain: "Postorder visits the root after both subtrees: children are deleted/evaluated first. Preorder is for serialisation/copying."
+  - id: bst-invariant-value
+    type: mcq
+    q: What does the BST invariant buy you over a sorted array?
+    options:
+      - O(log n) insert and delete as well as search (a sorted array needs O(n) shifts)
+      - O(1) search instead of O(log n)
+      - Cache-friendly contiguous storage
+      - Duplicate detection in O(1)
+    explain: Both structures search in O(log n) (balanced tree ≈ binary search), but the tree also inserts/deletes in O(log n).
+  - id: bst-degeneration
+    type: mcq
+    q: What happens if you insert values into a naive BST in sorted order?
+    options:
+      - The tree degenerates into a linked list — height O(n), all operations O(n)
+      - The tree rebalances itself automatically
+      - Insertion fails once the invariant is violated
+      - Search stays O(log n) but insert becomes O(n)
+    explain: Balance requires self-balancing variants (AVL, Red-Black); in Python reach for `sortedcontainers.SortedList`.
+  - id: bst-validation
+    type: mcq
+    q: Why is checking `node.left.val < node.val < node.right.val` at each node insufficient to validate a BST?
+    options:
+      - The invariant is about entire subtrees — a deep-right node in the left subtree may still exceed the root
+      - It fails on trees with duplicate values only
+      - It doesn't handle leaf nodes
+      - It is sufficient — that's the standard check
+    explain: The correct validation threads a (lo, hi) range through recursion, narrowing it at each step; or check that the inorder sequence is sorted.
+  - id: iterative-inorder
+    type: recall
+    q: Describe the iterative inorder traversal with an explicit stack.
+    answer: "Descend left from the current node, pushing every node onto the stack; when left is exhausted, pop, visit the node, then move to its right child and repeat. Loop while `curr or stack`. Time O(n), space O(h)."

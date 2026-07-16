@@ -1,0 +1,52 @@
+note: dsa/graphs.md
+tier: core
+questions:
+  - id: repr-tradeoff
+    type: mcq
+    q: When is an adjacency matrix preferable to an adjacency list?
+    options:
+      - Dense graphs, or when O(1) edge-existence checks are needed
+      - Sparse graphs, to save memory
+      - Whenever the graph is directed
+      - When you need to iterate a node's neighbours quickly
+    explain: The matrix costs O(V²) storage regardless of edge count but answers "is there an edge u→v?" in O(1). Lists are the default for sparse graphs at O(V+E).
+  - id: bfs-shortest-path
+    type: mcq
+    q: Why does BFS find shortest paths in unweighted graphs while DFS does not?
+    options:
+      - BFS explores level by level, so the first time it reaches a node is via a minimum-edge path
+      - BFS visits fewer nodes than DFS overall
+      - DFS cannot track distances in its stack
+      - BFS uses a heap ordered by distance
+    explain: The FIFO queue guarantees all nodes at distance d are processed before any at d+1 — the first arrival is optimal. DFS commits to one full path first.
+  - id: visited-marking
+    type: mcq
+    q: In iterative DFS with an explicit stack, when should a node be marked visited?
+    options:
+      - After popping it — a node can sit in the stack multiple times, so guard with `if node in visited: continue`
+      - Before pushing it, exactly like BFS
+      - Only after all its neighbours are pushed
+      - Marking is unnecessary if the graph is connected
+    explain: BFS marks before enqueuing (each node enqueued once); iterative DFS marks after popping because duplicates can be pushed before the first is processed.
+  - id: topo-sort-mechanism
+    type: mcq
+    q: How does DFS produce a topological sort?
+    options:
+      - Append each node after all its descendants are processed (post-order), then reverse the list
+      - Append each node when it is first visited (pre-order)
+      - Sort nodes by discovery time
+      - Append nodes level by level with a queue
+    explain: Reverse post-order is topological order. The queue-based alternative is Kahn's algorithm.
+  - id: traversal-complexity
+    type: mcq
+    q: What is the time complexity of BFS or DFS on an adjacency list?
+    options:
+      - O(V + E)
+      - O(V²)
+      - O(E log V)
+      - O(V · E)
+    explain: Each vertex is dequeued/popped once and each edge examined once. With an adjacency matrix it becomes O(V²).
+  - id: graph-vs-tree
+    type: recall
+    q: What distinguishes a graph from a tree, and which DFS applications follow from that?
+    answer: Graphs may contain cycles and disconnected components (a tree is a connected acyclic graph). Hence DFS is used for cycle detection, connected components (restart from every unvisited node), and topological sort on DAGs.

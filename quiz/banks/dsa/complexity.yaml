@@ -1,0 +1,56 @@
+note: dsa/complexity.md
+tier: core
+questions:
+  - id: double-n-intuition
+    type: mcq
+    q: If you double n, what happens to the work of an O(log n) algorithm?
+    options:
+      - One extra step
+      - The work doubles
+      - The work quadruples
+      - Nothing at all
+    explain: "That's the Big-O interview intuition: O(1) no change, O(log n) +1 step, O(n) doubles, O(n²) quadruples."
+  - id: n-squared-trap
+    type: mcq
+    q: "`for i in lst: if i in other_lst: ...` — what is the complexity and the fix?"
+    options:
+      - O(n²); convert `other_lst` to a set before the loop → O(n) total
+      - O(n log n); sort `other_lst` and use `bisect`, which is optimal here
+      - O(n); `in` on a list is a hash lookup
+      - O(n²); no better solution exists without sorting
+    explain: "`x in list` is a linear scan — n of them is O(n²). A set gives O(n) build + O(1) per lookup. The most common performance mistake."
+  - id: dict-amortised
+    type: mcq
+    q: Why is dict insertion "amortised" O(1) rather than plain O(1)?
+    options:
+      - Occasional resizes copy all entries (O(n)), but spread over n inserts the average stays O(1)
+      - Collisions make every k-th insert O(log n)
+      - The first insert allocates the table, which is O(n)
+      - Hash computation is O(n) for long keys
+    explain: The hash table resizes as it fills; the O(n) copy happens rarely enough that the per-insert average is constant.
+  - id: pop-front-list
+    type: mcq
+    q: What is the complexity of `lst.pop(0)` on a Python list, and what should you use instead for queue behaviour?
+    options:
+      - O(n) — all elements shift left; use `collections.deque` with `popleft()`
+      - O(1) — lists keep a head pointer
+      - O(log n) — lists are backed by a tree
+      - O(n) — use `heapq` instead
+    explain: Lists are contiguous arrays; removing the front shifts everything. `deque` gives O(1) at both ends.
+  - id: heapify-cost
+    type: mcq
+    q: What are the complexities of `heapq.heapify(lst)` and each subsequent `heappop`?
+    options:
+      - heapify O(n); heappop O(log n)
+      - heapify O(n log n); heappop O(log n)
+      - heapify O(n); heappop O(1)
+      - heapify O(log n); heappop O(log n)
+    explain: Building a heap bottom-up is linear; each pop re-sifts the root down the tree, O(log n).
+  - id: dict-worst-case
+    type: recall
+    q: When does dict lookup degrade to O(n), and why is this rare in CPython?
+    answer: If every key hashes to the same slot, lookups must probe all n entries. CPython randomises string hashes per process (since 3.3), making adversarial collisions vanishingly rare.
+  - id: interview-reflexes
+    type: recall
+    q: "Name the reflex data structure for each: find duplicates, count occurrences, group by key, repeated minimum, search sorted data."
+    answer: "Duplicates → set (O(n)); counting → Counter; grouping → defaultdict(list); repeated min → heapq (O(log n) per pop); sorted search → bisect (O(log n))."
