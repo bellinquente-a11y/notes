@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # GitHub Actions & CI
 
 **Continuous Integration (CI)**: automatically run tests, linters, and type checkers on every push. Failures surface immediately while context is fresh.

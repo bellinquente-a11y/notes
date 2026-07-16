@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Mutation of function arguments
 
 Python passes object references. Both the caller's variable and the function's parameter point to the **same object**. What happens outside the function depends on what you do with it.

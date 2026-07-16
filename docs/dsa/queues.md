@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # deque and heapq
 
 Two stdlib data structures for cases where `list` is the wrong tool.

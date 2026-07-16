@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # Binance
 
 World's largest crypto exchange by volume. A **centralised exchange (CEX)**: Binance holds custody of funds; trades update an internal database, not a blockchain. For data purposes only the exchange layer matters — the ecosystem (BNB Chain, NFTs, staking) is irrelevant.

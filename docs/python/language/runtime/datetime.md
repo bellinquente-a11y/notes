@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # Datetime
 
 Converting between strings, integer timestamps, and `datetime.datetime` objects.

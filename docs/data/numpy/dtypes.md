@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # dtypes
 
 A dtype is the contract that makes NumPy arrays fast: every element occupies exactly the same number of bytes, laid out contiguously in memory, with no per-element Python overhead. The CPU can stride through the block predictably and operate on multiple elements per clock cycle.

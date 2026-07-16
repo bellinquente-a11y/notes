@@ -1,6 +1,7 @@
 ---
 tags:
   - logging
+quiz: core
 ---
 
 # Logging (stdlib)

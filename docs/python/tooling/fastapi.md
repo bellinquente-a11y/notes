@@ -3,6 +3,7 @@ tags:
   - concurrency
   - design-patterns
   - typing
+quiz: core
 ---
 
 # FastAPI

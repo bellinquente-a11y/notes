@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # `itertools.groupby`
 
 Groups consecutive elements of an iterable that share the same key. Like SQL `GROUP BY`, but **only groups adjacent elements** — input must be sorted by the key first.

@@ -1,6 +1,7 @@
 ---
 tags:
   - typing
+quiz: core
 ---
 
 # typing module — selected constructs

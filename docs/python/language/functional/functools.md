@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Decorators and `functools`
 
 ## Decorators

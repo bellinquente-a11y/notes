@@ -1,6 +1,7 @@
 ---
 tags:
   - testing
+quiz: detail
 ---
 
 # Python — Float Comparison

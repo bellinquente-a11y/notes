@@ -2,6 +2,7 @@
 tags:
   - testing
   - logging
+quiz: detail
 ---
 
 # Testing structlog Logs

@@ -1,6 +1,7 @@
 ---
 tags:
   - packaging
+quiz: detail
 ---
 
 # Poetry

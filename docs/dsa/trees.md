@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Binary Trees
 
 ## TreeNode

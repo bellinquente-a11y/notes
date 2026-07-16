@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Unpacking Operators: `*x` and `**x`
 
 `*` and `**` appear in expression and assignment contexts with different meanings. This note covers **expression context** (right-hand side) — what protocol `x` must satisfy.

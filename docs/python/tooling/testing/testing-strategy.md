@@ -1,6 +1,7 @@
 ---
 tags:
   - testing
+quiz: core
 ---
 
 # Testing — Strategy

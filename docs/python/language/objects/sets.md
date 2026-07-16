@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # Sets
 
 An unordered collection of **unique, hashable** elements backed by a hash table. O(1) membership testing; no duplicates.

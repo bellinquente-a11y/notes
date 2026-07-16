@@ -1,6 +1,7 @@
 ---
 tags:
   - performance
+quiz: core
 ---
 
 # Broadcasting

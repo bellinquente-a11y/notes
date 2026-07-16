@@ -2,6 +2,7 @@
 tags:
   - testing
   - concurrency
+quiz: core
 ---
 
 # Testing — Mocking

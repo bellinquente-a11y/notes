@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # `itertools.accumulate` — running totals
 
 `accumulate(iterable, func=operator.add, *, initial=None)` yields cumulative results of a binary function applied left-to-right. Lazy equivalent of `numpy.cumsum` / `numpy.cumprod`.

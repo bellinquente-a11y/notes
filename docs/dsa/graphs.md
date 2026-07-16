@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Graphs
 
 A graph G = (V, E) is a set of vertices V connected by edges E. Unlike trees, graphs can have cycles and disconnected components.

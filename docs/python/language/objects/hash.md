@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # `__hash__` — Making Objects Hashable
 
 ## What and why

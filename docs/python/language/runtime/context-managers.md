@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Context Managers
 
 Used to do something temporarily, then reliably undo it. Big advantage: hard to leave the environment in a bad state.

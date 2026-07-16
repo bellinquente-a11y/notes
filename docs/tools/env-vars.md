@@ -1,6 +1,7 @@
 ---
 tags:
   - config
+quiz: detail
 ---
 
 # Environment Variables — macOS / Unix

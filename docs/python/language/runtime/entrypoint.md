@@ -2,6 +2,7 @@
 tags:
   - cli
   - packaging
+quiz: detail
 ---
 
 # Python Entry Points

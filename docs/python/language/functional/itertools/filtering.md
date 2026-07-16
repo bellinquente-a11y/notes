@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # itertools filtering — compress, dropwhile, filterfalse, takewhile
 
 All five are lazy iterators that select or reject elements from a stream. `filter` is a builtin; the rest live in `itertools`.

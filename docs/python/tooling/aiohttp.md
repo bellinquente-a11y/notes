@@ -1,6 +1,7 @@
 ---
 tags:
   - concurrency
+quiz: detail
 ---
 
 # aiohttp

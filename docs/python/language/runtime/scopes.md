@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Scopes and Namespaces
 
 A **namespace** is a dict mapping names to objects. Every module, every function call, and every class body gets its own. Name resolution searches them in LEGB order.

@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # JSON Lines (JSONL)
 
 One JSON object per line. Append-friendly, streamable, human-readable — no infrastructure required. Uses [`pathlib.Path`](../language/runtime/pathlib.md) for file access.

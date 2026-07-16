@@ -1,6 +1,7 @@
 ---
 tags:
   - performance
+quiz: detail
 ---
 
 # Lazy vs Eager Evaluation

@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Comprehensions
 
 Comprehensions build a new collection by mapping and/or filtering an iterable in a single expression. Use them when the intent is *transformation or filtering*; use a loop when the body has side effects, accumulates multiple things, or is too complex to read in one line.

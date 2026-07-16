@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Iterators and Generators
 
 Iteration is fundamental in data processing, especially to fetch data **lazily** (one at a time as needed; the opposite is **eagerly**). See [lazy-evaluation.md](lazy-evaluation.md) for the full tradeoff analysis.

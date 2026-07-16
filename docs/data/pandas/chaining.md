@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Method Chaining
 
 ## Method chaining

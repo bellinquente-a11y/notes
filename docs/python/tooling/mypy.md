@@ -1,6 +1,7 @@
 ---
 tags:
   - typing
+quiz: core
 ---
 
 # Mypy

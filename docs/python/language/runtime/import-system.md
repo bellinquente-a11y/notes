@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # The Import System
 
 - `sys.path` lists the directories Python searches when importing a module.

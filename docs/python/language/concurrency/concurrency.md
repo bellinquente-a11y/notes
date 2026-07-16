@@ -2,6 +2,7 @@
 tags:
   - concurrency
   - performance
+quiz: core
 ---
 
 # Concurrency in Python: GIL, Threads, Processes, asyncio

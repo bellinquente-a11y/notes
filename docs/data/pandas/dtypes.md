@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # dtypes
 
 Pandas wraps [NumPy dtypes](../numpy/dtypes.md) for numeric columns, then adds extension types that fix NumPy's practical gaps: no nullable integers, slow strings, and no categorical type.

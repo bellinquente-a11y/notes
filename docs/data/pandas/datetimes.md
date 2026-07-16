@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # Datetimes
 
 ## The stack

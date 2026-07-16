@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # Git Tags and Releases
 
 ## Tags

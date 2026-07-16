@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # Pandas — Indexing, Views and Copies
 
 ## SettingWithCopyWarning

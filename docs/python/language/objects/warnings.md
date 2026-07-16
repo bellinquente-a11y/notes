@@ -1,6 +1,7 @@
 ---
 tags:
   - errors
+quiz: detail
 ---
 
 # Warnings

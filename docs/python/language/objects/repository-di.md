@@ -3,6 +3,7 @@ tags:
   - design-patterns
   - testing
   - typing
+quiz: core
 ---
 
 # Repository Pattern + Dependency Injection

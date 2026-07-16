@@ -2,6 +2,7 @@
 tags:
   - testing
   - design-patterns
+quiz: core
 ---
 
 # Testing — Contract Tests

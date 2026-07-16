@@ -1,3 +1,7 @@
+---
+quiz: core
+---
+
 # The Data Model and Pythonic Objects
 
 ## The Data Model

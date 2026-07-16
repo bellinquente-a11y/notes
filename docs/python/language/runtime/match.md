@@ -1,3 +1,7 @@
+---
+quiz: detail
+---
+
 # match / case (Python 3.10+)
 
 Python's switch-case equivalent — but more powerful: **structural pattern matching** that dispatches on type, shape, and value simultaneously.

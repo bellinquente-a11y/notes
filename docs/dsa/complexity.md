@@ -1,6 +1,7 @@
 ---
 tags:
   - performance
+quiz: core
 ---
 
 # Complexity and Data Structure Choice

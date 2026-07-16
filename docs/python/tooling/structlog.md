@@ -1,6 +1,7 @@
 ---
 tags:
   - logging
+quiz: detail
 ---
 
 # structlog
