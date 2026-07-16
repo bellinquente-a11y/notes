@@ -1,0 +1,56 @@
+note: git/github-actions.md
+tier: core
+questions:
+  - id: hierarchy
+    type: mcq
+    q: "In GitHub Actions, what is the execution hierarchy?"
+    options:
+      - Workflow → jobs (parallel by default, one runner each) → steps (sequential)
+      - Workflow → steps (parallel) → jobs (sequential)
+      - Job → workflows → steps, all sequential
+      - Runner → workflow → action, all parallel
+    explain: Each job gets a fresh VM (runner); its steps run in order. Jobs only sequence when `needs:` declares a dependency.
+  - id: needs-keyword
+    type: mcq
+    q: How do you make a `deploy` job wait for `lint` and `test` to pass?
+    options:
+      - "`needs: [lint, test]` on the deploy job"
+      - "`after: [lint, test]` on the deploy job"
+      - List deploy last in the file — jobs run top to bottom
+      - "`depends_on:` at the workflow level"
+    explain: "Without `needs:`, all jobs run in parallel regardless of file order."
+  - id: cache-key
+    type: mcq
+    q: "In `actions/cache` with `key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}` — when is the cache invalidated?"
+    options:
+      - When `poetry.lock` changes (its hash is part of the key)
+      - Every 24 hours
+      - When the workflow file changes
+      - Manually, from the GitHub UI only
+    explain: Runners start fresh every job; the lockfile-hash key means a dependency change produces a new cache entry while identical lockfiles reuse the old one.
+  - id: matrix-builds
+    type: mcq
+    q: "What does `strategy.matrix` with `python-version: ['3.10', '3.11', '3.12']` do?"
+    options:
+      - Fans the job out into three parallel runs, one per version
+      - Installs all three versions on one runner
+      - Runs the job once with the newest version
+      - Retries the job with older versions on failure
+    explain: Each combination becomes an independent job; steps reference the value via `${{ matrix.python-version }}`.
+  - id: workflow-edit-effect
+    type: mcq
+    q: When does an edit to a workflow YAML file take effect?
+    options:
+      - The next time the triggering event fires — there is no reload
+      - Immediately, re-running any in-flight jobs
+      - After GitHub validates it, usually within a minute
+      - Only after a manual re-enable in the Actions tab
+    explain: Debugging a push trigger means pushing again after each fix. Workflow files are versioned code — revertable via git.
+  - id: secrets-token
+    type: recall
+    q: How do secrets reach a workflow, and what is special about `GITHUB_TOKEN`?
+    answer: Secrets are stored in repo Settings → Secrets and injected via `${{ secrets.NAME }}` into step env vars — never hardcoded. `GITHUB_TOKEN` is auto-created per run with permissions to push and comment on PRs, no setup needed.
+  - id: ci-purpose
+    type: recall
+    q: What is Continuous Integration and why run it on every push?
+    answer: Automatically running tests, linters, and type checkers on each push so failures surface immediately while context is fresh — instead of accumulating breakage that's expensive to untangle later.

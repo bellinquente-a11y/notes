@@ -1,0 +1,34 @@
+note: git/tags-releases.md
+tier: detail
+questions:
+  - id: tags-not-pushed
+    type: mcq
+    q: You created `v1.0.0` locally, ran `git push`, but the tag isn't on GitHub. Why?
+    options:
+      - "`git push` only sends commits and branch refs — tags need `git push origin v1.0.0` or `--tags`"
+      - Tags must be annotated to be pushable
+      - The tag name must match a branch name
+      - Tags sync only when a GitHub release references them
+    explain: Explicit tag pushing is the most common "tag exists locally but not on the remote" confusion.
+  - id: annotated-vs-lightweight
+    type: mcq
+    q: Why prefer annotated tags (`git tag -a`) over lightweight ones?
+    options:
+      - They are full Git objects storing author, date, and message, and appear in `git describe`
+      - They are immutable while lightweight tags can move
+      - They are pushed automatically with `git push`
+      - They can point at past commits; lightweight tags cannot
+    explain: A lightweight tag is just a pointer; both are immutable and both can tag past commits.
+  - id: semver
+    type: mcq
+    q: Under semantic versioning, a new backward-compatible feature bumps which component?
+    options:
+      - MINOR
+      - MAJOR
+      - PATCH
+      - The build metadata suffix
+    explain: MAJOR = breaking change, MINOR = compatible feature, PATCH = bug fix.
+  - id: tag-vs-release
+    type: recall
+    q: What does a GitHub Release add on top of a git tag?
+    answer: The tag is the Git-native immutable pointer; the release is a platform layer adding release notes/changelog, downloadable artifacts, and a `release` event that CI/CD can react to (e.g. `gh release create v1.0.0 --generate-notes`).

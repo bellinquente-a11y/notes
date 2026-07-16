@@ -1,0 +1,34 @@
+note: finance/binance.md
+tier: detail
+questions:
+  - id: maker-taker
+    type: mcq
+    q: What distinguishes a maker from a taker on an exchange?
+    options:
+      - A maker's limit order rests in the book adding liquidity (lower fee); a taker fills immediately against the book (higher fee)
+      - A maker trades spot; a taker trades futures
+      - A maker is an institutional account; a taker is retail
+      - A maker sets the daily reference price; a taker follows it
+    explain: The klines API exposes taker-buy volume separately — the basis of the buy-ratio aggression proxy.
+  - id: buy-ratio
+    type: mcq
+    q: In Binance klines, what does `taker_buy_base_asset_volume / volume` measure?
+    options:
+      - The fraction of volume initiated by aggressive buyers — above 0.5 suggests buying pressure
+      - The proportion of volume that paid maker fees
+      - The ratio of spot volume to futures volume
+      - The share of volume settled in the quote currency
+    explain: Taker buys are market orders hitting the ask — a standard microstructure proxy for buying aggression.
+  - id: volume-vs-quote-volume
+    type: mcq
+    q: For comparing traded value across different markets, which klines column should you use?
+    options:
+      - "`quote_asset_volume` — total value in the quote currency (e.g. USDT)"
+      - "`volume` — the base asset amount"
+      - "`number_of_trades`"
+      - "`taker_buy_base_asset_volume`"
+    explain: "`volume` counts base units (e.g. BTC), which aren't comparable across symbols; quote volume is in a common currency."
+  - id: perp-anchor
+    type: recall
+    q: Perpetual futures have no expiry — what keeps their price anchored to spot?
+    answer: The funding rate, exchanged between longs and shorts every 8 hours. When perp trades above spot, longs pay shorts (pressure down), and vice versa. Note most of Binance's volume is in perps, not spot.
