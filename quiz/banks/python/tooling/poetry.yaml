@@ -1,0 +1,34 @@
+note: python/tooling/poetry.md
+tier: detail
+questions:
+  - id: two-files
+    type: mcq
+    q: What are the roles of `pyproject.toml` vs `poetry.lock`?
+    options:
+      - toml holds human-edited constraints ("what I want"); lock holds machine-resolved exact pins for everything ("what's installed") — commit both, never hand-edit the lock
+      - toml is for dev machines, lock for production
+      - lock is a cache that can be safely deleted
+      - toml pins exact versions; lock records ranges
+    explain: "The lock file is what makes `poetry install` reproduce an identical environment on another machine."
+  - id: caret-semantics
+    type: mcq
+    q: "What does the default caret constraint `^1.2.3` allow?"
+    options:
+      - "`>=1.2.3, <2.0.0` — anything below the next major"
+      - "`>=1.2.3, <1.3.0` — patch updates only"
+      - Exactly 1.2.3
+      - Any version ≥1.2.3
+    explain: "Semver-aware: with major 0 the minor is locked (`^0.2.3` → <0.3.0), and `^0.0.3` locks the patch. `~` locks major+minor."
+  - id: add-vs-install-vs-update
+    type: mcq
+    q: Which command re-resolves the lock file WITHOUT touching pyproject.toml?
+    options:
+      - "`poetry update`"
+      - "`poetry install`"
+      - "`poetry add`"
+      - "`poetry sync`"
+    explain: "install just reads the lock and makes the env match (idempotent); add changes both files; update re-resolves the lock within existing constraints."
+  - id: groups-and-run
+    type: recall
+    q: How do dependency groups work, and why run code with `poetry run`?
+    answer: "`poetry add --group dev pytest ruff mypy` separates dev/test deps; `poetry install --without dev` skips them in production. `poetry run python -m pkg` executes inside the project's virtualenv instead of whatever python is on PATH."

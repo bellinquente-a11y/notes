@@ -1,0 +1,34 @@
+note: python/tooling/testing/structlog-testing.md
+tier: detail
+questions:
+  - id: capture-logs-mechanism
+    type: mcq
+    q: How does `structlog.testing.capture_logs()` work?
+    options:
+      - It temporarily swaps the entire processor chain for one that appends each event dict to a list — no rendering, no I/O, no patching
+      - It attaches a `MemoryHandler` to the root stdlib logger
+      - It redirects stdout and parses the rendered lines back into dicts
+      - It monkeypatches every bound logger method individually
+    explain: "Every keyword arg survives intact: assert directly on `cap[0][\"event\"]`, `cap[0][\"log_level\"]`, `cap[0][\"order_id\"]`."
+  - id: capture-logs-missing-fields
+    type: mcq
+    q: Inside `capture_logs()`, why are timestamps and `bind_contextvars` keys missing from captured events?
+    options:
+      - The real processor chain is bypassed — processor-added fields (timestamp, `merge_contextvars`) never run; use `log.bind(...)` in tests instead
+      - capture_logs strips non-deterministic fields for reproducibility
+      - Timestamps only appear when a renderer is configured
+      - It's a bug fixed in recent structlog versions
+    explain: "Direct `log.bind(...)` context is captured; contextvar-based context is not, because `merge_contextvars` isn't in the replacement chain."
+  - id: capture-vs-caplog
+    type: mcq
+    q: When must you fall back to pytest's `caplog` instead of `capture_logs()`?
+    options:
+      - When asserting on stdlib `logging` calls, e.g. from third-party libraries — capture_logs only sees structlog events
+      - When you need to assert on log levels
+      - When the test is async
+      - When more than one logger is involved
+    explain: "capture_logs gives dicts with fields intact; caplog gives `LogRecord`s that need string parsing — but it's the only option for stdlib logging."
+  - id: exception-capture
+    type: recall
+    q: What does a captured event contain after `log.exception("division_error")` inside `capture_logs()`?
+    answer: "An `exc_info` key holding the raw `(type, value, traceback)` tuple — no renderer runs, so assert `cap[0][\"exc_info\"][0] is ZeroDivisionError` or simply `\"exc_info\" in cap[0]`."

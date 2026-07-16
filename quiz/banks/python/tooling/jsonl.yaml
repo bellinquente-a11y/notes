@@ -1,0 +1,34 @@
+note: python/tooling/jsonl.md
+tier: detail
+questions:
+  - id: why-jsonl
+    type: mcq
+    q: Why choose JSON Lines over a single JSON array for a record log?
+    options:
+      - Appending is one write of one line, and reading streams in O(1) memory — an array must be fully loaded and rewritten to append
+      - JSONL compresses better
+      - Arrays can't hold heterogeneous objects
+      - JSONL enforces a schema
+    explain: "Plus greppability: head/tail/grep just work on line-oriented records."
+  - id: pydantic-serialisation
+    type: mcq
+    q: "Why `trade.model_dump_json()` rather than `json.dumps(trade.model_dump())` when writing JSONL?"
+    options:
+      - It serialises straight to JSON, skipping the intermediate dict — faster, and `model_validate_json` mirrors it on read
+      - "`json.dumps` can't handle floats"
+      - "`model_dump()` loses field order"
+      - They produce different JSON dialects
+    explain: Pydantic gives validation on read for free too — corrupt lines fail loudly (or get skipped in a try/except if resilience matters).
+  - id: file-iteration
+    type: mcq
+    q: "How does `for line in f` achieve O(1) memory on a huge file?"
+    options:
+      - The file object is an iterator — each `__next__` reads up to the next newline from OS-buffered ~8 KB chunks
+      - Python memory-maps the file
+      - Lines are compressed in RAM
+      - It doesn't — the file is read fully on first iteration
+    explain: "`readlines()`/`list(f)` load everything; prefer iteration unless you need random access. Lines include the trailing newline — strip() handles it."
+  - id: when-to-switch
+    type: recall
+    q: When does JSONL stop being the right format?
+    answer: Beyond a few hundred MB, or when you need queries and indexes — switch to SQLite for structured access or Parquet for columnar analytics. CSV stays flat/stringly; a JSON array can't append or stream.

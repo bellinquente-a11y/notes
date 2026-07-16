@@ -1,0 +1,34 @@
+note: python/tooling/pydantic/pydantic.md
+tier: core
+questions:
+  - id: main-idea
+    type: mcq
+    q: What does Pydantic do when data arrives at a BaseModel?
+    options:
+      - Validates against the type hints, coerces compatible types automatically, and raises a clear ValidationError on invalid input
+      - Only documents the expected structure for humans
+      - Checks types at import time like mypy
+      - Serialises the input to JSON immediately
+    explain: "`Trade(price=\"5230.5\", qty=\"10\")` succeeds — strings are coerced to Decimal and int; `side='hold'` against a Literal raises at parse time."
+  - id: boundary-rule
+    type: mcq
+    q: What is the rule for Pydantic vs plain dataclasses?
+    options:
+      - Pydantic at application boundaries (API, user input, config); dataclasses for internal models built from already-validated data
+      - Pydantic everywhere for safety
+      - Dataclasses for public APIs, Pydantic internally
+      - They are interchangeable
+    explain: Runtime validation costs — pointless for objects constructed from clean data inside the system, essential at the edges where data is untrusted.
+  - id: dump-modes
+    type: mcq
+    q: "What does `model_dump(mode=\"json\")` change compared to a plain `model_dump()`?"
+    options:
+      - Values are coerced to JSON-safe types (e.g. Decimal → str); plain dump keeps Python objects in the dict
+      - It returns a JSON string instead of a dict
+      - It excludes None fields
+      - Nothing — mode is deprecated
+    explain: "`model_dump_json()` is the one returning a string — faster than json.dumps(model.model_dump()) since it skips the intermediate dict. Other useful args: include/exclude, exclude_none, exclude_unset."
+  - id: field-constraints
+    type: recall
+    q: How do you express "symbol is 1-10 chars, price positive, side is BUY or SELL" declaratively?
+    answer: "`symbol: str = Field(..., min_length=1, max_length=10)`, `price: Decimal = Field(..., gt=0)`, `side: Literal['BUY', 'SELL']`. Field() covers simple constraints; validators are only for logic beyond it. `model_config = {'frozen': True}` makes instances immutable."

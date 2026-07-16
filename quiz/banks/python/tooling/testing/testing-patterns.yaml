@@ -1,0 +1,43 @@
+note: python/tooling/testing/testing-patterns.md
+tier: core
+questions:
+  - id: seam-concept
+    type: mcq
+    q: What is the root-cause fix for functions that are hard to test because they open files or query databases internally?
+    options:
+      - Create a seam — receive the dependency (path, file object, connection) as an argument so tests can swap in a substitute
+      - Patch the built-in open/connect in every test
+      - Run tests against production data read-only
+      - Mark them integration-only
+    explain: "Hidden coupling (`open(\"/data/prices.csv\")` inside the function) is the problem; dependency injection is the general solution — patch() is the last resort when you can't inject."
+  - id: tmp-path-vs-stringio
+    type: mcq
+    q: "When do you pick `tmp_path` over `io.StringIO` for file-based tests?"
+    options:
+      - When the parsing logic itself matters — tmp_path exercises a real file; StringIO is faster when the function accepts any file-like object and parsing is trivial
+      - tmp_path is deprecated in favour of StringIO
+      - StringIO only works for binary data
+      - Always StringIO; tmp_path leaks files
+    explain: tmp_path gives a fresh per-test temp directory, auto-deleted. StringIO never touches the filesystem at all.
+  - id: sqlite-memory
+    type: mcq
+    q: "What does `sqlite3.connect(\":memory:\")` buy you in tests, and what's the limitation?"
+    options:
+      - A real SQL engine with zero infrastructure — but the dialect differs from Postgres/MySQL; use Testcontainers or a rollback fixture for fidelity
+      - A mock connection that records queries
+      - A persistent test database shared across runs
+      - Faster Postgres via shared memory
+    explain: Great for unit-testing SQL logic. Integration tests against a real DB use a transaction-rollback fixture so state never leaks.
+  - id: capsys
+    type: mcq
+    q: "How do you test a function that prints, and what's the gotcha with `capsys.readouterr()`?"
+    options:
+      - "`captured = capsys.readouterr()` gives `.out`/`.err` — but it consumes the buffer; each call returns only output since the last call"
+      - Redirect sys.stdout to a file and read it back
+      - "`capsys.get_output()` returns the full history"
+      - print calls fail under pytest unless captured
+    explain: Use `capfd` (same API) when output comes from C extensions or subprocesses that bypass sys.stdout; prefer `in` over strict equality for long output.
+  - id: pure-function-split
+    type: recall
+    q: You find yourself heavily testing print output. What does that signal, and what's the fix?
+    answer: "The function conflates computation with display. Split into a pure `compute_pnl(trades) -> float` that's tested directly, plus a thin `report_pnl` that just formats and prints — covered by one smoke test or none."

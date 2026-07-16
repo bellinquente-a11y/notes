@@ -1,0 +1,34 @@
+note: python/tooling/structlog.md
+tier: detail
+questions:
+  - id: bind
+    type: mcq
+    q: "What does `log.bind(service=\"pricing\", symbol=\"BTC\")` do?"
+    options:
+      - Returns a new logger with those key-values permanently attached to every future call
+      - Mutates the global logger config
+      - Sends an immediate log entry with those keys
+      - Filters out events lacking those keys
+    explain: "Context binding replaces stdlib's LoggerAdapter/extra={} boilerplate. `unbind` removes keys; `new()` resets; for async tasks use `bind_contextvars` with `merge_contextvars` first in the chain."
+  - id: processors
+    type: mcq
+    q: What is a structlog processor?
+    options:
+      - "A callable `(logger, method, event_dict) -> event_dict` — chained in order, with the last one rendering to a string"
+      - A thread that batches log writes
+      - A regex filter over the final message
+      - A stdlib Handler subclass
+    explain: "The pipeline is fully composable: add_log_level, TimeStamper, dict_tracebacks, then ConsoleRenderer (dev) or JSONRenderer (prod). Raise structlog.DropEvent inside one to suppress an event."
+  - id: library-rule
+    type: mcq
+    q: Should a reusable library log via structlog?
+    options:
+      - No — libraries always use stdlib `logging.getLogger(__name__)`; structlog is an application choice
+      - Yes, structlog is the modern default everywhere
+      - Only if it declares structlog as an optional extra
+      - Only in async libraries
+    explain: A library importing structlog forces it on every consumer. Applications choose structlog for services/APIs; stdlib mode lets third-party stdlib logs share one renderer.
+  - id: stdlib-mode
+    type: recall
+    q: What is stdlib mode, and what is `foreign_pre_chain` for?
+    answer: "structlog preprocesses events then hands them to stdlib handlers for routing (via ProcessorFormatter.wrap_for_formatter last in the chain), so structlog and third-party `logging` calls share one renderer. `foreign_pre_chain` preprocesses records arriving from stdlib loggers (httpx, sqlalchemy) that lack an `event` key — without it they error."

@@ -1,0 +1,34 @@
+note: python/tooling/testing/hypothesis.md
+tier: detail
+questions:
+  - id: property-vs-example
+    type: mcq
+    q: How does property-based testing with Hypothesis differ from example-based testing?
+    options:
+      - You declare invariants that must hold for all valid inputs; Hypothesis generates ~100 random cases per test to falsify them
+      - Hypothesis exhaustively tests every possible input value
+      - You still pick the inputs, but Hypothesis mutates them slightly
+      - It replaces assertions with statistical confidence intervals
+    explain: "`@given(st.lists(st.integers()))` injects generated values; known edge cases still belong in `@pytest.mark.parametrize` or `@example`."
+  - id: shrinking
+    type: mcq
+    q: A Hypothesis property fails on `[0.1, -0.2, 0.3]`. What does Hypothesis do before reporting?
+    options:
+      - Shrinks the input to the smallest counterexample that still fails (e.g. `[-0.1]`), and stores it in `.hypothesis/` to replay first on the next run
+      - Reruns the same input 100 times to rule out flakiness
+      - Reports the raw random input as-is
+      - Bisects the test function to find the failing assertion
+    explain: The shrunk minimal example is far easier to debug and becomes the regression anchor.
+  - id: bounded-floats
+    type: mcq
+    q: "Why generate returns with `st.floats(min_value=-0.5, max_value=0.5, allow_nan=False, allow_infinity=False)` instead of unrestricted floats?"
+    options:
+      - Unbounded floats produce NaN/infinity and cumulative values at 0 or ∞ — IEEE 754 edge cases that mask actual logic bugs; test NaN behaviour separately if needed
+      - Hypothesis can't generate floats outside that range
+      - Larger values make the test too slow
+      - Financial returns are legally capped at ±50%
+    explain: Bound the domain to the property you're testing; edge-case behaviour deserves its own dedicated test.
+  - id: given-vs-parametrize
+    type: recall
+    q: When do you reach for `@given` versus `@pytest.mark.parametrize`?
+    answer: "`parametrize` for known, hand-picked edge cases; `@given` for mathematical invariants, round-trips, commutativity — properties that should hold over a whole input domain. `@example` pins explicit cases alongside a property."

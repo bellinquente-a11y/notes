@@ -1,0 +1,34 @@
+note: python/tooling/pydantic/pydantic-settings.md
+tier: detail
+questions:
+  - id: priority-order
+    type: mcq
+    q: In what priority order does BaseSettings resolve a field's value?
+    options:
+      - Constructor args > environment variables > .env file > field defaults
+      - .env file > environment variables > constructor args > defaults
+      - Environment variables > constructor args > .env > defaults
+      - Defaults > .env > env vars > constructor args
+    explain: "Constructor-arg priority is also the testing pattern: `Settings(api_key=\"test-key\")` overrides everything without patching env."
+  - id: dotenv-gotcha
+    type: mcq
+    q: "What happens if `python-dotenv` isn't installed but `env_file=\".env\"` is configured?"
+    options:
+      - The .env file is silently ignored — no error, fields fall back to defaults or raise for required ones
+      - "`ImportError` at Settings() time"
+      - Pydantic falls back to its own .env parser
+      - A DeprecationWarning is emitted
+    explain: Silent misconfiguration — pin python-dotenv alongside pydantic-settings.
+  - id: nested-delimiter
+    type: mcq
+    q: "How do you populate a nested `database: DatabaseSettings` model from flat env vars?"
+    options:
+      - "Set `env_nested_delimiter=\"__\"` and use vars like `DATABASE__HOST`; the sub-model must be a plain BaseModel"
+      - Env vars support dots natively (`DATABASE.HOST`)
+      - Nesting requires a YAML config instead
+      - Declare the sub-model as another BaseSettings
+    explain: The delimiter isn't set by default, and nesting two BaseSettings doesn't compose — sub-models are plain BaseModel. JSON-encoded values are the alternative for K8s secrets.
+  - id: stateful-deps
+    type: recall
+    q: Config singleton is fine — what is the actual anti-pattern, and the fix?
+    answer: "Modules calling `os.environ.get()` directly, or instantiating stateful objects (DB engines, HTTP clients) at import time. Fix: one `settings = Settings()` in config.py, plus `@lru_cache` factories like `get_engine()` for stateful deps — singleton behaviour without import-time side effects; in FastAPI use Depends(get_settings) with dependency_overrides in tests."

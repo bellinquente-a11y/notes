@@ -1,0 +1,34 @@
+note: python/tooling/pydantic/pydantic-validators.md
+tier: detail
+questions:
+  - id: before-vs-after
+    type: mcq
+    q: "In validators, what distinguishes `mode='before'` from `mode='after'`?"
+    options:
+      - before receives raw untouched input (any type) for cleaning/reformatting; after receives the coerced, typed value for semantic checks
+      - before runs only on optional fields
+      - after re-runs on every attribute access
+      - before is for field validators, after for model validators only
+    explain: "Mental model: before = accept multiple input formats (e.g. strip commas from '1,234.5'); after = assert rules on clean data."
+  - id: cross-field
+    type: mcq
+    q: You need to check that `end > start` across two fields. Which validator?
+    options:
+      - "`@model_validator(mode='after')` — receives the fully constructed self with all fields validated; return self"
+      - "`@field_validator('end', mode='after')` using info.data"
+      - "`@field_validator('start', 'end')` applied to both"
+      - A property that raises
+    explain: "The field-validator trap: `info.data` only contains fields declared BEFORE the current one — cross-field logic belongs in the model validator."
+  - id: validator-mechanics
+    type: mcq
+    q: How does a `@field_validator` signal pass vs fail?
+    options:
+      - Return the (possibly transformed) value to pass; raise ValueError to fail
+      - Return True/False
+      - Raise ValidationError directly
+      - Set cls.errors and return None
+    explain: "It must be a @classmethod; the returned value replaces the field — validators double as normalisers (`v.strip().upper()`). All failures are collected before ValidationError raises, reporting every broken field."
+  - id: tool-ladder
+    type: recall
+    q: "Rank the validation tools from simplest to most powerful and say when each applies."
+    answer: "Field(gt=0, min_length=1) for simple constraints; @field_validator(mode='before') to clean one field pre-coercion; @field_validator(mode='after') to normalise/check one parsed field; @model_validator(mode='before') to remap raw input keys; @model_validator(mode='after') for cross-field consistency. Execution order: model-before → coercion → field-before → type validation → field-after → model-after."

@@ -1,0 +1,47 @@
+note: python/tooling/testing/contract-tests.md
+tier: core
+questions:
+  - id: contract-test-idea
+    type: mcq
+    q: You have `InMemoryTradeStore` and `JsonlTradeStore` implementing the same Protocol. How do you test both without duplicating the test suite?
+    options:
+      - Write one suite against the Protocol and drive it with a parametrized fixture (`@pytest.fixture(params=["memory", "jsonl"])`) that constructs each implementation
+      - Write a base test class and subclass it once per implementation
+      - Test one implementation thoroughly and assume the other matches
+      - Loop over both implementations inside each test function
+    explain: "`params` makes every dependent test run once per value; names get the param appended: `test_empty[memory]`, `test_empty[jsonl]`."
+  - id: tests-talk-to-protocol
+    type: mcq
+    q: In a contract test suite, what must the test bodies reference?
+    options:
+      - Only the Protocol interface — no `isinstance`, no `request.param`, no implementation-specific attributes
+      - The concrete class under test, so failures are precise
+      - "`request.param`, to branch on the active implementation"
+      - Both the Protocol and each concrete class
+    explain: The tests are implementation-agnostic by design — that's what makes them a contract.
+  - id: request-param-smell
+    type: mcq
+    q: 'A parametrized contract test contains `if request.param == "jsonl": ...`. What does that signal?'
+    options:
+      - The abstraction is leaking — the behaviour is either part of the contract (fix the test to hold for all impls) or implementation-specific (extract a standalone test against the concrete class)
+      - Normal practice — implementations legitimately differ
+      - The fixture needs more params
+      - pytest requires a branch per param value
+    explain: "Diagnostic question: is this behaviour required by the interface, or specific to one implementation?"
+  - id: impl-specific-behaviour
+    type: mcq
+    q: "`JsonlTradeStore` should create its file on first `add()` — behaviour the Protocol doesn't require. Where does that test go?"
+    options:
+      - A standalone test that constructs `JsonlTradeStore` directly, outside the shared parametrized fixture
+      - Inside the contract suite, guarded by `request.param`
+      - Nowhere — only contract behaviour deserves tests
+      - In the fixture itself, as a post-construction assert
+    explain: Implementation-specific behaviour gets its own test against the concrete class; the contract suite stays agnostic.
+  - id: third-impl-cost
+    type: recall
+    q: You add a third implementation of the Protocol. What does it cost to get full test coverage from the contract suite?
+    answer: One string in the fixture's `params` list plus one construction branch in the fixture body — every existing contract test then runs against the new implementation for free.
+  - id: param-test-names
+    type: recall
+    q: With `@pytest.fixture(params=["memory", "jsonl"])`, what does pytest name the generated runs of `test_empty`?
+    answer: "`test_empty[memory]` and `test_empty[jsonl]` — the param is appended in brackets, so failures identify the implementation."

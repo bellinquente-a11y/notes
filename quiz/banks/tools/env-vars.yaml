@@ -1,0 +1,34 @@
+note: tools/env-vars.md
+tier: detail
+questions:
+  - id: env-inheritance
+    type: mcq
+    q: You `export API_KEY=x` in one terminal. Why doesn't a script already running in another terminal see it?
+    options:
+      - Each process gets a copy of its parent's environment at spawn time — changes never propagate between siblings or back to the parent
+      - Environment variables need a shell restart to take effect
+      - export only affects the filesystem-level environment, not processes
+      - The other terminal caches its environment for performance
+    explain: "The environment is per-process `KEY=value` memory, copied down at spawn. Same reason `LOG_LEVEL=DEBUG python app.py` leaves the parent shell unchanged."
+  - id: dotenv-vs-zshrc
+    type: mcq
+    q: Why put project secrets in a gitignored `.env` file rather than `~/.zshrc`?
+    options:
+      - Per-project scope — project A's keys don't leak into project B's processes, and tooling (pydantic-settings, python-dotenv, Docker Compose) reads `.env` by default
+      - .zshrc can't hold secret values
+      - .env files are encrypted at rest
+      - The shell loads .env automatically, so it's more convenient
+    explain: "The shell does NOT read `.env` — the app loads it at startup. Commit a fake-value `.env.example` to document what's needed."
+  - id: env-not-security-boundary
+    type: mcq
+    q: What security guarantee do environment variables NOT provide for secrets?
+    options:
+      - Isolation from other processes on the same host — any process running as the same OS user can read them via `ps e` or `/proc/<pid>/environ`
+      - Keeping secrets out of source code
+      - Keeping secrets out of committed config files
+      - Injection into CI jobs without appearing in logs
+    explain: Env vars keep secrets out of git, not away from co-tenant processes — for that, use a secrets manager issuing scoped credentials.
+  - id: path-resolution
+    type: recall
+    q: How does the shell use `PATH` to find `python`, and how do you make a new install win?
+    answer: "`PATH` is a colon-separated directory list searched left to right; the first match wins (`which python` shows it). Prepend the new directory: `export PATH=\"/new/dir:$PATH\"`."

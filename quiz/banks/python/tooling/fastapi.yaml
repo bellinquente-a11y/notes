@@ -1,0 +1,52 @@
+note: python/tooling/fastapi.md
+tier: core
+questions:
+  - id: core-idea
+    type: mcq
+    q: What is FastAPI's core idea?
+    options:
+      - Type annotations are the single source of truth — parsing, validation, serialisation, and OpenAPI docs are derived from them
+      - Async execution makes endpoints faster than Flask
+      - A built-in ORM unifies web and database layers
+      - Convention-over-configuration project layouts
+    explain: "`def get_trade(trade_id: int, page: int = 1) -> TradeResponse:` — the annotations tell FastAPI where to find values, how to coerce them, what to return on bad input (422), and what to document."
+  - id: building-blocks
+    type: mcq
+    q: Which three components does FastAPI glue together, and in what roles?
+    options:
+      - Starlette (ASGI routing/middleware), Pydantic (validation + serialisation), inspect (reads signatures at decoration time)
+      - Flask (routing), marshmallow (validation), asyncio (concurrency)
+      - uvicorn (routing), Pydantic (ORM), typing (docs)
+      - Starlette (validation), Pydantic (routing), importlib (discovery)
+    explain: FastAPI itself is mostly the glue between the three.
+  - id: param-classification
+    type: mcq
+    q: How does FastAPI decide whether a parameter is a path param, query param, or request body?
+    options:
+      - "By its annotation and name: scalar matching a path segment → path; scalar not in path → query; Pydantic model → body; Depends() default → dependency"
+      - By decorator arguments listing each parameter's source
+      - By naming conventions (body_, q_, p_ prefixes)
+      - Path and query are interchangeable; the body needs `@body`
+    explain: "`inspect.signature(fn)` runs once at decoration time, building a Dependant tree stored on the route."
+  - id: depends-value
+    type: mcq
+    q: "What does `Depends()` add over manual constructor injection?"
+    options:
+      - Request-scoped resources (factories run at request time with live request data) and automatic per-request deduplication of shared dependencies
+      - Compile-time verification of the dependency graph
+      - Parallel resolution of independent dependencies
+      - Global singletons without imports
+    explain: "You can't pass a DB session in `__init__` — it doesn't exist until the request arrives. With use_cache=True, two dependencies declaring Depends(get_db) share one session."
+  - id: yield-dependency
+    type: mcq
+    q: "In a dependency `def get_db(): with Session(engine) as s: yield s` — when does the session close?"
+    options:
+      - After the response, via the AsyncExitStack that FastAPI runs per request
+      - As soon as the endpoint function returns
+      - When the next request reuses the dependency
+      - It leaks unless closed manually
+    explain: Yield dependencies are FastAPI's request-scoped context managers — setup before the endpoint, teardown after the response.
+  - id: lifecycle
+    type: recall
+    q: Sketch the FastAPI request lifecycle.
+    answer: Starlette routes the URL to an APIRoute → raw values extracted from path/query/headers/body → Pydantic validates and coerces (auto-422 on mismatch) → solve_dependencies() walks the Depends tree calling factories with caching → endpoint runs with typed args → return value serialised via response_model → HTTP response.

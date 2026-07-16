@@ -1,0 +1,34 @@
+note: python/tooling/aiohttp.md
+tier: detail
+questions:
+  - id: session-per-app
+    type: mcq
+    q: Why create one `ClientSession` per application rather than per request?
+    options:
+      - Each session owns a TCP connection pool — per-request sessions discard connections, forcing TLS handshakes and defeating keep-alive
+      - Sessions are expensive to garbage collect
+      - aiohttp caps the number of sessions per process
+      - Cookies leak between sessions otherwise
+    explain: Create it at startup (or in the top-level `async with`) and pass it to fetch functions.
+  - id: semaphore-scope
+    type: mcq
+    q: A shared concurrency cap for `gather()`-ed requests requires the Semaphore to be created where?
+    options:
+      - Once in the outer scope, closed over by the inner fetch coroutine
+      - Inside each fetch coroutine, so each has fresh state
+      - Inside the ClientSession constructor
+      - Inside the event loop policy
+    explain: A semaphore created inside the coroutine gives every task its own private counter — no cap is enforced. Also beats batching, since the next request starts the moment any slot frees.
+  - id: sync-retry-trap
+    type: mcq
+    q: Why does a synchronous retry decorator silently fail on an async function?
+    options:
+      - The sync wrapper calls `func(...)`, getting a coroutine object — no await, no execution, no exception ever caught
+      - Async exceptions are a different class hierarchy
+      - Decorators can't wrap `async def` functions
+      - The event loop blocks the retry sleep
+    explain: "The wrapper must be `async def` and `return await func(...)`. Retry only 5xx (`e.status >= 500`) and use exponential backoff with `await asyncio.sleep`."
+  - id: timeout-default
+    type: recall
+    q: What is aiohttp's default timeout behaviour and the recommended setup?
+    answer: "There is no meaningful default — always set one: `ClientSession(timeout=aiohttp.ClientTimeout(total=30, connect=5))`, raising asyncio.TimeoutError when exceeded. Per-block, `async with asyncio.timeout(10):` (3.11+) covers the whole request-and-read."

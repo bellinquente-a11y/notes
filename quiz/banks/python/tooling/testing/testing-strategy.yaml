@@ -1,0 +1,56 @@
+note: python/tooling/testing/testing-strategy.md
+tier: core
+questions:
+  - id: pyramid
+    type: mcq
+    q: What does the test pyramid prescribe?
+    options:
+      - Many fast unit tests at the base, fewer integration tests, few E2E tests on the critical path only
+      - Equal numbers of unit, integration, and E2E tests
+      - Mostly E2E tests since they give the highest confidence
+      - Integration tests only — units are redundant with types
+    explain: Units pinpoint failures fast; integration catches what units can't (schema mismatches, transaction semantics); E2E is slow and reserved for the critical path.
+  - id: behaviour-not-impl
+    type: mcq
+    q: "What does \"test behaviour, not implementation\" mean in practice?"
+    options:
+      - Assert on outcomes and contracts, weighted by risk × value — heavy on validation, error paths, business rules; skip trivial getters and third-party internals
+      - Only test public methods, never private ones
+      - Never use mocks
+      - Assert on internal state after each call
+    explain: "\"Test the things that scare you\" (Kent Beck). Implementation-coupled tests break on every refactor without catching real bugs."
+  - id: stub-mock-fake
+    type: mcq
+    q: Stub vs mock vs fake — which is which?
+    options:
+      - Stub returns canned values to drive a path; mock also records calls for side-effect assertions; fake is a lightweight real implementation
+      - Mock returns canned values; stub records calls; fake raises on use
+      - Fake and stub are synonyms; mock is the pytest name
+      - Stub is for classes, mock for functions
+    explain: "`mock_send.assert_called_once()` is mock usage; an in-memory dict repo is a fake."
+  - id: dont-mock-unowned
+    type: mcq
+    q: Why "don't mock what you don't own"?
+    options:
+      - Mocks of third-party internals drift from the real API — the library changes and tests keep passing while the code breaks
+      - Third-party classes can't be patched
+      - It violates library licences
+      - Mocking externals is slower than real calls
+    explain: "Mock at your own boundary: the function that wraps the library, or your repository interface."
+  - id: coverage
+    type: mcq
+    q: What is a sane position on line coverage?
+    options:
+      - "80–90% is a reasonable floor; beyond that ask better questions — are the scary parts tested, do real bugs fail tests (mutation testing)?"
+      - 100% is the professional standard
+      - Coverage is meaningless; never measure it
+      - 50% suffices with good types
+    explain: Coverage measures execution, not assertion quality — `mutmut` mutation testing checks whether tests actually catch bugs.
+  - id: tdd
+    type: recall
+    q: Describe the TDD cycle and when it is most useful.
+    answer: "Red → Green → Refactor: write the failing test first, write minimal code to pass, then clean up under a green bar. Most valuable when fixing bugs (reproduce with a test first, so the bug can't return) and when designing new APIs."
+  - id: aaa
+    type: recall
+    q: What is the AAA pattern, and the granularity rule that goes with it?
+    answer: "Arrange (set up data), Act (call the thing), Assert (check the outcome). One test, one behaviour — a test with ten assertions should be ten tests, so a failure pinpoints exactly what broke."

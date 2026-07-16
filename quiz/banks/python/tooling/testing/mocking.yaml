@@ -1,0 +1,65 @@
+note: python/tooling/testing/mocking.md
+tier: core
+questions:
+  - id: patch-where-used
+    type: mcq
+    q: "`mymodule.py` does `from httpx import get`. Why does `patch(\"httpx.get\", ...)` not affect the test, and what's the fix?"
+    options:
+      - The import bound `get` into `mymodule`'s namespace, so patching `httpx.get` leaves `mymodule.get` pointing at the original — patch `"mymodule.get"` instead
+      - httpx blocks patching of its public API
+      - patch only works on classes, not functions
+      - The fix is to reload `mymodule` after patching
+    explain: "Rule: patch the dotted path of the name as it appears in the module under test. With `import httpx` + `httpx.get(...)`, patch `\"mymodule.httpx.get\"`."
+  - id: magicmock-vs-mock
+    type: mcq
+    q: What does `MagicMock` add over plain `Mock`?
+    options:
+      - Implementations of dunder methods (`__len__`, `__iter__`, `__enter__`, …) so the mock works as an iterator, context manager, etc.
+      - Automatic attribute access — plain Mock raises `AttributeError` on unknown attributes
+      - Call recording (`call_count`, `call_args`)
+      - Async support
+    explain: Both accept arbitrary attributes and record calls; only MagicMock supports dunders. Use MagicMock by default.
+  - id: side-effect-list
+    type: mcq
+    q: What does `m.fetch.side_effect = [42.0, ValueError(), 43.0]` do?
+    options:
+      - Each call consumes the next item — values are returned, exceptions are raised; useful for retry logic (first call fails, second succeeds)
+      - All three are returned as a tuple on every call
+      - Only the first item is used; the rest are ignored
+      - It raises immediately because a list can't be a side effect
+    explain: "`side_effect` overrides `return_value`; it also accepts a single exception (always raise) or a callable (dynamic)."
+  - id: spec-purpose
+    type: mcq
+    q: Why create a mock with `MagicMock(spec=Notifier)`?
+    options:
+      - It constrains the mock to `Notifier`'s real interface, so a typo like `m.sned_email(...)` raises `AttributeError` instead of silently passing
+      - It makes the mock inherit `Notifier`'s real method implementations
+      - It speeds up mock creation
+      - It auto-verifies all `Notifier` methods were called
+    explain: Without spec, a MagicMock accepts any attribute — tests can pass while asserting against methods that don't exist.
+  - id: monkeypatch-vs-patch
+    type: mcq
+    q: When do you pick pytest's `monkeypatch` over `unittest.mock.patch`?
+    options:
+      - For simple replacement with no call inspection — `monkeypatch.setattr` swaps the attribute and auto-restores; reach for `patch` + `MagicMock` when you need `call_count` or `assert_called_with`
+      - monkeypatch is required for any pytest test; patch only works in unittest
+      - patch is deprecated in favour of monkeypatch
+      - monkeypatch can patch builtins; patch cannot
+    explain: Both restore automatically; the difference is that MagicMock records calls for inspection.
+  - id: async-test-vacuous
+    type: mcq
+    q: Without pytest-asyncio configured, what happens to `async def test_fetch()`?
+    options:
+      - pytest never awaits the returned coroutine — the body never runs and the test passes vacuously
+      - pytest raises a collection error
+      - pytest runs it in a fresh event loop automatically
+      - The test is reported as skipped
+    explain: "Enable `asyncio_mode = \"auto\"` in `[tool.pytest.ini_options]`, or decorate each test with `@pytest.mark.asyncio`."
+  - id: asyncmock-why
+    type: recall
+    q: Why can't a `MagicMock` stand in for an async function, and what do you use instead?
+    answer: "Awaiting a MagicMock's return value raises `TypeError` — it isn't awaitable. Use `AsyncMock`: calls return awaitables, so `await mock.json()` works; set sync methods (like `raise_for_status`) back to `MagicMock` explicitly."
+  - id: mock-boundary-choice
+    type: recall
+    q: Testing code that calls `fetch_price`, which itself calls `httpx.get` — what do you mock, and why?
+    answer: Mock `fetch_price`, the outermost function crossing a boundary you don't own — the test targets orchestration, not response parsing. Mock `httpx.get` only when testing `fetch_price` itself.

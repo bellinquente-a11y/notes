@@ -1,0 +1,34 @@
+note: python/tooling/mypy.md
+tier: core
+questions:
+  - id: what-mypy-is
+    type: mcq
+    q: What does running mypy change about your program at runtime?
+    options:
+      - Nothing — Python stays dynamically typed; mypy is an external static analysis tool
+      - Type hints become enforced, raising TypeError on mismatch
+      - Annotated functions get compiled to C
+      - Un-annotated code is rejected at import
+    explain: mypy analyses code before runtime for consistent use of type hints; the interpreter ignores annotations.
+  - id: any-effect
+    type: mcq
+    q: "What does the `Any` type do in mypy's analysis?"
+    options:
+      - Disables most checking for that value — errors flow silently through it
+      - Matches only values of unknown built-in types
+      - Forces an explicit cast at each use
+      - Is an alias for `object`
+    explain: "`Any` is an escape hatch, infectious through operations on the value. `object` is the safe 'anything' — you must narrow before using it."
+  - id: what-not-checked
+    type: mcq
+    q: Which of these can mypy actually verify?
+    options:
+      - That a function receiving `float` is never called with a `str`
+      - That a price value is positive
+      - That an algorithm is numerically accurate
+      - That business logic is correct
+    explain: "mypy enforces contracts between functions — type consistency, not logical correctness. Pair it with tests; they're complementary."
+  - id: typed-architecture
+    type: recall
+    q: How should a typed project be structured to get the most from mypy?
+    answer: "Keep messy external data at the boundaries: parsing/validation code (e.g. Pydantic) converts raw input into clean typed objects, and the core domain logic works only with precise types. Configure via `[tool.mypy]` in pyproject.toml (e.g. `strict = true`); run as a dev dependency (`poetry run mypy src`)."
