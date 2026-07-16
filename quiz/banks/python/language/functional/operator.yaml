@@ -1,0 +1,34 @@
+note: python/language/functional/operator.md
+tier: detail
+questions:
+  - id: why-not-lambda
+    type: mcq
+    q: Which advantage of `itemgetter`/`attrgetter` over lambdas is decisive for multiprocessing?
+    options:
+      - They are picklable — lambdas can't cross process boundaries
+      - They release the GIL
+      - They run on all cores automatically
+      - They validate their arguments at construction time
+    explain: "`ProcessPoolExecutor` pickles callables to send to workers; lambdas fail there. They're also ~20–40% faster as sort keys and more declarative."
+  - id: attrgetter-dotted
+    type: mcq
+    q: "What is the 'killer feature' of `attrgetter` that has no clean lambda equivalent?"
+    options:
+      - "Dotted paths for nested attributes: `attrgetter('department.headcount')`"
+      - Access to private attributes
+      - Automatic None-handling on missing attributes
+      - Reverse-order sorting built in
+    explain: "Multi-key also works: `attrgetter('dept', 'salary')` returns a tuple, like `itemgetter('dept', 'salary')` for subscriptable data."
+  - id: methodcaller-use
+    type: mcq
+    q: "What does `methodcaller('strftime', '%Y-%m')` produce?"
+    options:
+      - A callable that invokes `obj.strftime('%Y-%m')` on whatever it is given
+      - The string `'%Y-%m'` formatted with the current time
+      - A partial application of `strftime` bound to no object
+      - A decorator that adds a `strftime` method
+    explain: "Use it in `map` or sort keys when every object gets the same call with the same args. For zero-arg methods on built-ins, `str.upper` is cleaner."
+  - id: lambda-still-right
+    type: recall
+    q: When is a lambda still the right choice over the operator module?
+    answer: "When the key involves computation, not just access: arithmetic (`lambda p: p.price * p.quantity`), negation, or fallbacks (`lambda x: x.value or 0`). Rule: pure attribute/item/method access → operator module; anything computed → lambda."

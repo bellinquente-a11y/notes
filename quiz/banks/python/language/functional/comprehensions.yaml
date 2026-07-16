@@ -1,0 +1,38 @@
+note: python/language/functional/comprehensions.md
+tier: core
+questions:
+  - id: filter-vs-ternary
+    type: mcq
+    q: "In a list comprehension, what is the difference between `[x for x in data if x > 0]` and `[x if x > 0 else 0 for x in data]`?"
+    options:
+      - The first excludes items (filter at the end); the second transforms every item (ternary in the expression)
+      - They are equivalent
+      - The first transforms items; the second filters
+      - The second raises `SyntaxError` — else is not allowed
+    explain: "Trailing `if` filters; `if/else` before `for` is a ternary applied to all items. Mixing both is the readability limit."
+  - id: nested-order
+    type: mcq
+    q: "How do you flatten a 2-D list `matrix` with a comprehension?"
+    options:
+      - "`[x for row in matrix for x in row]` — for clauses read left-to-right, outer loop first"
+      - "`[x for x in row for row in matrix]`"
+      - "`[[x for x in row] for row in matrix]`"
+      - "`[x for x in matrix]`"
+    explain: "Multiple `for` clauses nest in reading order. The double-bracket version builds a 2-D list (e.g. a transpose), not a flat one."
+  - id: genexp-memory
+    type: mcq
+    q: "Why prefer `sum(x**2 for x in range(1_000_000))` over `sum([x**2 for x in range(1_000_000)])`?"
+    options:
+      - The generator feeds values one at a time — O(1) memory instead of materialising an ~8 MB list
+      - Generators compute squares faster than lists
+      - The list version drops values above a size limit
+      - There is no difference; Python optimises both identically
+    explain: Use `[...]` only when you need the list itself (indexing, multiple passes, `len`); for single-pass consumption a generator expression avoids the allocation.
+  - id: when-loop
+    type: recall
+    q: Name situations where a plain loop beats a comprehension.
+    answer: Side effects (print/write/mutate), multiple accumulations, multi-step value computation needing intermediates, per-item try/except, more than two for clauses, or any break/continue flow control. Comprehensions are for pure transform/filter.
+  - id: dict-set-comp
+    type: recall
+    q: "Give a dict comprehension inverting `d`, and note its caveat."
+    answer: "`{v: k for k, v in d.items()}` — only valid when values are unique (and hashable); colliding values silently keep only the last key. Set comprehensions `{f(x) for x in xs}` similarly dedupe automatically."

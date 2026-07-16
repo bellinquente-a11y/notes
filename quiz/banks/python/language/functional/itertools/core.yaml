@@ -1,0 +1,34 @@
+note: python/language/functional/itertools/core.md
+tier: detail
+questions:
+  - id: chain-from-iterable
+    type: mcq
+    q: When do you need `chain.from_iterable(xs)` instead of `chain(*xs)`?
+    options:
+      - When the outer iterable is itself a generator — `*` would have to consume it eagerly
+      - When the inner iterables have different types
+      - When there are more than 255 iterables
+      - They are always interchangeable
+    explain: "`chain.from_iterable` flattens one level lazily; unpacking with `*` materialises the outer level first."
+  - id: product-vs-combinations
+    type: mcq
+    q: All pairs of tickers for a correlation matrix, without computing both (A,B) and (B,A) — which tool?
+    options:
+      - "`combinations(tickers, 2)` — unordered subsets from one pool, no repeats"
+      - "`product(tickers, repeat=2)` — all ordered pairs"
+      - "`zip(tickers, tickers)`"
+      - "`permutations(tickers, 2)`"
+    explain: "product is for independent pools (scenario grids, hyperparameter search) where order matters; combinations draws unordered subsets from one shared pool."
+  - id: islice-negative
+    type: mcq
+    q: How do you get the last N elements of a lazy iterator, given that `islice` doesn't support negative indices?
+    options:
+      - "`collections.deque(it, maxlen=N)`"
+      - "`islice(it, -N, None)`"
+      - "`list(it)[-N:]` is the only way"
+      - "`reversed(islice(it, N))`"
+    explain: A maxlen-bounded deque keeps the last N seen in O(N) memory while streaming through the rest.
+  - id: combinatorial-explosion
+    type: recall
+    q: What must you check before enumerating `combinations(universe, r)` over a large universe, and how?
+    answer: "The count, with `math.comb(n, r)` — C(500, 5) is 255 billion, which will never finish even lazily. If the count is huge, switch to random sampling / Monte Carlo instead of enumeration."

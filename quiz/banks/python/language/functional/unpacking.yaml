@@ -1,0 +1,43 @@
+note: python/language/functional/unpacking.md
+tier: core
+questions:
+  - id: star-protocol
+    type: mcq
+    q: What protocol must `x` satisfy for `f(*x)` to work?
+    options:
+      - "`__iter__` (or legacy `__getitem__` with integer keys from 0)"
+      - "`keys()` plus `__getitem__`"
+      - "`__len__` plus `__getitem__`"
+      - It must be a list or tuple
+    explain: "`*` is iterable unpacking — Python calls `iter(x)` and consumes items as positional args."
+  - id: doublestar-protocol
+    type: mcq
+    q: What does `**x` require of `x` — and notably NOT require?
+    options:
+      - "Requires `keys()` and `__getitem__`; does not require `__iter__`"
+      - "Requires `__iter__`; does not require `keys()`"
+      - "Requires inheriting from `dict`"
+      - "Requires `items()` returning pairs"
+    explain: "A class with only `keys()` and `__getitem__` works with `**` but raises TypeError with `*` — the two operators use different protocols."
+  - id: dict-merge
+    type: mcq
+    q: "In `{**d1, **d2}`, what happens when both dicts share a key?"
+    options:
+      - The rightmost value wins
+      - The leftmost value wins
+      - "`KeyError` is raised"
+      - The values are merged into a list
+    explain: "Later entries override earlier ones. Since Python 3.9, `d1 | d2` is the cleaner idiom for merging two dicts."
+  - id: starred-assignment
+    type: mcq
+    q: "What does `a, *mid, z = range(5)` assign to `mid`?"
+    options:
+      - "`[1, 2, 3]` — a list capturing the variable-length middle"
+      - "`(1, 2, 3)` — a tuple"
+      - "`range(1, 4)` — a lazy slice"
+      - "`SyntaxError` — `*` must be first or last"
+    explain: Left-hand-side `*` captures a slice as a list; only one starred target is allowed per assignment, but it can sit anywhere.
+  - id: mixed-call
+    type: recall
+    q: "Given `def f(a, b, c=0, d=0)`, show how to call it with a list `[1, 2]` and a dict `{'c': 3, 'd': 4}`."
+    answer: "`f(*[1, 2], **{'c': 3, 'd': 4})` → `f(1, 2, c=3, d=4)`. `*` splices positional args, `**` keyword args (keys must be strings); multiple `*`/`**` unpacks per call are allowed since 3.5."

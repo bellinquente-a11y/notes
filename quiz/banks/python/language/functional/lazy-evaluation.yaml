@@ -1,0 +1,34 @@
+note: python/language/functional/lazy-evaluation.md
+tier: detail
+questions:
+  - id: generator-exhaustion
+    type: mcq
+    q: What does `list(gen)` return when called a second time on the same generator?
+    options:
+      - An empty list — generators are exhausted after one pass
+      - The same list as the first call
+      - It raises `StopIteration`
+      - It restarts the generator from the beginning
+    explain: If you need multiple passes (two loops, sorting plus indexing), materialise once with `data = list(gen)` first.
+  - id: best-sink
+    type: mcq
+    q: You only need the total of a large generator. Why is `sum(gen)` better than `sum(list(gen))`?
+    options:
+      - "`sum` streams with O(1) state (a running total); `list` allocates the whole collection first"
+      - "`sum` short-circuits when the total stops changing"
+      - "`list` copies each element twice"
+      - There is no difference — Python optimises the list away
+    explain: sum/max/any are ideal sinks — they fold the stream to a scalar without an intermediate collection.
+  - id: short-circuit
+    type: mcq
+    q: "What advantage does `any(is_breached(p) for p in portfolio)` have over `any([is_breached(p) for p in portfolio])`?"
+    options:
+      - The generator version stops at the first True; the list version evaluates every element first
+      - The list version may return a different result
+      - The generator version caches results between calls
+      - None — `any` short-circuits in both cases
+    explain: With the eager list comprehension, all elements are computed before `any` even starts. Same logic applies to `next(t for t in trades if ...)`.
+  - id: eager-wins
+    type: recall
+    q: When does eager evaluation beat lazy?
+    answer: "Multiple passes (iterators exhaust), random access and len() (no indexing/length on generators), sorting (must consume fully anyway), and numerical work — NumPy/pandas are eager but vectorised, trading memory for C-speed, which wins when data fits in RAM."

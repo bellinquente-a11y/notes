@@ -1,0 +1,34 @@
+note: python/language/functional/itertools/accumulate.md
+tier: detail
+questions:
+  - id: accumulate-vs-reduce
+    type: mcq
+    q: When should you use `itertools.accumulate` instead of `functools.reduce`?
+    options:
+      - When the path matters (NAV series, running P&L) — accumulate yields every intermediate value lazily; reduce collapses to one final value
+      - When the function is not associative
+      - When the input is a list rather than a generator
+      - Never — reduce supersedes accumulate
+    explain: "accumulate is the lazy equivalent of numpy.cumsum/cumprod; reduce consumes everything and returns a single scalar."
+  - id: initial-param
+    type: mcq
+    q: "What does `list(accumulate([1, 2, 3], operator.add, initial=10))` return?"
+    options:
+      - "`[10, 11, 13, 16]` — output is one element longer than the input"
+      - "`[11, 13, 16]`"
+      - "`[10, 1, 2, 3]`"
+      - "`[16]`"
+    explain: "`initial` (3.8+) prepends a starting value — exactly what a NAV series needs (`initial=1.0`)."
+  - id: running-max
+    type: mcq
+    q: How do you compute running peaks (e.g. for drawdown tracking) with accumulate?
+    options:
+      - "`accumulate(prices, max)` — any binary function works, not just addition"
+      - "`accumulate(prices, key=max)`"
+      - "`accumulate(max(prices))`"
+      - accumulate only supports `operator.add` and `operator.mul`
+    explain: "`[100, 102, 101, 105]` → peaks `[100, 102, 102, 105]`; then drawdown = (price − peak) / peak zipped element-wise."
+  - id: nav-pattern
+    type: recall
+    q: Write the accumulate pattern for a NAV series from daily net returns.
+    answer: "`accumulate((1 + r for r in daily_net), operator.mul, initial=1.0)` — the lazy, composable equivalent of numpy.cumprod(1 + returns) with a leading 1.0."

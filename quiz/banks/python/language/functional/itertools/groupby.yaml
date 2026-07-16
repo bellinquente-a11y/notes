@@ -1,0 +1,34 @@
+note: python/language/functional/itertools/groupby.md
+tier: detail
+questions:
+  - id: sort-first
+    type: mcq
+    q: Why must input be sorted by the key before `itertools.groupby`?
+    options:
+      - It only groups adjacent equal elements — unsorted input yields multiple groups for the same key
+      - It raises `ValueError` on unsorted input
+      - Sorting makes the grouping faster but is optional
+      - The key function requires ordered input
+    explain: "`[1, 1, 2, 2, 3, 1, 1]` produces a second group for the trailing 1s. Unlike SQL GROUP BY, groupby is strictly consecutive."
+  - id: shared-iterator
+    type: mcq
+    q: "Why is `groups = {k: g for k, g in groupby(data)}` broken?"
+    options:
+      - The group iterators share state with the outer iterator — advancing to the next key exhausts them, so all stored groups are empty
+      - Dict keys collide when data repeats
+      - groupby cannot be used in comprehensions
+      - The groups are tuples, not iterators
+    explain: "Materialise each group immediately: `{k: list(g) for k, g in groupby(data)}`."
+  - id: groupby-alternatives
+    type: mcq
+    q: You have unsorted records and just need counts per key. What is the right tool?
+    options:
+      - "`collections.Counter` (or `defaultdict`) — no sort needed, one pass"
+      - "`groupby` after sorting — always the canonical way"
+      - "`set` plus repeated `.count()` calls"
+      - "`zip` with itself"
+    explain: "groupby earns its keep on already-sorted/streaming data; for unsorted aggregation, Counter/defaultdict is simpler and O(n). In DataFrames, use pandas groupby."
+  - id: canonical-pattern
+    type: recall
+    q: Write the canonical sort → groupby pattern for grouping records by a dict key.
+    answer: "`key = itemgetter('dept')` then `for dept, group in groupby(sorted(records, key=key), key=key):` — define the key once, use it for both sort and groupby, and materialise `list(group)` inside the loop."

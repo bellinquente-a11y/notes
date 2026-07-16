@@ -1,0 +1,56 @@
+note: python/language/functional/functools.md
+tier: core
+questions:
+  - id: wraps-purpose
+    type: mcq
+    q: What does `@functools.wraps(func)` do inside a decorator?
+    options:
+      - Copies the wrapped function's metadata (name, docstring) onto the wrapper
+      - Makes the wrapper call `func` automatically
+      - Registers the decorator with the interpreter
+      - Prevents the decorator from being applied twice
+    explain: Without it, the decorated function reports itself as `wrapper` — breaking introspection, debugging, and doc tools.
+  - id: decorator-args-nesting
+    type: mcq
+    q: Why does a decorator that takes arguments, like `@retry(times=3)`, need three levels of nesting?
+    options:
+      - "Outer receives the decorator arguments, middle receives the function, inner receives the call arguments"
+      - Python requires exactly three frames for any decorator
+      - One level per argument type (positional, keyword, variadic)
+      - It doesn't — two levels always suffice
+    explain: "`retry(times=3)` is called first and must return a plain decorator, which in turn returns the wrapper."
+  - id: lru-hashability
+    type: mcq
+    q: What happens when you call an `@lru_cache` function with a list argument?
+    options:
+      - "`TypeError: unhashable type` — cache keys are built like dict keys"
+      - The list is converted to a tuple automatically
+      - The call works but is never cached
+      - The cache stores a deep copy of the list
+    explain: Every argument must be hashable — use tuple instead of list, frozenset instead of set, frozen dataclasses instead of mutable ones.
+  - id: lru-purity
+    type: mcq
+    q: Why must `@lru_cache` only be applied to pure functions?
+    options:
+      - The cache never re-calls the function for a seen input — results from a DB, clock, or RNG silently go stale
+      - Impure functions raise `RuntimeError` when cached
+      - The cache invalidates too often for impure functions, hurting performance
+      - Side effects run twice on cache hits
+    explain: There is no automatic invalidation, only a full `.cache_clear()`. Same inputs must always produce the same output.
+  - id: lru-instance-method
+    type: mcq
+    q: Why does `@lru_cache` on an instance method leak memory, and what is the fix for computed attributes?
+    options:
+      - "`self` is part of the cache key, so the module-level cache holds every instance forever; use `@cached_property`"
+      - The cache is copied into each instance; use `__slots__`
+      - Bound methods can't be hashed; use a static method
+      - It doesn't leak — the cache uses weak references
+    explain: "`@cached_property` stores the result on the instance itself, so it's garbage-collected with the instance."
+  - id: partial
+    type: recall
+    q: What does `functools.partial` do? Give an example.
+    answer: "It fixes some arguments of a callable and returns a new callable for the rest — e.g. `square = partial(pow, exp=2)`, then `square(3) == 9`. Useful for adapting functions to APIs expecting fewer arguments."
+  - id: cache-decision
+    type: recall
+    q: "Pick the right caching tool: pure function with unbounded inputs; pure function with small fixed inputs; computed instance attribute; per-key expiry."
+    answer: "`@lru_cache(maxsize=N)` (bounded eviction); `@functools.cache` (unbounded, less overhead); `@cached_property`; the `cachetools` library. Never cache DB/file/network reads at this layer."

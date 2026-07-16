@@ -1,0 +1,47 @@
+note: python/language/functional/iterators-generators.md
+tier: core
+questions:
+  - id: iterable-vs-iterator
+    type: mcq
+    q: What is the difference between an iterable and an iterator?
+    options:
+      - "An iterable implements `__iter__` returning an iterator; an iterator implements `__next__` (and `__iter__` returning itself)"
+      - They are synonyms in Python 3
+      - An iterator can be looped multiple times; an iterable only once
+      - An iterable is lazy; an iterator is eager
+    explain: "The `for` loop calls `iter(obj)` to get an iterator, then `next()` until StopIteration. Iterables without `__iter__` can fall back to `__getitem__`."
+  - id: generator-definition
+    type: mcq
+    q: What makes a function a generator function?
+    options:
+      - The presence of `yield` anywhere in its body
+      - Returning a list lazily
+      - Being decorated with `@generator`
+      - Having no `return` statement
+    explain: Calling it returns a generator object (an iterator built by the compiler); the body suspends at each `yield`, preserving local state between calls.
+  - id: stop-iteration
+    type: mcq
+    q: How does an iterator signal that it is exhausted?
+    options:
+      - "`__next__` raises `StopIteration`"
+      - "`__next__` returns `None`"
+      - "`__iter__` returns `False`"
+      - It sets an `exhausted` attribute
+    explain: "`for` loops catch StopIteration internally — that's the whole termination protocol."
+  - id: yield-from
+    type: mcq
+    q: What does `yield from subgen()` do?
+    options:
+      - Delegates to the subgenerator, yielding all its values as if inlined
+      - Yields the subgenerator object itself, once
+      - Runs the subgenerator eagerly and yields the resulting list
+      - Forks the generator into two parallel streams
+    explain: "`yield from` is generator delegation — it also propagates sends and return values, but the everyday use is flattening nested generators."
+  - id: why-generators
+    type: recall
+    q: Why are generators "a secret weapon for large datasets"?
+    answer: They produce values lazily — one at a time as requested — so complex iteration logic reads as sequential code without ever materialising the full collection in memory. The compiler turns the function into a state machine that suspends at each yield.
+  - id: itertools-awareness
+    type: recall
+    q: "Before writing a custom generator, which itertools/builtin families should you check? Name a few members."
+    answer: "Filtering (compress, dropwhile, takewhile, islice), mapping (accumulate, map, enumerate), merging (chain, product, zip_longest), multiple outputs (combinations, permutations, cycle, pairwise), rearranging (groupby, tee), reducing (any, all, sum, reduce)."
