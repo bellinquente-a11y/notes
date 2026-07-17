@@ -14,7 +14,7 @@ The workflows live as project skills in `.claude/skills/`. When a query starts w
 |---------|-------|--------------|
 | `EXPLAIN` (or `EXPLAIN BRIEFLY`) | `/explain` | Deep dive to `_explain.md` + permanent note |
 | `ADD TOPIC` | `/add-topic` | Concise note only, no `_explain.md` |
-| `RESTRUCTURE` | `/restructure` | Survey structure, propose reorganisation, execute after approval |
+| `RESTRUCTURE` (or `RESTRUCTURE DEEP`) | `/restructure` | Survey structure (`DEEP`: whole taxonomy top-down), propose reorganisation, execute after approval |
 | `AUDIT` | `/audit` | Check notes for stale claims, fix after approval |
 | `QUIZ` | `/quiz` | Create/update question banks in `quiz/banks/`, rebuild web quiz data |
 
