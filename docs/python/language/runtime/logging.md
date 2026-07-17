@@ -139,6 +139,8 @@ except Exception:
 log.info("trade executed", extra={"order_id": 123, "symbol": "AAPL"})
 ```
 
+The lazy `%`-style pattern is logging-specific — [exception](../objects/exceptions.md) messages have no deferred interpolation and must be built eagerly with f-strings.
+
 ---
 
 ## Key practices

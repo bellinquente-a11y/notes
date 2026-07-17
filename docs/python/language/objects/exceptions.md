@@ -81,6 +81,19 @@ except ValueError:
     raise
 ```
 
+### Build the message eagerly — f-strings, not logging style
+
+```python
+raise ValueError(f"price missing for {symbol}")    # GOOD
+raise ValueError("price missing for %s", symbol)   # BUG — nothing interpolates
+```
+
+- [Logging](../runtime/logging.md) uses `%`-style arguments for a real reason: interpolation is deferred until the record is actually emitted, so a disabled `log.debug()` in a hot loop never pays the string-building cost.
+- Exceptions have no such mechanism — `BaseException.__init__` just stores its arguments as `e.args`. The "bug" line above raises `ValueError('price missing for %s', 'AAPL')`: a two-element tuple, never interpolated.
+
+!!! warning "Logging-style formatting in an exception is not lazy — it is silently broken"
+    The lazy-evaluation benefit that justifies `%`-style args for `logger.info` does not exist for exceptions, so you get the downside (a garbled message) with none of the upside. Build the full message before raising — `str(e)` needs it the moment the exception is displayed. A [`pytest.raises(..., match=)`](../../tooling/testing/pytest.md) test makes this class of bug loud: the un-interpolated `%s` fails the message match.
+
 ### Exception chaining
 
 Link exceptions to preserve cause when translating between layers:
