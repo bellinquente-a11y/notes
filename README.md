@@ -24,6 +24,7 @@ notes/\
 │   │   ├── [broadcasting.md](docs/data/numpy/broadcasting.md)\
 │   │   └── [dtypes.md](docs/data/numpy/dtypes.md)\
 │   └── pandas/\
+│       ├── [chaining-catalog.md](docs/data/pandas/chaining-catalog.md)\
 │       ├── [chaining.md](docs/data/pandas/chaining.md)\
 │       ├── [datetimes.md](docs/data/pandas/datetimes.md)\
 │       ├── [display.md](docs/data/pandas/display.md)\
@@ -98,6 +99,7 @@ notes/\
 │       │   ├── [contract-tests.md](docs/python/tooling/testing/contract-tests.md)\
 │       │   ├── [fixtures.md](docs/python/tooling/testing/fixtures.md)\
 │       │   ├── [hypothesis.md](docs/python/tooling/testing/hypothesis.md)\
+│       │   ├── [mocking-network.md](docs/python/tooling/testing/mocking-network.md)\
 │       │   ├── [mocking.md](docs/python/tooling/testing/mocking.md)\
 │       │   ├── [pytest.md](docs/python/tooling/testing/pytest.md)\
 │       │   ├── [structlog-testing.md](docs/python/tooling/testing/structlog-testing.md)\
