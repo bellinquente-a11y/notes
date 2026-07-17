@@ -79,6 +79,36 @@ m.assert_called_once_with("BTC", threshold=1000)   # TypeError if signature drif
 
 Use `autospec=True` on `patch` by default (`create_autospec(obj)` for standalone mocks). Fall back to `spec=`/bare mocks only for attributes created dynamically at runtime (e.g. set in `__init__`), which autospec can't see.
 
+## Mocking a class
+
+`patch` rebinds a **name in a namespace**, and every `from x import C` gives the importing module its *own* binding — so patch the class in the module that *uses* it, not the module that defines it (same rule as for functions: [patch where it's used](mocking-network.md#patch-where-its-used-not-where-its-defined)):
+
+```python
+# service.py uses:  from notifiers import Notifier
+patch("service.Notifier")        # RIGHT
+patch("notifiers.Notifier")      # WRONG — service keeps its own binding
+
+# service.py uses:  import notifiers → notifiers.Notifier(...)
+patch("notifiers.Notifier")      # RIGHT — attribute looked up on the module at call time
+```
+
+A patched class replaces the class object; "instantiating" it returns `MockClass.return_value` — the **same mock instance every call**. Configure and assert on that instance:
+
+```python
+@patch("service.Notifier", autospec=True)
+def test_alert(MockNotifier):
+    instance = MockNotifier.return_value
+    service.alert("BTC dropped")
+    MockNotifier.assert_called_once_with()               # constructor args
+    instance.send.assert_called_once_with("BTC dropped") # method on the instance
+```
+
+!!! warning "Class mock vs instance mock"
+    Asserting on `MockNotifier.send` (the class attribute) instead of `MockNotifier.return_value.send` (the instance) is a classic trap — the class-level mock was never called, so `assert_not_called()` on it passes vacuously. With classes, `autospec=True` specs the instances too, so both constructor and method signatures are enforced.
+
+- `patch.object(service, "Notifier", autospec=True)` — same rule without a dotted string; the module is a real reference, only the attribute name is text.
+- Module not importable at all (heavyweight SDK absent in CI): `patch.dict(sys.modules, {"heavyweight_sdk": MagicMock()})` *before* importing the code under test. Last resort — prefer patching specific attributes.
+
 !!! note "MagicMock vs Mock"
     `Mock` records calls and returns a child mock for any attribute — but dunder methods are looked up on the *type*, so `len(m)`, `list(m)`, or `with m:` raise `TypeError` on a plain `Mock`. `MagicMock` pre-wires the dunders (`__len__`, `__iter__`, `__enter__`, `__exit__`, …), so it works as a container, iterator, or context manager. Use `MagicMock` by default; drop to `Mock` only if you want dunder access to fail loudly.
 
