@@ -157,6 +157,7 @@ direnv's `PATH_add <dir>` prepends a project-local directory to `PATH` (also sco
 # .envrc
 PATH_add bin   # ./bin/* callable as plain commands only inside this project
 ```
+The scripts placed in `bin/` are themselves plain shell scripts — see [bash-scripting.md](bash-scripting.md) for the shebang, `exec`, and argument-quoting basics behind a wrapper like `bin/run_pytest`.
 
 ## Scope summary
 
