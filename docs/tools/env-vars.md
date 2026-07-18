@@ -159,6 +159,29 @@ PATH_add bin   # ./bin/* callable as plain commands only inside this project
 ```
 The scripts placed in `bin/` are themselves plain shell scripts — see [bash-scripting.md](bash-scripting.md) for the shebang, `exec`, and argument-quoting basics behind a wrapper like `bin/run_pytest`.
 
+### direnv commands
+
+| Command | Effect |
+|---------|--------|
+| `direnv allow` | Trust the current `.envrc` (re-run after any edit) |
+| `direnv deny` | Revoke trust — variables unexport on next `cd` |
+| `direnv edit` | Open `.envrc` in `$EDITOR`, then re-prompts `allow` |
+| `direnv reload` | Force re-evaluation without leaving/re-entering the dir |
+| `direnv status` | Show which `.envrc` is active and whether it's loaded |
+
+!!! warning "Trust is per-content, not per-path"
+    direnv hashes `.envrc` and refuses to load an unapproved or changed file — silently skipping it, not erroring — until `direnv allow` runs again. This stops a malicious `.envrc` (e.g. from `git pull` or `cd` into an untrusted repo) from executing arbitrary shell code unnoticed.
+
+### Other stdlib functions
+
+Beyond `dotenv` and `PATH_add`, `.envrc` can call:
+```bash
+use python 3.12       # activate a language-specific env (pyenv, nvm, etc. — needs the matching plugin)
+layout python          # create/activate a venv in .direnv/ scoped to the project
+source_up               # inherit and extend the parent directory's .envrc (monorepo subfolders)
+dotenv_if_exists .env.local   # like dotenv, but silent if the file is missing
+```
+
 ## Scope summary
 
 | Scope | Where | Who sees it |
