@@ -152,6 +152,12 @@ direnv allow   # approve once per new/changed .envrc
 ```
 direnv (`brew install direnv`) hooks the shell's directory-change event: `cd` into the folder and variables export automatically in *any* terminal (Cursor, Terminal.app, SSH); `cd` out and they unexport. The `.zshrc` line is written once, ever, and carries no secrets.
 
+direnv's `PATH_add <dir>` prepends a project-local directory to `PATH` (also scoped to entering/leaving the folder) — useful for project-scoped command shortcuts, since `alias` itself isn't an environment variable and can't be exported this way (see [zsh.md](zsh.md#aliases-and-functions)):
+```bash
+# .envrc
+PATH_add bin   # ./bin/* callable as plain commands only inside this project
+```
+
 ## Scope summary
 
 | Scope | Where | Who sees it |
