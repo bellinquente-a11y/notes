@@ -99,3 +99,21 @@ Python 3.12 adds `type Side = Literal['BUY', 'SELL']` as a cleaner alternative.
 ### Version
 
 Introduced in Python 3.8 (PEP 586).
+
+---
+
+## `cast` — override the checker, not the runtime
+
+`cast(Type, value)` tells the type checker "treat this as `Type`" with zero runtime effect — no `isinstance` check, no conversion. It's `return value` under the hood.
+
+```python
+from typing import cast
+
+raw: dict[str, object] = get_config()
+port = cast(int, raw["port"])  # checker now treats port as int
+```
+
+Use it when a checker can't infer a type you know to be true (e.g. after `json.loads()`, or a loose library stub) — not to silence errors you don't understand.
+
+!!! warning "No runtime safety"
+    If the value isn't actually `Type`, `cast` won't catch it — the bug surfaces later, elsewhere. Prefer `assert isinstance(x, T)` when you want the check enforced at runtime; reach for `cast` when the type is unrepresentable at runtime (generics like `list[int]`, Protocols) or verification is genuinely too costly.
