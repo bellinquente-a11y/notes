@@ -110,6 +110,17 @@ rome_dt = utc_dt.astimezone(ZoneInfo("Europe/Rome"))
     `dt.astimezone(tz)` keeps the instant and shifts the clock display.
     Use `replace` only when attaching a tz to a naive datetime you know is already in that zone.
 
+### Converting to the local timezone
+
+`astimezone()` with no argument (or `tz=None`) converts to the system's local timezone:
+
+```python
+utc_dt = datetime(2024, 6, 21, 12, 0, tzinfo=timezone.utc)
+local_dt = utc_dt.astimezone()  # local tz, e.g. 2024-06-21 14:00:00+02:00
+```
+
+A **naive** datetime must first be told what timezone it's actually in (via `replace` or by parsing with `tz=`) — calling `astimezone()` on a naive datetime assumes it's already local time, which is only correct if that's true.
+
 !!! tip "pytz is legacy"
     Before Python 3.9, `pytz` was standard. `zoneinfo` supersedes it and handles DST correctly without `localize()` / `normalize()` workarounds. Prefer `zoneinfo` in new code.
 
