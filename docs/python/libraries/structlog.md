@@ -59,7 +59,17 @@ They also compose: structlog can sit on top of stdlib (stdlib mode), so third-pa
 !!! tip "Level filtering is zero-cost"
     `make_filtering_bound_logger(logging.INFO)` bakes the minimum level into the class at config time. Calls below the threshold become no-ops — no dict construction, no processor chain traversal.
 
-To suppress an event from inside a processor, raise `structlog.DropEvent`:
+### Changing the level
+
+- **Native mode** (`wrapper_class=structlog.stdlib.BoundLogger` not set) — level lives in `wrapper_class`; there's no `setLevel()`, re-run `configure()` with a new threshold to change it:
+
+  ```python
+  structlog.configure(wrapper_class=structlog.make_filtering_bound_logger(logging.WARNING), ...)
+  ```
+
+- **stdlib mode** (`wrapper_class=structlog.stdlib.BoundLogger`) — `make_filtering_bound_logger` doesn't apply; set the level on the stdlib logger as usual: `logging.getLogger().setLevel(logging.DEBUG)`.
+
+To suppress one specific event rather than a whole level tier, raise `structlog.DropEvent` from a processor:
 
 ```python
 def drop_health_checks(logger, method, event_dict):
