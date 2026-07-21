@@ -158,6 +158,26 @@ logging.getLogger().setLevel(logging.INFO)
 !!! note "foreign_pre_chain is required in stdlib mode"
     Records arriving from stdlib loggers (e.g. httpx, sqlalchemy) have no `event` key. `foreign_pre_chain` preprocesses them before the formatter runs. Without it, those records error.
 
+### Switching renderer via Settings
+
+The renderer is just the last item in the `processors` list — pick it with a plain conditional on a [pydantic Settings](pydantic/pydantic-settings.md) field:
+
+```python
+shared_processors = [
+    structlog.contextvars.merge_contextvars,
+    structlog.processors.add_log_level,
+    structlog.processors.TimeStamper(fmt="iso"),
+]
+renderer = (
+    structlog.processors.JSONRenderer()
+    if settings.environment == "production"
+    else structlog.dev.ConsoleRenderer()
+)
+structlog.configure(processors=[*shared_processors, renderer], ...)
+```
+
+Keeping `shared_processors` common to both branches means only the *encoding* changes between environments, not the log content.
+
 ### Dev vs prod processor chain
 
 | Processor | Dev | Prod |
