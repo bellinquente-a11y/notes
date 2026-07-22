@@ -2,7 +2,7 @@
 
 Question banks generated from the notes under `docs/`, reviewed with spaced
 repetition in the web quiz app at
-[`/quiz/`](https://bellinquente-a11y.github.io/notes/quiz/) on the published
+[`/quiz/`](https://simone-belli.github.io/notes/quiz/) on the published
 site (works in any browser — add it to the phone home screen for an app-like
 experience). No Anki or paid apps involved.
 
