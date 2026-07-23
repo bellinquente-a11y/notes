@@ -54,6 +54,7 @@ checkouts instead of testing every commit.
 git bisect start
 git bisect bad                  # current commit is broken
 git bisect good v1.2.0            # this older tag/commit was known to work
+# Alternatively: git bisect start <bad-sha> <good-sha>
 # Git checks out a midpoint commit each round — test it, then:
 git bisect good                  # or: git bisect bad
 # ... repeats until Git reports the first bad commit ...
