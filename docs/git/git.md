@@ -2,6 +2,7 @@
 
 ## What is Git?
 Git is a distributed version control system used to track changes in code and collaborate safely.
+Under the hood, commits, branches, and history are all built from a small [object model](internals.md).
 
 ## Typical Workflow
 

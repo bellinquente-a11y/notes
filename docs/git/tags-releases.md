@@ -15,6 +15,10 @@ git tag v1.0.0                          # lightweight: just a pointer
 git tag -a v1.0.0 -m "First release"   # annotated: full Git object with metadata
 ```
 
+A lightweight tag is just a ref, exactly like a branch that never moves. An annotated tag is
+its own Git object with a SHA of its own — see the [object model](internals.md#the-four-object-types)
+for what it stores.
+
 Prefer annotated tags — they store author, date, and message, and appear in `git describe`.
 
 ### Common operations

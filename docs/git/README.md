@@ -4,4 +4,5 @@
 |------|------|-------------|
 | [git.md](git.md) | ref | Core workflow: init, stage, commit, push, pull |
 | [github-actions.md](github-actions.md) | note | CI/CD with GitHub Actions: workflows, jobs, triggers, matrix, caching |
+| [internals.md](internals.md) | note | Object model: blobs, trees, commits, tags; refs; the commit DAG |
 | [tags-releases.md](tags-releases.md) | note | Tags (lightweight vs annotated), semver, GitHub releases, release workflow |
